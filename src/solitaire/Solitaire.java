@@ -227,7 +227,8 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 			{
 				clip.stop();
 			} else {
-				clip.start();
+				clip.setFramePosition(0);
+				clip.loop(0);
 			}
 		}
 
@@ -312,7 +313,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 			clip = AudioSystem.getClip();
 			clip.open(ais);
 
-			clip.start();
+			clip.loop(0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
