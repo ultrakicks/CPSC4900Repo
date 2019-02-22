@@ -4,11 +4,12 @@ import java.awt.CardLayout;
 import java.awt.Container;
 import java.awt.Desktop;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
+import java.awt.event.*;
+import java.io.*;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -26,12 +27,15 @@ import javax.swing.JPanel;
  * @author Warren Godone-Maresca
  */
 
-public class Solitaire extends JPanel implements ActionListener {
+public class Solitaire extends JPanel implements ActionListener, ItemListener {
+	/**global clip for sound    		                                	*/
+	public static Clip clip;
+
 	/** The Solitaire game.													*/
 	static Klondike game;
 
 	/**Points to menu items in main menu.                                   */
-	private JMenuItem argosShowItem, annoShowItem, americanShowItem, 
+	private JMenuItem argosShowItem, annoShowItem, americanShowItem,
 					  aztecShowItem, volumeItem, argosStatsItem,
 					  annoStatsItem, americanStatsItem, aztecStatsItem;
 	
@@ -114,22 +118,33 @@ public class Solitaire extends JPanel implements ActionListener {
 		argosShowItem = new JCheckBoxMenuItem("Show Argos"); 
 		argosShowItem.addActionListener(this);
 		settingsMenu.add(argosShowItem);   //Toggles show of Argos
+		argosShowItem.setSelected(true);
+		argosShowItem.addItemListener(this);
+
 		
 		annoShowItem = new JCheckBoxMenuItem("Show Anno Domini"); 
 		annoShowItem.addActionListener(this);
 		settingsMenu.add(annoShowItem);   //Toggles show of Anno Domini
+		annoShowItem.setSelected(true);
+		annoShowItem.addItemListener(this);
 		
 		americanShowItem = new JCheckBoxMenuItem("Show American Toad"); 
 		americanShowItem.addActionListener(this);
 		settingsMenu.add(americanShowItem);   //Toggles show of American Toad
+		americanShowItem.setSelected(true);
+		americanShowItem.addItemListener(this);
 		
 		aztecShowItem = new JCheckBoxMenuItem("Show Aztec"); 
 		aztecShowItem.addActionListener(this);
 		settingsMenu.add(aztecShowItem);   //Toggles show of Aztec
+		aztecShowItem.setSelected(true);
+		aztecShowItem.addItemListener(this);
 		
 		volumeItem = new JCheckBoxMenuItem("Volume Toggle"); 
 		volumeItem.addActionListener(this);
 		settingsMenu.add(volumeItem);   //Toggles show of Aztec
+		volumeItem.setSelected(true);
+		volumeItem.addItemListener(this);
 
 		bar.add(settingsMenu);
 
@@ -157,6 +172,66 @@ public class Solitaire extends JPanel implements ActionListener {
 		return bar; //The bar has been created.
 	}
 
+	/**
+	 * checks if a check box has changed to show/hide buttons on the main menu
+	 * @param e
+	 */
+	@Override
+	public void itemStateChanged(ItemEvent e)
+	{
+		Object source = e.getItemSelectable();
+
+		if (source == argosShowItem)
+		{
+			if (argosShowItem.isSelected() == false)
+			{
+				MainMenu.argosBtn.setVisible(false);
+			} else {
+				MainMenu.argosBtn.setVisible(true);
+			}
+		}
+
+		if (source == annoShowItem)
+		{
+			if (annoShowItem.isSelected() == false)
+			{
+				MainMenu.annoBtn.setVisible(false);
+			} else {
+				MainMenu.annoBtn.setVisible(true);
+			}
+		}
+
+		if (source == americanShowItem)
+		{
+			if (americanShowItem.isSelected() == false)
+			{
+				MainMenu.americanBtn.setVisible(false);
+			} else {
+				MainMenu.americanBtn.setVisible(true);
+			}
+		}
+
+		if (source == aztecShowItem)
+		{
+			if (aztecShowItem.isSelected() == false)
+			{
+				MainMenu.aztecBtn.setVisible(false);
+			} else {
+				MainMenu.aztecBtn.setVisible(true);
+			}
+		}
+
+		if (source == volumeItem)
+		{
+			if (volumeItem.isSelected() == false)
+			{
+				clip.stop();
+			} else {
+				clip.start();
+			}
+		}
+
+	}
 
 	/**
 	 * Responds to menu events to set the form of Solitaire.
@@ -227,7 +302,23 @@ public class Solitaire extends JPanel implements ActionListener {
 				break;
 		}
 	}
-	
+
+	public static void Sound()
+	{
+		try
+		{
+			File file = new File("NoisestormCrabRave.wav");
+			AudioInputStream ais = AudioSystem.getAudioInputStream(Solitaire.class.getResource("/resources/" + file));
+			clip = AudioSystem.getClip();
+			clip.open(ais);
+
+			clip.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	//Creation of several high-level GUI components
 	//I made these public, so other methods could modify them
 	public static CardLayout cardLayout = new CardLayout();
@@ -249,5 +340,6 @@ public class Solitaire extends JPanel implements ActionListener {
 		frame.setSize(gamePanel.getPreferredSize());
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Sound();
 	}
 }
