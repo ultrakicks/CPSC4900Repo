@@ -240,6 +240,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
+		//Open rules
 		if(e.getSource() == rulesItem){
 			try { //Opens the rules //TODO
 				Desktop.getDesktop().open(new File("User Manual.pdf"));
@@ -248,11 +249,27 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 			return; //So we don't remove the listeners.
 		}
 		
+		//Open statistics
+		if(e.getSource() == argosStatsItem){
+			Statistics.openStatistics("Argos");
+			return; //So we don't remove the listeners.
+		} else if(e.getSource() == annoStatsItem){
+			Statistics.openStatistics("Anno");
+			return; //So we don't remove the listeners.
+		} else if(e.getSource() == americanStatsItem){
+			Statistics.openStatistics("American");
+			return; //So we don't remove the listeners.
+		} else if(e.getSource() == aztecStatsItem){
+			Statistics.openStatistics("Aztec");
+			return; //So we don't remove the listeners.
+		}
+		
 		//The listeners need to be removed or else there will still be a
 		//reference to the previous game object.
 		this.removeMouseListener(game);
 		this.removeMouseMotionListener(game);
 		
+		//Change game view
 		if(e.getSource() == mainMenuItem){
 			switchScreens(0);
 		} else if(e.getSource() == klondikeItem){
