@@ -10,6 +10,7 @@ import java.io.*;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.*;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -327,14 +328,16 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		{
 			File file = new File("NoisestormCrabRave.wav");
 			AudioInputStream ais = AudioSystem.getAudioInputStream(Solitaire.class.getResource("/resources/" + file));
-			clip = AudioSystem.getClip();
+			Clip clip = AudioSystem.getClip();
 			clip.open(ais);
+			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+			gainControl.setValue(-15.0f); //lowers the volume by 15db
 
 			clip.loop(0);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	//Creation of several high-level GUI components
