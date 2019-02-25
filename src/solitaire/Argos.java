@@ -34,7 +34,7 @@ import dataStructures.Stack;
  * 
  * @author Warren Godone-Maresca
  */
-public class Klondike implements MouseListener, MouseMotionListener {
+public class Argos implements MouseListener, MouseMotionListener {
 	/** Holds each of the tableau stacks.									*/
 	protected Tableau[] tableaux;
 
