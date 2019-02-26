@@ -34,7 +34,7 @@ public class Statistics extends JPanel implements ActionListener {
 	private JMenuItem ArgosItem, AnnoItem, 
 					  AmericanItem, AztecItem;
 
-	private JLabel gameTitle, gameTotal, gameWins, gameLosses;
+	private JLabel gameTitle, gameTotal, gameWins, gameAverageTime, gameBestTime;
 
 	private Statistics(String gameName) {
 		//Create panel objects
@@ -48,23 +48,35 @@ public class Statistics extends JPanel implements ActionListener {
 
 		gameTotal = new JLabel("Total Games: ");
 		gameTotal.setAlignmentX(CENTER_ALIGNMENT);
+		gameTotal.setBorder(new EmptyBorder(new Insets(10, 0, 0, 0)));
 		infoPanel.add(gameTotal);
 
 		//Wins losses row
+		/*
 		Container winLossBox = new Container();
 			BoxLayout winLossLayout = new BoxLayout(winLossBox, BoxLayout.X_AXIS);
 			winLossBox.setLayout(winLossLayout);
-
-			gameWins = new JLabel("Wins: ");
-			gameWins.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
-			gameWins.setAlignmentX(LEFT_ALIGNMENT);
-			winLossBox.add(gameWins);
 
 			gameLosses = new JLabel("Losses: ");
 			gameLosses.setAlignmentX(RIGHT_ALIGNMENT);
 			gameLosses.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
 			winLossBox.add(gameLosses);
-		infoPanel.add(winLossBox);
+		*/
+
+		gameWins = new JLabel("Wins: ");
+		gameWins.setBorder(new EmptyBorder(new Insets(0, 0, 10, 0)));
+		gameWins.setAlignmentX(CENTER_ALIGNMENT);
+		infoPanel.add(gameWins);
+
+		//infoPanel.add(winLossBox);
+
+		gameAverageTime = new JLabel("Average Time: ");
+		gameAverageTime.setAlignmentX(CENTER_ALIGNMENT);
+		infoPanel.add(gameAverageTime);
+
+		gameBestTime = new JLabel("Best Time: ");
+		gameBestTime.setAlignmentX(CENTER_ALIGNMENT);
+		infoPanel.add(gameBestTime);
 
 		add(infoPanel);
 
@@ -137,12 +149,21 @@ public class Statistics extends JPanel implements ActionListener {
 			
 			int totalGames = infile.nextInt();
 			int wins = infile.nextInt();
+			int totalTime = infile.nextInt();
+			int bestTime = infile.nextInt();
 
 			//Set values of each item
 			gameTitle.setText(gameName);
 			gameTotal.setText("Total Games: " + totalGames);
 			gameWins.setText("Wins: " + wins);
-			gameLosses.setText("Losses: " + (totalGames-wins));
+			int timeTaken;
+			if(totalGames > 0)
+				timeTaken = totalTime/totalGames;
+			else
+				timeTaken = 0;
+
+			gameAverageTime.setText("Average Time: " + (timeTaken/60) + "m " + (timeTaken%60) + "s");
+			gameBestTime.setText("Best Time: " + (bestTime/60) + "m " + (bestTime%60) + "s");
 
 			infile.close();
 		} catch (Exception e) {
@@ -151,12 +172,24 @@ public class Statistics extends JPanel implements ActionListener {
 
 	}
 
+	//Variable defining how long a game has lasted
+	private static long timeStarted = 0;
+	
 	/**
 	 * This set of methods adds to the current statistics of a certain game
 	 * and then, if the statistics tab is open, reloads it automatically
 	 */
-	public static void addGame(String gameName) {
+	public static void startGame(String gameName) {
 		int wins = 0, games = 0;
+		long totalTime = 0, bestTime = 0;
+
+		//If a game was started before consider all this time taken as time played.
+		if(timeStarted > 0) {
+			totalTime = (System.currentTimeMillis() - timeStarted)/1000;
+		}
+
+		timeStarted = System.currentTimeMillis();
+
 		try
 		{
 			//Open file
@@ -165,6 +198,8 @@ public class Statistics extends JPanel implements ActionListener {
 			
 			games = infile.nextInt();
 			wins = infile.nextInt();
+			totalTime += infile.nextInt();
+			bestTime = infile.nextInt();
 			infile.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -173,20 +208,7 @@ public class Statistics extends JPanel implements ActionListener {
 		games++;
 
 		//Rewrite file
-		try
-		{
-			//Open File
-			File file = new File("bin/data/" + gameName + ".txt");
-			FileWriter fileWriter = new FileWriter(file);
-			PrintWriter printWriter = new PrintWriter(fileWriter);
-			//Write wins and losses
-			printWriter.print(games);
-			printWriter.println(wins);
-			//Clean up
-			printWriter.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		writeFile(gameName, games, wins, totalTime, bestTime);
 
 		//If statsPanel is open, reload stats
 		if(statsPanel != null) {
@@ -196,6 +218,7 @@ public class Statistics extends JPanel implements ActionListener {
 
 	public static void winGame(String gameName) {
 		int wins = 0, games = 0;
+		long totalTime = 0, bestTime = 0;
 		try
 		{
 			//Open file
@@ -204,32 +227,81 @@ public class Statistics extends JPanel implements ActionListener {
 			
 			games = infile.nextInt();
 			wins = infile.nextInt();
+			totalTime = infile.nextInt();
+			bestTime = infile.nextInt();
 			infile.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		wins++;
+		if(timeStarted > 0) {
+			long timeTaken = (System.currentTimeMillis() - timeStarted)/1000;
+			totalTime += timeTaken;
+			if(timeTaken < bestTime || bestTime <= 0) {
+				bestTime = timeTaken;
+			}
+		}
+		timeStarted = 0;
 
 		//Rewrite file
+		writeFile(gameName, games, wins, totalTime, bestTime);
+
+		//If statsPanel is open, reload stats
+		if(statsPanel != null) {
+			statsPanel.reloadStatistics(gameName);
+		}
+	}
+
+	public static void leaveGame(String gameName) {
+		int wins = 0, games = 0;
+		long totalTime = 0, bestTime = 0;
+		try
+		{
+			//Open file
+			File file = new File("bin/data/" + gameName + ".txt");
+			Scanner infile = new Scanner(file);
+			
+			games = infile.nextInt();
+			wins = infile.nextInt();
+			totalTime = infile.nextInt();
+			bestTime = infile.nextInt();
+			infile.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if(timeStarted > 0) {
+			long timeTaken = (System.currentTimeMillis() - timeStarted)/1000;
+			totalTime += timeTaken;
+		}
+		timeStarted = 0;
+
+		//Rewrite file
+		writeFile(gameName, games, wins, totalTime, bestTime);
+
+		//If statsPanel is open, reload stats
+		if(statsPanel != null) {
+			statsPanel.reloadStatistics(gameName);
+		}
+	}
+
+	public static void writeFile(String gameName, int games, int wins, long totalTime, long bestTime) {
 		try
 		{
 			//Open File
 			File file = new File("bin/data/" + gameName + ".txt");
 			FileWriter fileWriter = new FileWriter(file);
 			PrintWriter printWriter = new PrintWriter(fileWriter);
-			//Write wins and losses
-			printWriter.print(games);
+			//Write game data
+			printWriter.println(games);
 			printWriter.println(wins);
+			printWriter.println(totalTime);
+			printWriter.println(bestTime);
 			//Clean up
 			printWriter.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-
-		//If statsPanel is open, reload stats
-		if(statsPanel != null) {
-			statsPanel.reloadStatistics(gameName);
 		}
 	}
 
@@ -251,7 +323,7 @@ public class Statistics extends JPanel implements ActionListener {
 			frame.setJMenuBar(statsPanel.makeMenuBar());
 			//Set size to double the height of original for java swing
 			//problems I don't understand on my machine... Oh dear.
-			frame.setSize(170, 180);
+			frame.setSize(173, 200);
 			frame.setVisible(true);
 			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		} else {
