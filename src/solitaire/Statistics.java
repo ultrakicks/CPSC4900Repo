@@ -4,7 +4,6 @@ import java.util.Scanner;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.File;
-import java.net.URL;
 
 import java.awt.Container;
 import java.awt.Insets;
@@ -32,9 +31,10 @@ public class Statistics extends JPanel implements ActionListener {
 
 	/** Points to menu items in the game panel							*/
 	private JMenuItem ArgosItem, AnnoItem, 
-					  AmericanItem, AztecItem;
+					  	AmericanItem, AztecItem;
 
-	private JLabel gameTitle, gameTotal, gameWins, gameAverageTime, gameBestTime;
+	private JLabel gameTitle, gameTotal, gameWins,
+						gameAverageTime, gameBestTime, gameWinPercentage;
 
 	private Statistics(String gameName) {
 		//Create panel objects
@@ -64,11 +64,15 @@ public class Statistics extends JPanel implements ActionListener {
 		*/
 
 		gameWins = new JLabel("Wins: ");
-		gameWins.setBorder(new EmptyBorder(new Insets(0, 0, 10, 0)));
 		gameWins.setAlignmentX(CENTER_ALIGNMENT);
 		infoPanel.add(gameWins);
 
 		//infoPanel.add(winLossBox);
+
+		gameWinPercentage = new JLabel("Wins (%): ");
+		gameWinPercentage.setAlignmentX(CENTER_ALIGNMENT);
+		gameWinPercentage.setBorder(new EmptyBorder(new Insets(0, 0, 10, 0)));
+		infoPanel.add(gameWinPercentage);
 
 		gameAverageTime = new JLabel("Average Time: ");
 		gameAverageTime.setAlignmentX(CENTER_ALIGNMENT);
@@ -157,10 +161,14 @@ public class Statistics extends JPanel implements ActionListener {
 			gameTotal.setText("Total Games: " + totalGames);
 			gameWins.setText("Wins: " + wins);
 			int timeTaken;
-			if(totalGames > 0)
+			if(totalGames > 0) {
+				gameWinPercentage.setText("Wins (%): " + ((double) wins*100)/totalGames);
 				timeTaken = totalTime/totalGames;
-			else
+			}
+			else {
+				gameWinPercentage.setText("Wins (%): N/A");
 				timeTaken = 0;
+			}
 
 			gameAverageTime.setText("Average Time: " + (timeTaken/60) + "m " + (timeTaken%60) + "s");
 			gameBestTime.setText("Best Time: " + (bestTime/60) + "m " + (bestTime%60) + "s");
@@ -323,7 +331,7 @@ public class Statistics extends JPanel implements ActionListener {
 			frame.setJMenuBar(statsPanel.makeMenuBar());
 			//Set size to double the height of original for java swing
 			//problems I don't understand on my machine... Oh dear.
-			frame.setSize(173, 200);
+			frame.setSize(175, 208);
 			frame.setVisible(true);
 			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		} else {
