@@ -17,29 +17,20 @@ import dataStructures.Queue;
 import dataStructures.Stack;
 
 /**
-* A game of Klondike Solitaire. Klondike is one of the most
-* common forms of Solitaire and is sometimes referred to simply as "Solitaire".
+* A game of Argos Solitaire. 
 * This class facilitates the movement of cards between the various stacks and 
 * alerts the user that they have won if the cards are in a winning arrangement.
-* <p>
-* In Klondike Solitaire, 28 cards are dealt into the tableaux and the rest are
-* put in the stock. The user must fill the foundation by suit in sorted order.
-* The user can accomplish this by moving sub-stacks of cards between 
-* tableaux. A substack can only be moved if all of the values of adjacent cards
-* in the substack differ by one and the colors of adjacent cards are different
-* Also for that substack to placed onto a tableau, the value of the  
-* bottom card of the substack must be one less than the top card of the tableau
-* and differ in color. Users may also turn cards from the stock to the waste and
-* use the top card of the waste.
+* 
+* In Argos, 52 cards are dealt into four rows of thirteen tableaux and another 52 are
+* put in the stock deck. The user must complete each tableau by placing a card that is double the tableau's value on top of it.
+* Values higher than 13 are expressed in excess-13 format (i.e. doubleVal = 2*value-13)
+* Users may also turn cards from the stock to the waste and use the top card of the waste.
 * 
 * @author Warren Godone-Maresca
 */
 public class Argos implements MouseListener, MouseMotionListener {
 /** Holds each of the tableau stacks.									*/
 protected Tableau[] tableaux;
-
-/** The stacks of cards that will hold the sorted cards.				*/
-protected Foundation[] foundations;
 
 /** Holds cards that were not dealt into the tableaux.					*/
 protected StackOfCards stock;
@@ -74,7 +65,7 @@ protected int yCoord;
 /** Holds the number moves that the user has made.						*/
 protected int moves;
 
-/** Holds how off-center a the mouse was when it clicks a tableau relative
+/** Holds how off-center the mouse was when it clicks a tableau relative
  *  to the cards when the mouse clicks a tableau.						*/
 protected int deltaX, deltaY;
 
@@ -97,7 +88,7 @@ public Argos(Container container){
 	this.container = container;
 	container.addMouseListener(this); 		//To respond to clicks
 	container.addMouseMotionListener(this); //and dragging.
-	container.setBackground(new Color(0, 180, 0)); //A green color.
+	container.setBackground(new Color(40, 120, 40)); //A green color.
 	container.setSize(790, 720);
 	container.setPreferredSize(container.getSize());
 
@@ -126,7 +117,6 @@ protected void init(){
 	//holds the initial tableau sizes.
 	initTableaux(deck, new int[] {1, 2, 3, 4, 5, 6, 7});
 	initStockAndWaste(deck); //Initializes the stock and waste
-	initFoundations(4);		//and foundations
 	initialized = true; //Everything is initialized,
 	container.repaint();//So we repaint.
 }
@@ -135,11 +125,12 @@ protected void init(){
  * Initializes the size, location, and number tableaux and the cards in each
  * tableau.
  * 
- * @param source	The source deck where all of the cards will be dealt from.
- * 					Cards will be removed from the source stack.
- * @param initialTableauxSizes 	An array whose length equals the number of
- * 								tableaux and each element holds
- * 								the number of cards in each tableau.
+ * @param source The source deck where all of the cards will be dealt from. Cards will be removed from the source stack.
+ * 
+ * @param initialTableauxSizes 	An array whose length equals the number of tableaux and each element holds 
+ * the number of cards in each tableau.
+ *
+ * TODO: Adjust so that it will make a 2D array of tableaux
  */
 protected void initTableaux(StackOfCards source, int[] initialTableauxSizes){
 	//Sets the number of tableau columns.
@@ -174,9 +165,10 @@ protected void initStockAndWaste(StackOfCards deck){
 	waste = new StackOfCards(2*(stock.getX()), yCoord, cardWidth, 0, 0);
 }
 
-/**
+/* Not Needed for Argos
+/*
  * Initializes the size and location of foundation stacks which are initially empty.
- */
+ **\/
 protected void initFoundations(int numOfFoundations){
 	foundations = new Foundation[numOfFoundations];
 	for(int i = 0; i < foundations.length; i++){
@@ -184,7 +176,8 @@ protected void initFoundations(int numOfFoundations){
 				yCoord, cardWidth);
 	}
 }
-
+*/
+	
 /**
  * Performs the action associated with stock when clicked. If the stock is not
  * empty, a card will be flipped from the stock to the waste, otherwise, the
@@ -210,7 +203,10 @@ protected boolean stockPressedAction(int x, int y){
 		container.repaint();
 		return true; //The action was performed.
 
-	} else if(stock.shapeOfNextCard().contains(x, y)){
+	} 
+	/* 
+	//We will not allow the stock deck to be re-dealt 
+	else if(stock.shapeOfNextCard().contains(x, y)){
 		//else if the mouse clicked the empty stock's area:
 		//Turn over all cards from the waste to the stock,
 		stock.appendStack(waste.reverseCopy());
@@ -223,6 +219,7 @@ protected boolean stockPressedAction(int x, int y){
 		container.repaint();
 		return true; //The action was performed.
 	}
+	*/
 	return false; //The action was not performed.
 }
 
@@ -247,6 +244,8 @@ protected boolean wastePressedAction(int x, int y){
 	return false; //The waste was not clicked.
 }
 
+/*	
+// We do not want the user to interact with the tableau
 /**
  * Performs the action associated with the tableaux. If one tableau contains
  * the coordinates, all cards below the mouse click will be put inUse and
@@ -256,7 +255,7 @@ protected boolean wastePressedAction(int x, int y){
  * @param y		The y coordinate.
  * @return <code>true</code> if the action was successfully performed, 
  * 			else <code>false</code>
- */
+ *\/
 protected boolean tableauxPressedAction(int x, int y){
 	for(Tableau tableau : tableaux){ //Check each tableau,
 		if(tableau.contains(x, y)){  //and if the mouse clicked a tableau,
@@ -284,17 +283,20 @@ protected boolean tableauxPressedAction(int x, int y){
 	}
 	return false; //No tableau was clicked.
 }
+*/
 
+/*
+//Also does not apply to Argos
 /**
  * 
- */
+ *\/
 protected boolean removableFromTableaux(Stack<Card> cards){
 	return cards != null
 			&& Tableau.isVisible(cards)
 			&& Tableau.inSequence(cards)
 			&& Tableau.alternatesInColor(cards);
 }
-
+*/
 
 /**
  * Performs the pressed action methods.
@@ -317,6 +319,7 @@ public void mousePressed(MouseEvent e){
 
 }
 
+//We will use this to place cards on the tableaux from the waste tableau
 /**
  * If a tableau in {@link #tableaux} contains the given coordinates and the 
  * cards in {@link #inUse} increment in value and alternated in color, then
@@ -345,6 +348,8 @@ protected boolean tableauxReleasedAction(int x, int y){
 	return false;//If we have reached this point, then no action was performed
 }
 
+/*
+//Does not apply to Argos
 /**
  * If one foundation in {@link #foundations} contains the given coordinates,
  * and only one card is in {@link #inUse}, and either:
@@ -360,7 +365,7 @@ protected boolean tableauxReleasedAction(int x, int y){
  * @param y		The y coordinate.
  * @return <code>true</code> if the action above was performed, 
  * 			else <code>false</code>
- */
+ *\/
 protected boolean foundationsReleasedAction(int x, int y){
 	if(inUse.isEmpty() || inUse.size() != 1){ //Only 1 card can be added to
 		return false;						  //a foundation at a time.
@@ -383,6 +388,7 @@ protected boolean foundationsReleasedAction(int x, int y){
 	}
 	return false;
 }
+*/
 
 /**
  * Calls all of the release action methods. But if no action is performed,
