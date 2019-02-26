@@ -1,39 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9b2949fe-657b-4565-a671-7dc4302e731a" name="Default Changelist" comment="Add">
-      <change beforePath="$PROJECT_DIR$/.idea/CPSC4900Repo.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/CPSC4900Repo.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="9b2949fe-657b-4565-a671-7dc4302e731a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/bin/META-INF/MANIFEST.MF" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/data/American Toad.txt" beforeDir="false" afterPath="$PROJECT_DIR$/bin/data/American Toad.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/data/Anno Domini.txt" beforeDir="false" afterPath="$PROJECT_DIR$/bin/data/Anno Domini.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/data/Argos.txt" beforeDir="false" afterPath="$PROJECT_DIR$/bin/data/Argos.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/data/Aztec Pyramid.txt" beforeDir="false" afterPath="$PROJECT_DIR$/bin/data/Aztec Pyramid.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/resources/Anno.txt" beforeDir="false" afterPath="$PROJECT_DIR$/bin/resources/Anno.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.md" beforeDir="false" afterPath="$PROJECT_DIR$/index.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/card/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/card/Card.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/card/Foundation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/card/Foundation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/card/HoldingCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/card/HoldingCell.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/card/StackOfCards.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/card/StackOfCards.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/card/Suit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/card/Suit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/card/Tableau.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/card/Tableau.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dataStructures/Queue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dataStructures/Queue.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dataStructures/Stack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dataStructures/Stack.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dataStructures/StackADT.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dataStructures/StackADT.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/solitaire/Statistics.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/solitaire/Statistics.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/solitaire/Argos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/solitaire/Argos.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/solitaire/FreeCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/solitaire/FreeCell.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/solitaire/Klondike.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/solitaire/Klondike.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/solitaire/MainMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/solitaire/MainMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/solitaire/Solitaire.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/solitaire/Solitaire.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/solitaire/Spider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/solitaire/Spider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/solitaire/StackOfCardsAnimator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/solitaire/StackOfCardsAnimator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/solitaire/Statistics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/solitaire/Statistics.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/solitaire/Yukon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/solitaire/Yukon.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/solitaire/test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/solitaire/test.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -43,29 +19,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/solitaire/Solitaire.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="380" column="67" selection-start-line="380" selection-start-column="67" selection-end-line="380" selection-end-column="67" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/solitaire/Spider.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-4379">
-              <caret line="11" column="3" selection-start-line="11" selection-start-column="3" selection-end-line="11" selection-end-column="3" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/solitaire/Argos.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="29" column="25" selection-start-line="29" selection-start-column="25" selection-end-line="29" selection-end-column="25" />
+            <state relative-caret-position="269">
+              <caret line="26" column="3" lean-forward="true" selection-start-line="26" selection-start-column="3" selection-end-line="26" selection-end-column="3" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -73,35 +31,15 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/solitaire/Klondike.java">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/solitaire/Argos.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2064">
-              <caret line="100" column="8" selection-start-line="100" selection-start-column="8" selection-end-line="101" selection-end-column="56" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/solitaire/MainMenu.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2880">
-              <caret line="123" column="65" selection-start-line="123" selection-start-column="65" selection-end-line="123" selection-end-column="65" />
+            <state relative-caret-position="327">
+              <caret line="576" column="13" lean-forward="true" selection-start-line="576" selection-start-column="13" selection-end-line="576" selection-end-column="13" />
               <folding>
-                <element signature="e#1927#1928#0" expanded="true" />
-                <element signature="e#1990#1991#0" expanded="true" />
-                <element signature="e#2182#2183#0" expanded="true" />
-                <element signature="e#2247#2248#0" expanded="true" />
-                <element signature="e#2430#2431#0" expanded="true" />
-                <element signature="e#2496#2497#0" expanded="true" />
-                <element signature="e#2680#2681#0" expanded="true" />
-                <element signature="e#2740#2741#0" expanded="true" />
-                <element signature="e#2929#2930#0" expanded="true" />
-                <element signature="e#2992#2993#0" expanded="true" />
-                <element signature="e#3183#3184#0" expanded="true" />
-                <element signature="e#3246#3247#0" expanded="true" />
-                <element signature="e#3432#3433#0" expanded="true" />
-                <element signature="e#3489#3490#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#13836#13837#0" expanded="true" />
+                <element signature="e#13894#13895#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -111,20 +49,18 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>content</find>
-      <find>sound</find>
+      <find>argos</find>
+      <find>foundation</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
-    <option name="UPDATE_CHANGES_POLICY" value="SHELVE" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/solitaire/Argos.java" />
-        <option value="$PROJECT_DIR$/src/solitaire/Spider.java" />
         <option value="$PROJECT_DIR$/src/solitaire/Solitaire.java" />
+        <option value="$PROJECT_DIR$/src/solitaire/Argos.java" />
       </list>
     </option>
   </component>
@@ -140,14 +76,35 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
-      <pane id="ProjectPane" />
       <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="CPSC4900Repo" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CPSC4900Repo" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CPSC4900Repo" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CPSC4900Repo" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CPSC4900Repo" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CPSC4900Repo" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="solitaire" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1550976409940" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1551222141730" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
   </component>
@@ -200,16 +157,16 @@
     <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19189766" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18017058" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Capture Tool" order="2" />
-      <window_info id="Image Layers" order="3" />
-      <window_info id="Designer" order="4" />
-      <window_info id="UI Designer" order="5" />
+      <window_info id="Image Layers" order="2" />
+      <window_info id="Designer" order="3" />
+      <window_info id="UI Designer" order="4" />
+      <window_info id="Capture Tool" order="5" />
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.30653805" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.30653805" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -217,7 +174,7 @@
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info anchor="bottom" id="Messages" order="10" weight="0.3290461" />
+      <window_info anchor="bottom" id="Messages" order="10" weight="0.35691318" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -228,77 +185,33 @@
       <window_info anchor="right" id="Palette&#9;" order="7" />
     </layout>
   </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="RECENT_FILTERS">
-      <map>
-        <entry key="Branch">
-          <value>
-            <list />
-          </value>
-        </entry>
-        <entry key="User">
-          <value>
-            <list />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <option name="LAST_COMMIT_MESSAGE" value="" />
-  </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/solitaire/Klondike.java">
+    <entry file="file://$PROJECT_DIR$/src/solitaire/MainMenu.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2064">
-          <caret line="100" column="8" selection-start-line="100" selection-start-column="8" selection-end-line="101" selection-end-column="56" />
+        <state relative-caret-position="41">
+          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/solitaire/Argos.java">
+    <entry file="file://$PROJECT_DIR$/src/solitaire/Solitaire.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="29" column="25" selection-start-line="29" selection-start-column="25" selection-end-line="29" selection-end-column="25" />
+        <state relative-caret-position="269">
+          <caret line="26" column="3" lean-forward="true" selection-start-line="26" selection-start-column="3" selection-end-line="26" selection-end-column="3" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/solitaire/Spider.java">
+    <entry file="file://$PROJECT_DIR$/src/solitaire/Argos.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4379">
-          <caret line="11" column="3" selection-start-line="11" selection-start-column="3" selection-end-line="11" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/solitaire/MainMenu.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2880">
-          <caret line="123" column="65" selection-start-line="123" selection-start-column="65" selection-end-line="123" selection-end-column="65" />
+        <state relative-caret-position="327">
+          <caret line="576" column="13" lean-forward="true" selection-start-line="576" selection-start-column="13" selection-end-line="576" selection-end-column="13" />
           <folding>
-            <element signature="e#1927#1928#0" expanded="true" />
-            <element signature="e#1990#1991#0" expanded="true" />
-            <element signature="e#2182#2183#0" expanded="true" />
-            <element signature="e#2247#2248#0" expanded="true" />
-            <element signature="e#2430#2431#0" expanded="true" />
-            <element signature="e#2496#2497#0" expanded="true" />
-            <element signature="e#2680#2681#0" expanded="true" />
-            <element signature="e#2740#2741#0" expanded="true" />
-            <element signature="e#2929#2930#0" expanded="true" />
-            <element signature="e#2992#2993#0" expanded="true" />
-            <element signature="e#3183#3184#0" expanded="true" />
-            <element signature="e#3246#3247#0" expanded="true" />
-            <element signature="e#3432#3433#0" expanded="true" />
-            <element signature="e#3489#3490#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#13836#13837#0" expanded="true" />
+            <element signature="e#13894#13895#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/solitaire/Solitaire.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="380" column="67" selection-start-line="380" selection-start-column="67" selection-end-line="380" selection-end-column="67" />
         </state>
       </provider>
     </entry>
@@ -308,12 +221,10 @@
       <state key="ArtifactsStructureConfigurable.UI">
         <settings>
           <artifact-editor />
-          <last-edited>SolPack:jar</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
                 <option value="0.2" />
-                <option value="0.5" />
               </list>
             </option>
           </splitter-proportions>
@@ -344,7 +255,7 @@
       </state>
       <state key="JdkListConfigurable.UI">
         <settings>
-          <last-edited>11</last-edited>
+          <last-edited>10</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
