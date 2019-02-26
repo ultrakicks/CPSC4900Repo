@@ -255,13 +255,13 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 			Statistics.openStatistics("Argos");
 			return; //So we don't remove the listeners.
 		} else if(e.getSource() == annoStatsItem){
-			Statistics.openStatistics("Anno");
+			Statistics.openStatistics("Anno Domini");
 			return; //So we don't remove the listeners.
 		} else if(e.getSource() == americanStatsItem){
-			Statistics.openStatistics("American");
+			Statistics.openStatistics("American Toad");
 			return; //So we don't remove the listeners.
 		} else if(e.getSource() == aztecStatsItem){
-			Statistics.openStatistics("Aztec");
+			Statistics.openStatistics("Aztec Pyramid");
 			return; //So we don't remove the listeners.
 		}
 		
