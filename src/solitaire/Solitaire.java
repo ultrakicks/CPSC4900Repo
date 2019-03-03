@@ -175,7 +175,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 
 	/**
 	 * checks if a check box has changed to show/hide buttons on the main menu
-	 * @param e
+	 * @param e - Event generated when box is checked/unchecked
 	 */
 	@Override
 	public void itemStateChanged(ItemEvent e)
@@ -184,7 +184,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 
 		if (source == argosShowItem)
 		{
-			if (argosShowItem.isSelected() == false)
+			if (argosShowItem.isSelected())
 			{
 				MainMenu.argosBtn.setVisible(false);
 			} else {
@@ -194,7 +194,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 
 		if (source == annoShowItem)
 		{
-			if (annoShowItem.isSelected() == false)
+			if (annoShowItem.isSelected())
 			{
 				MainMenu.annoBtn.setVisible(false);
 			} else {
@@ -204,7 +204,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 
 		if (source == americanShowItem)
 		{
-			if (americanShowItem.isSelected() == false)
+			if (americanShowItem.isSelected())
 			{
 				MainMenu.americanBtn.setVisible(false);
 			} else {
@@ -214,7 +214,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 
 		if (source == aztecShowItem)
 		{
-			if (aztecShowItem.isSelected() == false)
+			if (aztecShowItem.isSelected())
 			{
 				MainMenu.aztecBtn.setVisible(false);
 			} else {
@@ -224,10 +224,9 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 
 		if (source == volumeItem)
 		{
-			if (volumeItem.isSelected() == false)
-			{
+			if (!volumeItem.isSelected())
 				clip.stop();
-			} else {
+			else {
 				clip.setFramePosition(0);
 				clip.loop(0);
 			}
@@ -328,7 +327,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		{
 			File file = new File("NoisestormCrabRave.wav");
 			AudioInputStream ais = AudioSystem.getAudioInputStream(Solitaire.class.getResource("/resources/" + file));
-			Clip clip = AudioSystem.getClip();
+			clip = AudioSystem.getClip();
 			clip.open(ais);
 			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 			gainControl.setValue(-15.0f); //lowers the volume by 15db
@@ -361,6 +360,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		frame.setSize(gamePanel.getPreferredSize());
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 		Sound();
 	}
 }
