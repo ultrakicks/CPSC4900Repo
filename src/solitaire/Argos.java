@@ -32,6 +32,9 @@ public class Argos implements MouseListener, MouseMotionListener {
 /** Holds each of the tableau stacks.									*/
 protected Tableau[] tableaux;
 
+/** The stacks of cards that will hold the sorted cards.				*/
+protected Foundation[] foundations;
+
 /** Holds cards that were not dealt into the tableaux.					*/
 protected StackOfCards stock;
 
@@ -165,10 +168,10 @@ protected void initStockAndWaste(StackOfCards deck){
 	waste = new StackOfCards(2*(stock.getX()), yCoord, cardWidth, 0, 0);
 }
 
-/* Not Needed for Argos
-/*
+// Not Needed for Argos
+/**
  * Initializes the size and location of foundation stacks which are initially empty.
- **\/
+**/
 protected void initFoundations(int numOfFoundations){
 	foundations = new Foundation[numOfFoundations];
 	for(int i = 0; i < foundations.length; i++){
@@ -176,7 +179,7 @@ protected void initFoundations(int numOfFoundations){
 				yCoord, cardWidth);
 	}
 }
-*/
+
 	
 /**
  * Performs the action associated with stock when clicked. If the stock is not
@@ -244,7 +247,7 @@ protected boolean wastePressedAction(int x, int y){
 	return false; //The waste was not clicked.
 }
 
-/*	
+
 // We do not want the user to interact with the tableau
 /**
  * Performs the action associated with the tableaux. If one tableau contains
@@ -255,7 +258,7 @@ protected boolean wastePressedAction(int x, int y){
  * @param y		The y coordinate.
  * @return <code>true</code> if the action was successfully performed, 
  * 			else <code>false</code>
- *\/
+ */
 protected boolean tableauxPressedAction(int x, int y){
 	for(Tableau tableau : tableaux){ //Check each tableau,
 		if(tableau.contains(x, y)){  //and if the mouse clicked a tableau,
@@ -283,20 +286,17 @@ protected boolean tableauxPressedAction(int x, int y){
 	}
 	return false; //No tableau was clicked.
 }
-*/
 
-/*
+
+
 //Also does not apply to Argos
-/**
- * 
- *\/
 protected boolean removableFromTableaux(Stack<Card> cards){
 	return cards != null
 			&& Tableau.isVisible(cards)
 			&& Tableau.inSequence(cards)
 			&& Tableau.alternatesInColor(cards);
 }
-*/
+
 
 /**
  * Performs the pressed action methods.
@@ -348,7 +348,7 @@ protected boolean tableauxReleasedAction(int x, int y){
 	return false;//If we have reached this point, then no action was performed
 }
 
-/*
+
 //Does not apply to Argos
 /**
  * If one foundation in {@link #foundations} contains the given coordinates,
@@ -365,7 +365,7 @@ protected boolean tableauxReleasedAction(int x, int y){
  * @param y		The y coordinate.
  * @return <code>true</code> if the action above was performed, 
  * 			else <code>false</code>
- *\/
+ */
 protected boolean foundationsReleasedAction(int x, int y){
 	if(inUse.isEmpty() || inUse.size() != 1){ //Only 1 card can be added to
 		return false;						  //a foundation at a time.
@@ -388,7 +388,7 @@ protected boolean foundationsReleasedAction(int x, int y){
 	}
 	return false;
 }
-*/
+
 
 /**
  * Calls all of the release action methods. But if no action is performed,
