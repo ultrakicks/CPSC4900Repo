@@ -327,42 +327,42 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 				frame.setJMenuBar(gamePanel.makeMainMenuBar());
 				break;
 			case ARGOS:
-				game = new Argos(contentPane);
+				game = new Argos(gamePanel);
 				frame.setJMenuBar(gamePanel.makeGameMenuBar());
 				cardLayout.next(contentPane);
 				break;
 			case AMERICAN_TOAD:
-				game = new Klondike(contentPane);
+				game = new Klondike(gamePanel);
 				frame.setJMenuBar(gamePanel.makeGameMenuBar());
 				cardLayout.next(contentPane);
 				break;
 			case ANNO_DOMINI:
-				game = new Klondike(contentPane);
+				game = new Klondike(gamePanel);
 				frame.setJMenuBar(gamePanel.makeGameMenuBar());
 				cardLayout.next(contentPane);
 				break;
 			case AZTEC_PYRAMIDS:
-				game = new Klondike(contentPane);
+				game = new Klondike(gamePanel);
 				frame.setJMenuBar(gamePanel.makeGameMenuBar());
 				cardLayout.next(contentPane);
 				break;
 			case KLONDIKE:
-				game = new Klondike(contentPane);
+				game = new Klondike(gamePanel);
 				frame.setJMenuBar(gamePanel.makeGameMenuBar());
 				cardLayout.next(contentPane);
 				break;
 			case SPIDER_EASY:
-				game = new Spider(contentPane, true);
+				game = new Spider(gamePanel, true);
 				frame.setJMenuBar(gamePanel.makeGameMenuBar());
 				cardLayout.next(contentPane);
 				break;
 			case SPIDER_HARD:
-				game = new Spider(contentPane, false);
+				game = new Spider(gamePanel, false);
 				frame.setJMenuBar(gamePanel.makeGameMenuBar());
 				cardLayout.next(contentPane);
 				break;
 			case YUKON:
-				game = new Yukon(contentPane);
+				game = new Yukon(gamePanel);
 				frame.setJMenuBar(gamePanel.makeGameMenuBar());
 				cardLayout.next(contentPane);
 				break;

@@ -3,6 +3,7 @@ package solitaire;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.MouseEvent;
+import java.awt.Toolkit;
 
 import card.Card;
 import card.Foundation;
@@ -27,8 +28,6 @@ public class Argos extends Klondike {
 	 */
 	public Argos(Container container){
 		super(container);
-		container.setBackground(new Color(0, 7, 255));
-
 	}
 
 	/**
