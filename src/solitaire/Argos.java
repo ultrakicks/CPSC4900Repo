@@ -1,12 +1,9 @@
 package solitaire;
 
-import java.awt.Color;
-import java.awt.Container;
+import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.awt.Toolkit;
 
 import card.Card;
-import card.Foundation;
 import card.StackOfCards;
 import card.Tableau;
 import dataStructures.Stack;
@@ -22,12 +19,36 @@ import dataStructures.Stack;
  */
 public class Argos extends Klondike {
 
+	//TODO: Use these max values to set screen to full size, scale cards
+	//Maximum width and height of screen
+	private int maxHeight;
+	private int maxWidth;
+	private int screenWidth;
+	private int screenHeight;
+	{
+		//Get screen size. We base all of our positioning on screen size so everything scales
+		Toolkit sys = Toolkit.getDefaultToolkit();
+		maxHeight = (int) sys.getScreenSize().getHeight();
+		maxWidth = (int) sys.getScreenSize().getWidth();
+	}
 	/**
 	 * Instantiates the game and the panel.
 	 * @param container The container for the game.
 	 */
 	public Argos(Container container){
 		super(container);
+
+		//TODO: figure out how to set size of game window - this method doesn't work
+		//container.setSize(maxWidth, maxHeight);
+		//container.setPreferredSize(container.getSize());
+
+		this.container = container;
+		screenHeight = container.getHeight();
+		screenWidth  = container.getWidth();
+
+		yCoord = (int) (screenHeight * 0.1);
+		cardWidth = (int) (screenWidth * 0.05);
+		offset = cardWidth/2;
 	}
 
 	/**
@@ -35,17 +56,75 @@ public class Argos extends Klondike {
 	 */
 	@Override
 	protected void init(){
+		//TODO: Split into two decks, make sure four kings are in each
+		//Two standard decks, shuffled together, less the kings
 		StackOfCards deck = new StackOfCards();
-		deck.fillBySuit();
-		deck.fillBySuit(); //Holds 104 cards.
+		//48 random cards and four kings for play tableaux
+		StackOfCards playDeck = new StackOfCards();
+
+		//48 random cards and four kings for stock deck
+		StackOfCards stockDeck = new StackOfCards();
+
+		//Add two of each value/suit combination except kings to the deck (96 cards)
+		for (card.Suit suit: card.Suit.values()) {
+			for (int i=1; i<13; i++) {
+				deck.push(new Card(suit,i,deck.getX(),deck.getY(),cardWidth,false));
+				deck.push(new Card(suit,i,deck.getX(),deck.getY(),cardWidth,false));
+			}
+		}
+
+		//Shuffle the cards
 		deck.shuffle();
 
-		initTableaux(deck, new int[] {6, 6, 6, 6, 5, 5, 5, 5, 5, 5});
-		initFoundations(0);
-		initStockAndWaste(deck);
+		//Split into stock and play decks (still no kings yet)
+		for (int i=0; i<48; i++){
+			stockDeck.push(deck.pop());
+			playDeck.push(deck.pop());
+		}
 
+		//Add one king of each suit to each deck
+		for (card.Suit suit : card.Suit.values()) {
+			stockDeck.push(new Card(suit,13,deck.getX(),deck.getY(),cardWidth,false));
+			playDeck.push(new Card(suit,13,deck.getX(),deck.getY(),cardWidth,false));
+		}
+
+		//Shuffle kings in to stock deck
+		stockDeck.shuffle();
+
+		initTableaux(playDeck);
+		initStockAndWaste(stockDeck);
+
+		//Automatically draw the first card
+		stockPressedAction(stock.getX(),stock.getY());
 		initialized = true;
 		container.repaint();
+	}
+
+	protected void initTableaux(StackOfCards source) {
+		//Sets the number of tableau columns.
+		tableaux = new Tableau[52];
+
+		//Initialize the thirteenth column, with kings
+		for (int k = 0; k<4; k++) {
+			tableaux[k] = new Tableau(
+					(cardWidth * 5 + (cardWidth + offset/2) * 12),
+					(int) (yCoord + (k*(2.25*cardWidth))), cardWidth, offset);
+
+			tableaux[k].push(source.pop());
+		}
+
+		//Initializes each tableau except for the thirteenth column with remaining random cards
+		for(int j = 0; j <  4; j++){
+			for (int i = 1; i < 13; i++) {
+				//Instantiates each tableau
+				tableaux[(i-1)+(12*j)+4] = new Tableau(
+						(cardWidth * 5 + (cardWidth + offset/2) * (i-1)),
+						(int) (yCoord + (j*(2.25*cardWidth))), cardWidth, offset);
+
+				tableaux[(i-1)+(12*j)+4].push(source.pop());          //source to tableau
+				tableaux[(i-1)+(12*j)+4].peek().setHidden(false);
+			}
+		}
 	}
 
 	/**
@@ -54,9 +133,11 @@ public class Argos extends Klondike {
 	 */
 	@Override
 	protected void initStockAndWaste(StackOfCards deck){
-		stock = new StackOfCards(tableaux[0].getX(), yCoord, cardWidth, 0, 0);
+		stock = new StackOfCards((int) (cardWidth*1.5), yCoord, cardWidth, 0, 0);
 		stock.appendStack(deck); //The stock contains all of its cards.
 		stock.peek().setHidden(true); //So that the stock is hidden.
+
+		waste = new StackOfCards(stock.getX(), (int) (yCoord+(cardWidth*6.75)),cardWidth,0,0);
 	}
 
 	/**
@@ -67,22 +148,18 @@ public class Argos extends Klondike {
 	 */
 	@Override
 	protected boolean stockPressedAction(int x, int y){
-		if(!stock.contains(x, y)){
-			return false;
-		}
+		if(stock.contains(x, y)) {
+			//If the stock was clicked:
+			waste.push(stock.pop());     //Move the top card from stock to waste.
+			waste.peek().setHidden(false);//And show it.
 
-		for(Tableau tableau : tableaux){
-			if(stock.isEmpty()) //If the stock is empty, then there are no cards
-				break;			//to move to a tableau.
-
-			stock.peek().setHidden(false);
-			super.animateTopCardOf(stock, tableau);
+			if (!stock.isEmpty())
+				stock.peek().setHidden(true);//Hides the new top card of the stack.
+			moves++; //This counts as a move.
+			container.repaint();
+			return true; //The action was performed.
 		}
-		if(!stock.isEmpty()){
-			stock.peek().setHidden(true);
-		}
-		container.repaint();
-		return true;
+		return false;
 	}
 
 	/**
@@ -95,9 +172,35 @@ public class Argos extends Klondike {
 	 * @return <code>true</code> if the action above was performed,
 	 * 			else <code>false</code>
 	 */
+	@Override
 	protected boolean tableauxReleasedAction(int x, int y){
-			return super.tableauxReleasedAction(x, y);
+		for(Tableau tableau : tableaux){ //Check each of the tableaux
+			if(tableau.contains(x, y) || tableau.shapeOfNextCard().contains(x, y)){
+				//Then we check if the inUse stack can be appended to the
+				//tableau per the rules of solitaire.
+				if (tableau.size()==1 && inUse.size()==1) {
+					try {
+						tableau.appendStack(inUse);
+						//This code is not executed if an exception was thrown.
+						inUse.clear();
+						flipLastStack();
+
+						//If we emptied the waste stack, deal another card automatically
+						if (waste.isEmpty()) {
+							stockPressedAction(stock.getX(),stock.getY());
+						}
+
+						return true;
+					} catch (IllegalArgumentException ex) {}
+				}
+			}
+		}
+		return false;//If we have reached this point, then no action was performed
 	}
+
+	//Cards cannot be picked up from the tableaux except for the last move
+	@Override
+	protected boolean removableFromTableaux(Stack<Card> cards) { return false;}
 
 	/**
 	 * Performs the actions associated with the stack that is pressed.
@@ -106,51 +209,42 @@ public class Argos extends Klondike {
 	public void mousePressed(MouseEvent e){
 		int x = e.getX(), y = e.getY();
 
-		if(inUse.isEmpty() && !stockPressedAction(x, y)){
+		if(inUse.isEmpty() && !stockPressedAction(x, y) && !wastePressedAction(x,y)){
 			//Do the tableaux action if the stock action wasn't done.
 			tableauxPressedAction(x, y);
 		}
 	}
 
 	/**
-	 * Appends the cards in use to first available foundation if the cards in use
-	 * are in sequence from ace to king.
-	 * Note: The mouse can be released anywhere, the parameters were inherited
-	 *       but are unused here.
-	 *
-	 * @return 	<code>true</code> if the cards were in sequence and added to a
-	 * 			foundation, otherwise <code>false</code>.
+	 * TODO: Set up win condition
 	 */
-	@Override
-	protected boolean foundationsReleasedAction(int x, int y){
-		if(inUse.size() < 13 || inUse.peek().getValue() != 1){
-			//Then the cards are not in sequence from ace to king.
-			return false;
-		} else {
-			for(Foundation foundation : foundations){
-
-				if(foundation.isEmpty()){ //If that foundation is empty,
-					//Then we append each card in use to it.
-					while(!inUse.isEmpty()){
-						animateTopCardOf(inUse, foundation);
-					}
-					flipLastStack(); //Flips the top card of the last stack.
-					return true; //The action was performed.
-				}
-			}
-		}
-		return false; //The action was not performed.
+	public  boolean hasWon(){
+		return false;
 	}
 
 	/**
-	 * Determines if the user has won (if all foundations are nonempty).
+	 * Paints all of the stacks. This should be placed in the container's paint
+	 * method.
+	 * Same paint method as Klondike, without foundations
 	 */
-	public  boolean hasWon(){
-		for(Foundation foundation : foundations){
-			if(foundation.isEmpty()){ //Then there exists an empty foundation.
-				return false;
+	public void paint(Graphics pane){
+		if(initialized){
+			for(StackOfCards tableau : tableaux){
+				tableau.draw(pane);
+			}
+			if(stock != null && !stock.isEmpty())
+				stock.peek().draw(pane);
+			if(waste != null && !waste.isEmpty())
+				waste.peek().draw(pane);
+			if(inUse != null && !inUse.isEmpty())
+				inUse.draw(pane);
+
+			updateAnimationQueue();
+			for(StackOfCards stack : animationQueue){
+				if(!stack.isEmpty()){
+					stack.draw(pane);
+				}
 			}
 		}
-		return true; //Then no foundation is empty.
 	}
 }
