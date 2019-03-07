@@ -127,6 +127,11 @@ public class Argos extends Klondike {
 		}
 	}
 
+	@Override
+	protected boolean foundationsReleasedAction(int x, int y) {
+		return false;
+	}
+
 	/**
 	 * Just initializes the stock as the waste isn't used.
 	 * Pre: the tableaux have been initialized.
