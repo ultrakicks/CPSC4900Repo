@@ -95,13 +95,14 @@ public class PyramidOfCards extends BinaryStack<Card> {
 		int remsize = size+1; int level = 0;
 		while(remsize > 0) {
 			level++;
-			if(remsize % 2 == 0)
-				offx = offx*2 - (offsetX*level);
-			else
-				offx = offx*2 + (offsetX*level);
-			remsize /= 2;
-			offy += offsetY;
+			if(remsize-level <= 0) {
+				int cardsOff = remsize*2-(level+1);
+				offx = offsetX * cardsOff;
+			}
+			remsize -= level;
 		}
+		offy = offsetY * level;
+
 		card.setLocation(x + offx, y + offy);
 		card.setSize(cardWidth); //And so is the size.
 		super.push(card);
@@ -194,15 +195,14 @@ public class PyramidOfCards extends BinaryStack<Card> {
 				int remsize = size+1; int level = 0;
 				while(remsize > 0) {
 					level++;
-					if(remsize % 2 == 0)
-						offx = offx*2 - (offsetX*level);
-					else
-						offx = offx*2 + (offsetX*level);
-					remsize /= 2;
-					offy += offsetY;
+					if(remsize-level <= 0) {
+						int cardsOff = remsize*2-(level+1);
+						offx = offsetX * cardsOff;
+					}
+					remsize -= level;
 				}
-				((Card)queue[node]).setLocation( //Continued next line.
-						x + offx, y + offy);
+				offy = offsetY * level;
+				((Card)queue[node]).setLocation(x + offx, y + offy);
 
 			}
 		}
@@ -276,13 +276,13 @@ public class PyramidOfCards extends BinaryStack<Card> {
 		int remsize = size+1; int level = 0;
 		while(remsize > 0) {
 			level++;
-			if(remsize % 2 == 0)
-				offx = offx*2 - (offsetX*level);
-			else
-				offx = offx*2 + (offsetX*level);
-			remsize /= 2;
-			offy += offsetY;
+			if(remsize-level <= 0) {
+				int cardsOff = remsize*2-(level+1);
+				offx = offsetX * cardsOff;
+			}
+			remsize -= level;
 		}
+		offy = offsetY * level;
 		return new RoundRectangle2D.Double(
 				x - cardWidth/2 + offx, y - cardWidth*3/4  + offy, 
 				cardWidth, cardWidth*3/2, cardWidth/10, cardWidth/10);

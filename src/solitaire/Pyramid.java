@@ -45,10 +45,15 @@ public class Pyramid extends Klondike {
 	 */
 	public Pyramid(Container container){
 		super(container);
+	}
 
-		//Set Tableaux row and other extras lower to make room for pyramid
-		yCoord = container.getHeight()/2; //Before was /12
-		xCoord = container.getWidth()/2; //Before was /12
+	/*
+	 * Sets the default yCoord (y of this row of tableaus)
+	 * Can be overriden by games that decide the tableaus should be moved down
+	 */
+	protected void setCoord() {
+		yCoord = container.getHeight()/2;
+		xCoord = 100;
 	}
 
 	/**
@@ -100,7 +105,7 @@ public class Pyramid extends Klondike {
 	protected void initPyramid(StackOfCards source, int size) {
 
 		pyramid = new PyramidOfCards(xCoord, cardWidth/2,
-			cardWidth, cardWidth/2+5, offset, size);
+			cardWidth, cardWidth/2 + 2, offset, size);
 
 		//Fill pyramid
 		for(int i=1; i <= size; i++) {

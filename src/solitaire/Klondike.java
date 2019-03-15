@@ -101,7 +101,7 @@ public class Klondike implements MouseListener, MouseMotionListener {
 		container.setSize(790, 720);
 		container.setPreferredSize(container.getSize());
 
-		yCoord = container.getHeight()/12;
+		setCoord();
 		cardWidth = 60;
 		offset = cardWidth/2;
 
@@ -110,6 +110,14 @@ public class Klondike implements MouseListener, MouseMotionListener {
 		animationQueue = new Queue<StackOfCards>();
 
 		init(); //Initializes all of the stacks.
+	}
+
+	/*
+	 * Sets the default yCoord (y of this row of tableaus)
+	 * Can be overriden by games that decide the tableaus should be moved down
+	 */
+	protected void setCoord() {
+		yCoord = container.getHeight()/12;
 	}
 
 	/**
