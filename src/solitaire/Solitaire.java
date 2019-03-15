@@ -342,7 +342,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 				cardLayout.next(contentPane);
 				break;
 			case AZTEC_PYRAMIDS:
-				game = new Klondike(gamePanel);
+				game = new Pyramid(gamePanel);
 				frame.setJMenuBar(gamePanel.makeGameMenuBar());
 				cardLayout.next(contentPane);
 				break;
