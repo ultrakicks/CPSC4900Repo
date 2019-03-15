@@ -51,9 +51,9 @@ public class Pyramid extends Klondike {
 	 * Sets the default yCoord (y of this row of tableaus)
 	 * Can be overriden by games that decide the tableaus should be moved down
 	 */
-	protected void setCoord() {
+	protected void setCoord(Container container) {
 		yCoord = container.getHeight()/2;
-		xCoord = 100;
+		xCoord = container.getWidth()/2;
 	}
 
 	/**

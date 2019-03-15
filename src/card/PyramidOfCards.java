@@ -246,24 +246,28 @@ public class PyramidOfCards extends BinaryStack<Card> {
 	 * But if the stack is empty, the shape of a card will be drawn where a card
 	 * would be located if added and with the corresponding size.
 	 */
-	public void draw(Graphics pane){
+	public void draw(Graphics pane){/*
 		if(isEmpty()){
 			drawOutlineOfNextCard(pane);
 		} else {
 			draw(pane, 1);
+		}*/
+		for(int index=0; index <= size; index++) {
+			if(queue[index] != null)
+				((Card) queue[index]).draw(pane);
 		}
 	}
 
 	/**
 	 * Draws all cards below a given node containing a card.
-	 */
+	 *//*
 	private void draw(Graphics pane, int val){
 		if(val <= size && queue[val] != null){
 			draw(pane, val*2);
 			draw(pane, val*2+1);
 			((Card) queue[val]).draw(pane);
 		}
-	}
+	}*/
 
 	/**
 	 * Returns the shape of a card where a card will be located if added
