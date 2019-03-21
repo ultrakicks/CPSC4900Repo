@@ -264,4 +264,30 @@ public class Card implements Comparable<Card> {
 	public boolean colorEquals(Card card){
 		return SUIT.getColor() == card.getSuit().getColor();
 	}
+
+	/**
+	 * Compares the color of this card with some other card.
+	 * @param card The card to be compared with.
+	 * @return <code>true</code> if this card and the other card have the same
+	 * color, otherwise <code>false</code>.
+	 */
+	@Override
+	public boolean equals(Object comp) {
+		Card card = (Card) comp;
+		if(colorEquals(card) && compareTo(card) == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Compares the color of this card with some other card.
+	 * @param card The card to be compared with.
+	 * @return <code>true</code> if this card and the other card have the same
+	 * color, otherwise <code>false</code>.
+	 */
+	public boolean colliding(int pointX, int pointY){
+		return (Math.abs(pointY - y) < height/2 && Math.abs(pointX - x) < width/2);
+	}
 }
