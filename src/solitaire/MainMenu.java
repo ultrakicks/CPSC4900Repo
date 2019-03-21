@@ -14,10 +14,6 @@ public class MainMenu extends JPanel
 	public static JButton annoBtn = new JButton("Anno Domini");
 	public static JButton americanBtn = new JButton("American Toad");
 	public static JButton aztecBtn = new JButton("Aztec Pyramids");
-	public static JButton klondikeBtn = new JButton("Klondike");
-	public static JButton spiderEasyBtn = new JButton("Spider (Easy)");
-	public static JButton spiderHardBtn = new JButton("Spider (Hard)");
-	public static JButton yukonBtn = new JButton("Yukon");
 
     public MainMenu() 
     {
@@ -89,53 +85,5 @@ public class MainMenu extends JPanel
 			}
 		});
 		add(aztecBtn, gbc);
-
-		/**
-		 * button listener for aztec
-		 */
-		klondikeBtn.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent event)
-			{
-				Solitaire.switchScreens(Solitaire.games.KLONDIKE);
-			}
-		});
-		add(klondikeBtn, gbc);
-
-		/**
-		 * button listener for aztec
-		 */
-		spiderEasyBtn.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent event)
-			{
-				Solitaire.switchScreens(Solitaire.games.SPIDER_EASY);
-			}
-		});
-		add(spiderEasyBtn, gbc);
-
-		/**
-		 * button listener for aztec
-		 */
-		spiderHardBtn.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent event)
-			{
-				Solitaire.switchScreens(Solitaire.games.SPIDER_HARD);
-			}
-		});
-		add(spiderHardBtn, gbc);
-
-		/**
-		 * button listener for aztec
-		 */
-		yukonBtn.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent event)
-			{
-				Solitaire.switchScreens(Solitaire.games.YUKON);
-			}
-		});
-		add(yukonBtn, gbc);
     }
 }

@@ -94,28 +94,6 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
         aztecItem.addActionListener(this);
         selectMenu.add(aztecItem);   //Adds the Aztec Pyramids item.
 
-		klondikeItem = new JMenuItem("Klondike");
-		klondikeItem.addActionListener(this);
-		selectMenu.add(klondikeItem);   //Adds the Klondike item.
-
-		freeCellItem = new JMenuItem("Free Cell"); //And Free Cell item.
-		freeCellItem.addActionListener(this);
-		selectMenu.add(freeCellItem);
-
-		JMenu spiderMenu = new JMenu("Spider"); //Holds the easy and hard items.
-		easySpiderItem = new JMenuItem("Easy  "); //The easy spider item.
-		easySpiderItem.addActionListener(this);
-		spiderMenu.add(easySpiderItem);
-
-		hardSpiderItem = new JMenuItem("Hard  "); //The hard spider item.
-		hardSpiderItem.addActionListener(this);
-		spiderMenu.add(hardSpiderItem);
-		selectMenu.add(spiderMenu);
-		
-		yukonItem = new JMenuItem("Yukon"); //And Free Cell item.
-		yukonItem.addActionListener(this);
-		selectMenu.add(yukonItem);
-
 		bar.add(selectMenu);
 
 		JMenu rulesMenu = new JMenu("Rules"); //To display the rules.
@@ -138,20 +116,41 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		argosShowItem = new JCheckBoxMenuItem("Show Argos"); 
 		argosShowItem.addActionListener(this);
 		settingsMenu.add(argosShowItem);   //Toggles show of Argos
-		argosShowItem.setSelected(true);
+		if (MainMenu.argosBtn.isVisible())
+		{
+			argosShowItem.setSelected(true);
+		}
+		else
+		{
+			argosShowItem.setSelected(false);
+		}
 		argosShowItem.addItemListener(this);
 
 		
 		annoShowItem = new JCheckBoxMenuItem("Show Anno Domini"); 
 		annoShowItem.addActionListener(this);
 		settingsMenu.add(annoShowItem);   //Toggles show of Anno Domini
-		annoShowItem.setSelected(true);
+		if (MainMenu.annoBtn.isVisible())
+		{
+			annoShowItem.setSelected(true);
+		}
+		else
+		{
+			annoShowItem.setSelected(false);
+		}
 		annoShowItem.addItemListener(this);
 		
 		americanShowItem = new JCheckBoxMenuItem("Show American Toad"); 
 		americanShowItem.addActionListener(this);
 		settingsMenu.add(americanShowItem);   //Toggles show of American Toad
-		americanShowItem.setSelected(true);
+		if (MainMenu.americanBtn.isVisible())
+		{
+			americanShowItem.setSelected(true);
+		}
+		else
+		{
+			americanShowItem.setSelected(false);
+		}
 		americanShowItem.addItemListener(this);
 		
 		aztecShowItem = new JCheckBoxMenuItem("Show Aztec"); 
@@ -163,7 +162,14 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		volumeItem = new JCheckBoxMenuItem("Volume Toggle"); 
 		volumeItem.addActionListener(this);
 		settingsMenu.add(volumeItem);   //Toggles show of Aztec
-		volumeItem.setSelected(true);
+		if (MainMenu.aztecBtn.isVisible())
+		{
+			aztecShowItem.setSelected(true);
+		}
+		else
+		{
+			aztecShowItem.setSelected(false);
+		}
 		volumeItem.addItemListener(this);
 
 		bar.add(settingsMenu);
@@ -205,9 +211,9 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		{
 			if (argosShowItem.isSelected())
 			{
-				MainMenu.argosBtn.setVisible(false);
-			} else {
 				MainMenu.argosBtn.setVisible(true);
+			} else {
+				MainMenu.argosBtn.setVisible(false);
 			}
 		}
 
@@ -215,9 +221,9 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		{
 			if (annoShowItem.isSelected())
 			{
-				MainMenu.annoBtn.setVisible(false);
-			} else {
 				MainMenu.annoBtn.setVisible(true);
+			} else {
+				MainMenu.annoBtn.setVisible(false);
 			}
 		}
 
@@ -225,9 +231,9 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		{
 			if (americanShowItem.isSelected())
 			{
-				MainMenu.americanBtn.setVisible(false);
-			} else {
 				MainMenu.americanBtn.setVisible(true);
+			} else {
+				MainMenu.americanBtn.setVisible(false);
 			}
 		}
 
@@ -235,9 +241,9 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		{
 			if (aztecShowItem.isSelected())
 			{
-				MainMenu.aztecBtn.setVisible(false);
-			} else {
 				MainMenu.aztecBtn.setVisible(true);
+			} else {
+				MainMenu.aztecBtn.setVisible(false);
 			}
 		}
 
@@ -296,21 +302,10 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
         } else if(e.getSource() == americanItem){
             game = new Klondike(this);
         } else if(e.getSource() == annoItem){
-            game = new Klondike(this);
+            game = new AnnoDomini(this); 
         } else if (e.getSource() == aztecItem) {
             game = new Klondike(this);
-		} else if(e.getSource() == klondikeItem){
-			game = new Klondike(this);
-		} else if(e.getSource() == freeCellItem){
-			game = new FreeCell(this);
-		} else if(e.getSource() == easySpiderItem){
-			game = new Spider(this, true);
-		} else if(e.getSource() == hardSpiderItem){
-			game = new Spider(this, false);
-		} else if (e.getSource() == yukonItem) {
-            game = new Yukon(this);
-        }
-
+		}
 
 		repaint();
 	}
@@ -337,32 +332,12 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 				cardLayout.next(contentPane);
 				break;
 			case ANNO_DOMINI:
-				game = new Klondike(gamePanel);
+				game = new AnnoDomini(gamePanel);
 				frame.setJMenuBar(gamePanel.makeGameMenuBar());
 				cardLayout.next(contentPane);
 				break;
 			case AZTEC_PYRAMIDS:
 				game = new Pyramid(gamePanel);
-				frame.setJMenuBar(gamePanel.makeGameMenuBar());
-				cardLayout.next(contentPane);
-				break;
-			case KLONDIKE:
-				game = new Klondike(gamePanel);
-				frame.setJMenuBar(gamePanel.makeGameMenuBar());
-				cardLayout.next(contentPane);
-				break;
-			case SPIDER_EASY:
-				game = new Spider(gamePanel, true);
-				frame.setJMenuBar(gamePanel.makeGameMenuBar());
-				cardLayout.next(contentPane);
-				break;
-			case SPIDER_HARD:
-				game = new Spider(gamePanel, false);
-				frame.setJMenuBar(gamePanel.makeGameMenuBar());
-				cardLayout.next(contentPane);
-				break;
-			case YUKON:
-				game = new Yukon(gamePanel);
 				frame.setJMenuBar(gamePanel.makeGameMenuBar());
 				cardLayout.next(contentPane);
 				break;
@@ -380,6 +355,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 			gainControl.setValue(-24.0f); //lowers the volume by 24db
 			clip.loop(-1);
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -407,7 +383,6 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		frame.setSize(gamePanel.getPreferredSize());
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 		Sound();
 	}
 }
