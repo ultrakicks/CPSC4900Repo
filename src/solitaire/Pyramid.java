@@ -138,9 +138,15 @@ public class Pyramid extends Klondike {
 						selectedStack.pop();
 						setSelected(null);
 					} else {
-						//Set this tableau as the new selectedStack
-						setSelected(tableau);
+						if(tableau.peek().getValue() == 13) {
+							tableau.pop();
+							setSelected(null);
+						} else {
+							//Set this tableau as the new selectedStack
+							setSelected(tableau);
+						}
 					}
+					container.repaint();
 					return true;
 				}
 				return false; //Inactive card was clicked
@@ -159,18 +165,30 @@ public class Pyramid extends Klondike {
 	 */
 	protected boolean pyramidPressedAction(int x, int y){
 		if(pyramid.contains(x, y)){  //if the mouse clicked the pyramid,
-			//If the card was actually obtainable (not covered), select it
-			if(pyramid.selectCard(x, y)) {
+			//Attempt to obtain the card
+			Card selectedCard = pyramid.getCard(x,y);
+			//If the card is obtainable (not covered), select it
+			if(selectedCard != null) {
+				//Possibly removing this card and the selected card
 				if(selectedStack != null
-					&& selectedStack.peek().getValue() + pyramid.peek().getValue() == 13) {
+					&& selectedStack.peek().getValue() + selectedCard.getValue() == 13) {
 					//Remove both
-					pyramid.pop();
 					selectedStack.pop();
+					pyramid.selectCard(x, y);
+					pyramid.pop();
 					setSelected(null);
 				} else {
-					//Set the pyramid as the new selectedStack
-					setSelected(pyramid);
+					//Removing Kings
+					if(selectedCard.getValue() == 13) {
+						pyramid.selectCard(x, y);
+						pyramid.pop();
+						setSelected(null);
+					} else {
+						//Set the pyramid as the new selectedStack
+						setSelected(pyramid);
+					}
 				}
+				container.repaint();
 				return true;
 			}
 		}
@@ -187,17 +205,18 @@ public class Pyramid extends Klondike {
 	 */
 	protected void setSelected(StackADT<Card> highlightedStack){
 		//Remove highlight from old card (if it still exists)
-		if(selectedStack.peek().isHighlighted()) {
-
+		if(selectedStack != null && selectedStack.peek() != null
+		 	&& highlightedStack != null && selectedStack.peek().isHighlighted()) {
+			highlightedStack.peek().setHighlighted(false);
 		}
 
 		//If the parameter is not null, highlight new card
-		if(highlightedStack) {
-			highlightedStack.peek().highlight();
+		if(highlightedStack != null && highlightedStack.peek() != null) {
+			highlightedStack.peek().setHighlighted(true);
 		}
 
 		//Set new stack
-		selectedStack = highlightedCard;
+		selectedStack = highlightedStack;
 	}
 
 	/**
