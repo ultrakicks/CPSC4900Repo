@@ -129,17 +129,17 @@ public class Pyramid extends Klondike {
 			if(tableau.contains(x, y)){  //and if the mouse clicked a tableau,
 
 				//Check mouse is colliding with top card.
-				if(tableau.peek().colliding(x, y)) {
+				if(!tableau.isEmpty() && tableau.peek().colliding(x, y)) {
 					//Check if current highlighted card is 13 minus selected card
-					if(selectedStack != null && !tableau.isEmpty()
+					if(selectedStack != null
 						&& selectedStack.peek().getValue() + tableau.peek().getValue() == 13) {
 						//Remove both
 						tableau.pop();
 						selectedStack.pop();
-						selectedStack = null;
+						setSelected(null);
 					} else {
 						//Set this tableau as the new selectedStack
-						selectedStack = tableau;
+						setSelected(tableau);
 					}
 					return true;
 				}
@@ -147,6 +147,57 @@ public class Pyramid extends Klondike {
 			}
 		}
 		return false; //No tableau was clicked.
+	}
+
+	/**
+	 * Performs the action associated with the pyramid. Finds, and selects
+	 * the top card being collided with. That card will be highlighted
+	 * @param x		The x coordinate of a mouse click.
+	 * @param y		The y coordinate.
+	 * @return <code>true</code> if the action was successfully performed, 
+	 * 			else <code>false</code>
+	 */
+	protected boolean pyramidPressedAction(int x, int y){
+		if(pyramid.contains(x, y)){  //if the mouse clicked the pyramid,
+			//If the card was actually obtainable (not covered), select it
+			if(pyramid.selectCard(x, y)) {
+				if(selectedStack != null
+					&& selectedStack.peek().getValue() + pyramid.peek().getValue() == 13) {
+					//Remove both
+					pyramid.pop();
+					selectedStack.pop();
+					setSelected(null);
+				} else {
+					//Set the pyramid as the new selectedStack
+					setSelected(pyramid);
+				}
+				return true;
+			}
+		}
+		return false; //No tableau was clicked.
+	}
+
+	/**
+	 * Highlights the given card and removes the highlight from the last card
+	 * 
+	 * @param highlightedCard		newly selected card.
+	 * @param y						newly selected stack.
+	 * @return <code>true</code> if the action was successfully performed, 
+	 * 			else <code>false</code>
+	 */
+	protected void setSelected(StackADT<Card> highlightedStack){
+		//Remove highlight from old card (if it still exists)
+		if(selectedStack.peek().isHighlighted()) {
+
+		}
+
+		//If the parameter is not null, highlight new card
+		if(highlightedStack) {
+			highlightedStack.peek().highlight();
+		}
+
+		//Set new stack
+		selectedStack = highlightedCard;
 	}
 
 	/**
@@ -159,8 +210,12 @@ public class Pyramid extends Klondike {
 			container.repaint();	//repaint and
 			onWin();				//perform the on win action
 			return;
-		} else if(inUse.isEmpty()){
-			tableauxPressedAction(e.getX(), e.getY());
+		}
+
+		int x = e.getX(), y = e.getY();
+		
+		if(!pyramidPressedAction(x,y)){
+			tableauxPressedAction(x, y);
 		}
 	}
 

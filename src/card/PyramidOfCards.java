@@ -241,6 +241,26 @@ public class PyramidOfCards extends BinaryStack<Card> {
 	}
 
 	/**
+	 * Returns a card at position x,y that has no cards on top of it
+	 * @param x The point's x coordinate.
+	 * @param y The point's y coordinate.
+	 * @return <code>true</code> if at least one card without cards on top
+	 * 			of it contains the point, else <code>false</code>.
+	 */
+	public Card selectCard(int x, int y){
+		//Each card is checked to see if it contains the given location.
+		for(int node = 1; node <= size; node++){
+			if(((Card) queue[node]).contains(x, y)) {
+				if((node*2 >= size || queue[node*2] == null) && (node*2+1 >= size || queue[node*2+1] == null)) {
+					selected = node;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Draws all of the cards in order of the stack. A card will be drawn
 	 * on top of all cards below it in the stack.
 	 * But if the stack is empty, the shape of a card will be drawn where a card
