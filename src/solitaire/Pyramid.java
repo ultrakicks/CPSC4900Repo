@@ -127,9 +127,9 @@ public class Pyramid extends Klondike {
 	protected boolean tableauxPressedAction(int x, int y){
 		for(Tableau tableau : tableaux){ //Check each tableau,
 			if(tableau.contains(x, y)){  //and if the mouse clicked a tableau,
-
 				//Check mouse is colliding with top card.
 				if(!tableau.isEmpty() && tableau.peek().colliding(x, y)) {
+					removeHighlight();
 					//Check if current highlighted card is 13 minus selected card
 					if(selectedStack != null
 						&& selectedStack.peek().getValue() + tableau.peek().getValue() == 13) {
@@ -143,7 +143,6 @@ public class Pyramid extends Klondike {
 							setSelected(null);
 						} else {
 							//Set this tableau as the new selectedStack
-							removeHighlight();
 							setSelected(tableau);
 						}
 					}
@@ -170,6 +169,7 @@ public class Pyramid extends Klondike {
 			Card selectedCard = pyramid.getCard(x,y);
 			//If the card is obtainable (not covered), select it
 			if(selectedCard != null) {
+				removeHighlight();
 				//Possibly removing this card and the selected card
 				if(selectedStack != null
 					&& selectedStack.peek().getValue() + selectedCard.getValue() == 13) {
@@ -186,7 +186,6 @@ public class Pyramid extends Klondike {
 						setSelected(null);
 					} else {
 						//Set the pyramid as the new selectedStack
-						removeHighlight();
 						pyramid.selectCard(x, y);
 						setSelected(pyramid);
 					}
