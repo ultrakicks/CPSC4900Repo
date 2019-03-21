@@ -280,7 +280,12 @@ public class PyramidOfCards extends BinaryStack<Card> {
 		//Each card is checked to see if it contains the given location.
 		for(int node = 1; node <= size; node++) {
 			if(queue[node] != null && ((Card) queue[node]).contains(x, y)) {
-				if((node*2 >= size || queue[node*2] == null) && (node*2+1 >= size || queue[node*2+1] == null)) {
+				int row = 0; int tempNode = node;
+				while(tempNode > 0) {
+					row++;
+					tempNode -= row;
+				}
+				if((node+row >= size || queue[node+row] == null) && (node+row+1 >= size || queue[node+row+1] == null)) {
 					return node;
 				}
 			}

@@ -185,6 +185,7 @@ public class Pyramid extends Klondike {
 						setSelected(null);
 					} else {
 						//Set the pyramid as the new selectedStack
+						pyramid.selectCard(x, y);
 						setSelected(pyramid);
 					}
 				}
@@ -211,7 +212,7 @@ public class Pyramid extends Klondike {
 		}
 
 		//If the parameter is not null, highlight new card
-		if(highlightedStack != null && highlightedStack.peek() != null) {
+		if(highlightedStack != null) {
 			highlightedStack.peek().setHighlighted(true);
 		}
 
