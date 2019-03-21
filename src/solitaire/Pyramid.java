@@ -143,6 +143,7 @@ public class Pyramid extends Klondike {
 							setSelected(null);
 						} else {
 							//Set this tableau as the new selectedStack
+							removeHighlight();
 							setSelected(tableau);
 						}
 					}
@@ -185,6 +186,7 @@ public class Pyramid extends Klondike {
 						setSelected(null);
 					} else {
 						//Set the pyramid as the new selectedStack
+						removeHighlight();
 						pyramid.selectCard(x, y);
 						setSelected(pyramid);
 					}
@@ -197,20 +199,22 @@ public class Pyramid extends Klondike {
 	}
 
 	/**
-	 * Highlights the given card and removes the highlight from the last card
+	 * Removes highlight from the current selected card
+	 */
+	protected void removeHighlight(){
+		//Remove highlight from old card (if it still exists)
+		if(selectedStack != null && selectedStack.peek() != null) {
+			selectedStack.peek().setHighlighted(false);
+		}
+	}
+
+	/**
+	 * Highlights the selected card of the given stack
 	 * 
 	 * @param highlightedCard		newly selected card.
-	 * @param y						newly selected stack.
-	 * @return <code>true</code> if the action was successfully performed, 
-	 * 			else <code>false</code>
+	 * 
 	 */
 	protected void setSelected(StackADT<Card> highlightedStack){
-		//Remove highlight from old card (if it still exists)
-		if(selectedStack != null && selectedStack.peek() != null
-		 	&& highlightedStack != null && selectedStack.peek().isHighlighted()) {
-			highlightedStack.peek().setHighlighted(false);
-		}
-
 		//If the parameter is not null, highlight new card
 		if(highlightedStack != null) {
 			highlightedStack.peek().setHighlighted(true);
