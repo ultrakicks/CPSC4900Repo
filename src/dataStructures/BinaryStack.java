@@ -101,6 +101,7 @@ public class BinaryStack<T> implements StackADT<T> {
 			return null;
 		}
 		T temp = (T)queue[selected];
+		queue[selected] = null;
 		selected = 0;
 		return temp;
 	}

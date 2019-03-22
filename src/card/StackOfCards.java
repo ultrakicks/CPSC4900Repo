@@ -275,6 +275,7 @@ public class StackOfCards extends Stack<Card> {
 			if(node.getValue().contains(x, y))
 				return true;
 		}
+				
 		return false;
 	}
 

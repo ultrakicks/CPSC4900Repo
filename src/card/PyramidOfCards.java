@@ -107,7 +107,6 @@ public class PyramidOfCards extends BinaryStack<Card> {
 		card.setSize(cardWidth); //And so is the size.
 		super.push(card);
 
-		System.out.println("setting select to newly made card.");
 		select(card);
 	}
 
@@ -234,10 +233,64 @@ public class PyramidOfCards extends BinaryStack<Card> {
 	public boolean contains(int x, int y){
 		//Each card is checked to see if it contains the given location.
 		for(int node = 1; node <= size; node++){
-			if(((Card) queue[node]).contains(x, y))
+			if(queue[node] != null && ((Card) queue[node]).contains(x, y))
 				return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Returns whether the card at position x,y has no cards on top of it
+	 * @param x The point's x coordinate.
+	 * @param y The point's y coordinate.
+	 * @return <code>true</code> if at least one card without cards on top
+	 * 			of it contains the point, else <code>false</code>.
+	 */
+	public boolean selectCard(int x, int y){
+		//Each card is checked to see if it contains the given location.
+		selected = findCard(x, y);
+		if(selected != 0)
+			return true;
+		return false;
+	}
+
+	/**
+	 * Returns a card at position x,y that has no cards on top of it
+	 * @param x The point's x coordinate.
+	 * @param y The point's y coordinate.
+	 * @return <code>card at (x,y)</code> if at least one card without cards on top
+	 * 			of it contains the point, else <code>false</code>.
+	 */
+	public Card getCard(int x, int y){
+		//Each card is checked to see if it contains the given location.
+		int node = findCard(x, y);
+		if(node > 0) {
+			return (Card) queue[node];
+		}
+		return null;
+	}
+
+	/**
+	 * Finds a card at position x,y that has no cards on top of it
+	 * @param x The point's x coordinate.
+	 * @param y The point's y coordinate.
+	 * @return The integer node value of the card, or 0 if no such card exists
+	 */
+	private int findCard(int x, int y){
+		//Each card is checked to see if it contains the given location.
+		for(int node = 1; node <= size; node++) {
+			if(queue[node] != null && ((Card) queue[node]).contains(x, y)) {
+				int row = 0; int tempNode = node;
+				while(tempNode > 0) {
+					row++;
+					tempNode -= row;
+				}
+				if((node+row >= size || queue[node+row] == null) && (node+row+1 >= size || queue[node+row+1] == null)) {
+					return node;
+				}
+			}
+		}
+		return 0;
 	}
 
 	/**

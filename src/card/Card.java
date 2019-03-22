@@ -29,6 +29,10 @@ public class Card implements Comparable<Card> {
 	 * 	the back of the card will be drawn, otherwise, the front.			*/
 	private boolean hidden;
 
+	/**	Holds whether or not the card is highlighted. If it is highlighted,
+	 * 	a glowing rectangle will be drawn with the card.					*/
+	private boolean highlighted;
+
 	/** The card's center's coordinates.							  		*/
 	private int x, y;
 
@@ -121,6 +125,22 @@ public class Card implements Comparable<Card> {
 	}
 
 	/**
+	 * Returns whether or not this card is hidden.
+	 * @return <code>true</code> if hidden, else <code>false</code>.
+	 */
+	public boolean isHighlighted(){
+		return highlighted;
+	}
+
+	/**
+	 * Sets whether or not the card is highlighted.
+	 * @param hidden The boolean value for hidden.
+	 */
+	public void setHighlighted(boolean highlighted){
+		this.highlighted = highlighted;
+	}
+
+	/**
 	 * Returns the x coordinate of the middle of the card.
 	 */
 	public int getX(){
@@ -195,7 +215,11 @@ public class Card implements Comparable<Card> {
 				width, height, width/10, height/10);
 
 		//Draws the thin black outline
-		pane.setColor(Color.BLACK);
+		if(!highlighted) {
+			pane.setColor(Color.BLACK);
+		} else {
+			pane.setColor(Color.WHITE);
+		}
 		pane.drawRoundRect(x - width/2, y - height/2, 
 				width, height, width/10, height/10);
 

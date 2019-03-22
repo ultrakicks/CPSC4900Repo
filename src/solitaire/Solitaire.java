@@ -304,7 +304,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
         } else if(e.getSource() == annoItem){
             game = new AnnoDomini(this); 
         } else if (e.getSource() == aztecItem) {
-            game = new Klondike(this);
+            game = new Pyramid(this);
 		}
 
 		repaint();
