@@ -44,7 +44,8 @@ public class AmericanToad extends Klondike implements MouseListener, MouseMotion
 
 	/** Holds cards that were not dealt into the tableaux.					*/
 	protected StackOfCards stock;
-
+	protected StackOfCards stock2;
+	
 	/** Holds cards that are removed from the stock.						*/
 	protected StackOfCards waste;
 
@@ -85,6 +86,8 @@ public class AmericanToad extends Klondike implements MouseListener, MouseMotion
 	/** Holds cards being moved between stacks and are not in one of the instance
 	 * StackOfCards so that they can be animated.							  */
 	protected Queue<StackOfCards> animationQueue;
+	
+	
 
 	/** Do nothing constructor.												*/
 	public AmericanToad(){}
@@ -105,7 +108,6 @@ public class AmericanToad extends Klondike implements MouseListener, MouseMotion
 		setCoord(container);
 		cardWidth = 60;
 		offset = cardWidth/2;
-
 		//Instantiates the in use stack and animation queue.
 		inUse = new StackOfCards(0, 0, cardWidth, 0, offset * 3/2);
 		animationQueue = new Queue<StackOfCards>();
@@ -138,11 +140,12 @@ public class AmericanToad extends Klondike implements MouseListener, MouseMotion
 
 		//Calls initTableaux with the random deck and an anonymous array that
 		//holds the initial tableau sizes.
-		initTableaux(deck,new int[]{1,1,1,1,1,1,1,1,1});
-		initStockAndWaste(deck); //Initializes the stock and waste
-		initFoundations(8);		//and foundations
-		initialized = true; //Everything is initialized,
-		container.repaint();//So we repaint.
+		initTableaux(deck,new int[]{1,1,1,1,1,1,1,1});
+		initStockAndWaste(deck,deck2); //Initializes the stocks and waste
+		initFoundations(8);		      //and foundations
+		initialized = true; 		 	  //Everything is initialized,
+		container.repaint();           //So we repaint.
+		
 	}
 
 	/**
@@ -155,16 +158,16 @@ public class AmericanToad extends Klondike implements MouseListener, MouseMotion
 	 * 								tableaux and each element holds
 	 * 								the number of cards in each tableau.
 	 */
+	@Override
 	protected void initTableaux(StackOfCards source, int[] initialTableauxSizes){
 		//Sets the number of tableau columns.
 		tableaux = new Tableau[initialTableauxSizes.length];
-
+		int increment = 3;
 		//Initializes each tableau
 		for(int i = 0; i < tableaux.length; i++){
-			//Instantiates each tableau
-			tableaux[i] = new Tableau(
-					(cardWidth+10)*(i+1), yCoord + cardWidth*2, cardWidth, offset);
-
+			tableaux[i] = new Tableau(increment*(cardWidth+10)+20,yCoord+cardWidth*2,cardWidth,offset);
+			increment++;
+		
 			for(int j = 0; j < initialTableauxSizes[i]; j++){ //Moves cards from
 				tableaux[i].push(source.pop());          //source to tableau
 				tableaux[i].peek().setHidden(initiallyHidden);
@@ -180,23 +183,37 @@ public class AmericanToad extends Klondike implements MouseListener, MouseMotion
 	 * deck.
 	 * @param deck The source of cards for the stock.
 	 */
-	protected void initStockAndWaste(StackOfCards deck){
+	protected void initStockAndWaste(StackOfCards deck,StackOfCards deck2){
 		stock = new StackOfCards(cardWidth + 10, yCoord, cardWidth, 0, 0);
 		stock.appendStack(deck); //The stock contains all of its cards.
 		stock.peek().setHidden(true); //So that the stock is hidden.
-
+		
+		// THIS IS WHERE I TRIED TO DECLARE THE SECOND STOCK AND PLACE IT DIRECTLY UNDER THE MAIN STOCK
+		stock2 = new StackOfCards(cardWidth+10,yCoord+cardWidth*2,cardWidth,0,0);
+		stock2.appendStack(deck2);
+		stock2.peek().setHidden(true);
+		
 		waste = new StackOfCards(2*(stock.getX()), yCoord, cardWidth, 0, 0);
 	}
 
 	/**
 	 * Initializes the size and location of foundation stacks which are initially empty.
 	 */
-	protected void initFoundations(int numOfFoundations){
+	protected void initFoundations(int numOfFoundations,StackOfCards source){
+		int increment = 3;
 		foundations = new Foundation[numOfFoundations];
 		for(int i = 0; i < foundations.length; i++){
-			foundations[i] = new Foundation(tableaux[tableaux.length - i - 1].getX(),
-					yCoord, cardWidth);
+			foundations[i] = new Foundation(increment*(stock.getX())+20,yCoord,cardWidth);
+			increment++;
 		}
+		// THIS IS WHERE I TRIED TO SET THE FIRST CARD ON THE FOUNDATION
+		foundations[0].push(source.pop());
+		foundations[0].peek().setHidden(false);
+	}
+	
+	protected void determineFoundation(StackOfCards deck) {
+		foundations[0].push(deck.pop());
+		container.repaint();
 	}
 
 	/**
