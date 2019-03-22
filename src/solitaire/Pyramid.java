@@ -1,6 +1,6 @@
 package solitaire;
 
-import java.awt.Color;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.Container;
 import java.awt.event.MouseEvent;
 import java.awt.Graphics;
@@ -48,17 +48,7 @@ public class Pyramid extends Klondike {
 	 * 					game will be played.
 	 */
 	public Pyramid(Container container){
-		this.container = container;
-		container.addMouseListener(this); 		//To respond to clicks
-		container.setBackground(new Color(0, 100, 0)); //A green color.
-		container.setSize(790, 720);
-		container.setPreferredSize(container.getSize());
-
-		setCoord(container);
-		cardWidth = 60;
-		offset = cardWidth/2;
-
-		init(); //Initializes all of the stacks.
+		super(container);
 	}
 
 	/*
@@ -82,7 +72,17 @@ public class Pyramid extends Klondike {
 		//holds the initial tableau sizes.
 		initTableaux(deck, new int[] {4, 4, 4, 4, 4, 4});
 		initPyramid(deck, 7);
-		freeSlot = new StackOfCards(container.getWidth() - (cardWidth+10), yCoord, cardWidth, 0, offset);
+		//Create a freeSlot that can be collided with using the empty space of the stack
+		freeSlot = new StackOfCards(container.getWidth() - (cardWidth+10), yCoord, cardWidth, 0, offset) {
+			public boolean contains(int x, int y){
+
+				if(new RoundRectangle2D.Double(this.x - cardWidth/2 - offsetX*size,
+					this.y - cardWidth*3/4 + offsetY*size, cardWidth,
+					cardWidth*3/2, cardWidth/10, cardWidth/10).contains(x,y)) {return true;}
+						
+				return false;
+			}
+		};
 
 		initialized = true; //Everything is initialized,
 		container.repaint();//So we repaint.
