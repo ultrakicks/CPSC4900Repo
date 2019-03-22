@@ -157,11 +157,6 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		aztecShowItem.addActionListener(this);
 		settingsMenu.add(aztecShowItem);   //Toggles show of Aztec
 		aztecShowItem.setSelected(true);
-		aztecShowItem.addItemListener(this);
-		
-		volumeItem = new JCheckBoxMenuItem("Volume Toggle"); 
-		volumeItem.addActionListener(this);
-		settingsMenu.add(volumeItem);   //Toggles show of Aztec
 		if (MainMenu.aztecBtn.isVisible())
 		{
 			aztecShowItem.setSelected(true);
@@ -170,6 +165,12 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		{
 			aztecShowItem.setSelected(false);
 		}
+		aztecShowItem.addItemListener(this);
+		
+		volumeItem = new JCheckBoxMenuItem("Volume Toggle"); 
+		volumeItem.addActionListener(this);
+		settingsMenu.add(volumeItem);
+		volumeItem.setSelected(true);
 		volumeItem.addItemListener(this);
 
 		bar.add(settingsMenu);
@@ -327,7 +328,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 				cardLayout.next(contentPane);
 				break;
 			case AMERICAN_TOAD:
-				game = new Klondike(gamePanel);
+				game = new AmericanToad(gamePanel);
 				frame.setJMenuBar(gamePanel.makeGameMenuBar());
 				cardLayout.next(contentPane);
 				break;
