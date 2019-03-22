@@ -275,6 +275,10 @@ public class StackOfCards extends Stack<Card> {
 			if(node.getValue().contains(x, y))
 				return true;
 		}
+		if(new RoundRectangle2D.Double(this.x - cardWidth/2 - offsetX*size,
+			this.y - cardWidth*3/4 + offsetY*size, cardWidth,
+			cardWidth*3/2, cardWidth/10, cardWidth/10).contains(x,y)) {return true;}
+				
 		return false;
 	}
 

@@ -1,5 +1,6 @@
 package solitaire;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.MouseEvent;
 import java.awt.Graphics;
@@ -32,6 +33,9 @@ public class Pyramid extends Klondike {
 	/** Holds the pyramid of cards.											*/
 	protected PyramidOfCards pyramid;
 
+	/** Holds the free card slot.											*/
+	protected StackOfCards freeSlot;
+
 	/** The x coordinate for the pyramid.									*/
 	protected int xCoord;
 
@@ -44,7 +48,17 @@ public class Pyramid extends Klondike {
 	 * 					game will be played.
 	 */
 	public Pyramid(Container container){
-		super(container);
+		this.container = container;
+		container.addMouseListener(this); 		//To respond to clicks
+		container.setBackground(new Color(0, 100, 0)); //A green color.
+		container.setSize(790, 720);
+		container.setPreferredSize(container.getSize());
+
+		setCoord(container);
+		cardWidth = 60;
+		offset = cardWidth/2;
+
+		init(); //Initializes all of the stacks.
 	}
 
 	/*
@@ -52,7 +66,7 @@ public class Pyramid extends Klondike {
 	 * Can be overriden by games that decide the tableaus should be moved down
 	 */
 	protected void setCoord(Container container) {
-		yCoord = container.getHeight()/2;
+		yCoord = container.getHeight()/2 + cardWidth*2;
 		xCoord = container.getWidth()/2;
 	}
 
@@ -68,6 +82,7 @@ public class Pyramid extends Klondike {
 		//holds the initial tableau sizes.
 		initTableaux(deck, new int[] {4, 4, 4, 4, 4, 4});
 		initPyramid(deck, 7);
+		freeSlot = new StackOfCards(container.getWidth() - (cardWidth+10), yCoord, cardWidth, 0, offset);
 
 		initialized = true; //Everything is initialized,
 		container.repaint();//So we repaint.
@@ -85,7 +100,7 @@ public class Pyramid extends Klondike {
 		for(int i = 0; i < tableaux.length; i++){
 			//Instantiates each tableau
 			tableaux[i] = new Tableau(
-					(cardWidth+10)*(i+1), yCoord + cardWidth*2, cardWidth, offset);
+					(cardWidth+10)*(i+1), yCoord, cardWidth, offset);
 
 			for(int j = 0; j < initialTableauxSizes[i]; j++){ //Moves cards from
 				tableaux[i].push(source.pop());          	  //source to tableau
@@ -198,6 +213,45 @@ public class Pyramid extends Klondike {
 	}
 
 	/**
+	 * Performs the action associated with the free slot. If the free slot
+	 * contains a card, that card will either cross itself out with the selected
+	 * card, or become the new selected card.
+	 * If not, the selected card will be placed in the free slot
+	 * @param x		The x coordinate of a mouse click.
+	 * @param y		The y coordinate.
+	 * @return <code>true</code> if the action was successfully performed, 
+	 * 			else <code>false</code>
+	 */
+	protected boolean freeSlotPressedAction(int x, int y){
+		if(freeSlot.contains(x, y)) {
+			removeHighlight();
+			//Check if there is already a card in the free slot
+			if(freeSlot.peek() != null) {
+				//Check if current highlighted card is 13 minus selected card
+				if(selectedStack != null
+					&& selectedStack.peek().getValue() + freeSlot.peek().getValue() == 13) {
+					//Remove both
+					freeSlot.pop();
+					selectedStack.pop();
+					setSelected(null);
+				} else {
+					//Select what's in the free slot
+					setSelected(freeSlot);
+				}
+			} else {
+				//There is no free card in the slot.
+				if(selectedStack != null) {
+					freeSlot.push(selectedStack.pop());
+					setSelected(null);
+				}
+			}
+			container.repaint();
+			return true; //Inactive card was clicked
+		}
+		return false;
+	}
+
+	/**
 	 * Removes highlight from the current selected card
 	 */
 	protected void removeHighlight(){
@@ -237,7 +291,7 @@ public class Pyramid extends Klondike {
 
 		int x = e.getX(), y = e.getY();
 		
-		if(!pyramidPressedAction(x,y)){
+		if(!freeSlotPressedAction(x,y) && !pyramidPressedAction(x,y)){
 			tableauxPressedAction(x, y);
 		}
 	}
@@ -255,6 +309,8 @@ public class Pyramid extends Klondike {
 
 			if(pyramid != null && !pyramid.isEmpty())
 				pyramid.draw(pane);
+
+			freeSlot.draw(pane);
 			/*
 			if(stock != null && !stock.isEmpty())
 				stock.peek().draw(pane);
@@ -263,13 +319,13 @@ public class Pyramid extends Klondike {
 			if(inUse != null && !inUse.isEmpty())
 				inUse.draw(pane);
 			*/
-			
+			/*
 			updateAnimationQueue();
 			for(StackOfCards stack : animationQueue){
 				if(!stack.isEmpty()){
 					stack.draw(pane);
 				}
-			}
+			}*/
 		}
 	}
 
@@ -285,4 +341,9 @@ public class Pyramid extends Klondike {
 			return true;
 		return false;
 	}
+	
+	@Override
+	public void mouseReleased(MouseEvent e){}
+	@Override
+	public void mouseDragged(MouseEvent e){}
 }
