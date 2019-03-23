@@ -292,8 +292,10 @@ public class Pyramid extends Klondike {
 
 		int x = e.getX(), y = e.getY();
 		
-		if(!freeSlotPressedAction(x,y) && !pyramidPressedAction(x,y)){
-			tableauxPressedAction(x, y);
+		if(!freeSlotPressedAction(x,y) && !pyramidPressedAction(x,y) && !tableauxPressedAction(x, y)){
+		} else {
+			//If any of the above actions returned true, that's an action
+			moves++;
 		}
 	}
 
