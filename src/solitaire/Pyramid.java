@@ -126,7 +126,8 @@ public class Pyramid extends Klondike {
 		for(int i=1; i <= size; i++) {
 			for(int j=1; j<=i; j++) {
 				pyramid.push(source.pop());
-				pyramid.peek().setHidden(false);
+				if(pyramid.peek() != null)
+					pyramid.peek().setHidden(false);
 			}
 		}
 	}

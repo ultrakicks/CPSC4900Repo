@@ -132,7 +132,7 @@ public class BinaryStack<T> implements StackADT<T> {
 	 * 			<code>false</code>
 	 */
 	public boolean isEmpty(){
-		return (queue[0] == null);
+		return (queue[1] == null);
 	}
 
 	/**
