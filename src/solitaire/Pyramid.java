@@ -126,7 +126,8 @@ public class Pyramid extends Klondike {
 		for(int i=1; i <= size; i++) {
 			for(int j=1; j<=i; j++) {
 				pyramid.push(source.pop());
-				pyramid.peek().setHidden(false);
+				if(pyramid.peek() != null)
+					pyramid.peek().setHidden(false);
 			}
 		}
 	}
@@ -291,8 +292,10 @@ public class Pyramid extends Klondike {
 
 		int x = e.getX(), y = e.getY();
 		
-		if(!freeSlotPressedAction(x,y) && !pyramidPressedAction(x,y)){
-			tableauxPressedAction(x, y);
+		if(!freeSlotPressedAction(x,y) && !pyramidPressedAction(x,y) && !tableauxPressedAction(x, y)){
+		} else {
+			//If any of the above actions returned true, that's an action
+			moves++;
 		}
 	}
 
