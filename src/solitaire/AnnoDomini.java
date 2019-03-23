@@ -268,30 +268,6 @@ public class AnnoDomini extends Klondike
 	}
 
 	/**
-	 * Alerts the user that s/he has won and plays the winning animation.
-	 * Pre. <code>hasWon()</code> returns <code>true</code>.
-	 */
-	protected void onWin(){
-		//We start a new anonymous thread with and anonymous runnable object
-		//to play the winning animation.
-		new Thread(new Runnable(){
-			public void run(){
-				winningAnimation();
-			}
-		}).start();
-		
-		//Then we show a dialog box to alert the user of the fact.
-		//We start another anonymous thread to show the dialog box because
-		//the dialog will pause all threads if it is in the main thread.
-		new Thread(new Runnable(){
-			public void run(){
-				JOptionPane.showMessageDialog(container,
-						"Congratulations, you won in " + moves + " moves!.");
-			}
-		}).start();
-	}
-
-	/**
 	 * Plays the winning animation.
 	 * Pre. <code>hasWon()</code> returns <code>true</code>.
 	 */

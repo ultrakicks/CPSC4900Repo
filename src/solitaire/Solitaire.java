@@ -295,17 +295,39 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		this.removeMouseListener(game);
 		this.removeMouseMotionListener(game);
 		
+		//Get game name
+		String gameName;
+		if(game instanceof Argos)
+			gameName = "Argos";
+		else if(game instanceof AmericanToad)
+			gameName = "American Toad";
+		else if(game instanceof AnnoDomini)
+			gameName = "Anno Domini";
+		else if(game instanceof Pyramid)
+			gameName = "Aztec Pyramid";
+		else
+			gameName = "Klondike";
+
 		//Change game view
 		if(e.getSource() == mainMenuItem){
+			Statistics.leaveGame(gameName);
 			switchScreens(games.MENU);
         } else if(e.getSource() == argosItem){
+			Statistics.leaveGame(gameName);
             game = new Argos(this);
+			Statistics.startGame("Argos");
         } else if(e.getSource() == americanItem){
+			Statistics.leaveGame(gameName);
             game = new Klondike(this);
+			Statistics.startGame("American Toad");
         } else if(e.getSource() == annoItem){
+			Statistics.leaveGame(gameName);
             game = new AnnoDomini(this); 
+			Statistics.startGame("Anno Domini");
         } else if (e.getSource() == aztecItem) {
+			Statistics.leaveGame(gameName);
             game = new Pyramid(this);
+			Statistics.startGame("Aztec Pyramid");
 		}
 
 		repaint();
@@ -316,6 +338,25 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 	// 0 is for going back to main menu, while 1 - 4 is for different games
 	public static void switchScreens(games selectedGame)
 	{
+		//Get Game's name to update statistics
+		String gameName = null;
+		if(game == null) {
+			//GameName = null
+		}
+		else if(game instanceof Argos)
+			gameName = "Argos";
+		else if(game instanceof AmericanToad)
+			gameName = "American Toad";
+		else if(game instanceof AnnoDomini)
+			gameName = "Anno Domini";
+		else if(game instanceof Pyramid)
+			gameName = "Aztec Pyramid";
+		else
+			gameName = "Klondike";
+		if(gameName != null) {
+			Statistics.leaveGame(gameName);
+		}
+
 		switch(selectedGame)
 		{
 			case MENU:
@@ -326,21 +367,25 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 				game = new Argos(gamePanel);
 				frame.setJMenuBar(gamePanel.makeGameMenuBar());
 				cardLayout.next(contentPane);
+				Statistics.startGame("Argos");
 				break;
 			case AMERICAN_TOAD:
 				game = new AmericanToad(gamePanel);
 				frame.setJMenuBar(gamePanel.makeGameMenuBar());
 				cardLayout.next(contentPane);
+				Statistics.startGame("American Toad");
 				break;
 			case ANNO_DOMINI:
 				game = new AnnoDomini(gamePanel);
 				frame.setJMenuBar(gamePanel.makeGameMenuBar());
 				cardLayout.next(contentPane);
+				Statistics.startGame("Anno Domini");
 				break;
 			case AZTEC_PYRAMIDS:
 				game = new Pyramid(gamePanel);
 				frame.setJMenuBar(gamePanel.makeGameMenuBar());
 				cardLayout.next(contentPane);
+				Statistics.startGame("Aztec Pyramid");
 				break;
 		}
 	}

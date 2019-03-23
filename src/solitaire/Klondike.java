@@ -85,6 +85,10 @@ public class Klondike implements MouseListener, MouseMotionListener {
 	 * StackOfCards so that they can be animated.							  */
 	protected Queue<StackOfCards> animationQueue;
 
+	/** Keeps track of whether statistics has been updated on any victories.
+	 * False by default and turned true when statistics is updated			  */
+	boolean recordedVictory = false;
+
 	/** Do nothing constructor.												*/
 	public Klondike(){}
 
@@ -519,6 +523,19 @@ public class Klondike implements MouseListener, MouseMotionListener {
 	 * Pre. <code>hasWon()</code> returns <code>true</code>.
 	 */
 	protected void onWin(){
+		if(!recordedVictory) {
+			if(this instanceof Argos)
+				Statistics.winGame("Argos");
+			else if(this instanceof AmericanToad)
+				Statistics.winGame("American Toad");
+			else if(this instanceof AnnoDomini)
+				Statistics.winGame("Anno Domini");
+			else if(this instanceof Pyramid)
+				Statistics.winGame("Aztec Pyramid");
+			else
+				Statistics.winGame("Klondike");
+		}
+
 		//We start a new anonymous thread with and anonymous runnable object
 		//to play the winning animation.
 		new Thread(new Runnable(){

@@ -125,8 +125,8 @@ public class Card implements Comparable<Card> {
 	}
 
 	/**
-	 * Returns whether or not this card is hidden.
-	 * @return <code>true</code> if hidden, else <code>false</code>.
+	 * Returns whether or not this card is highlighted.
+	 * @return <code>true</code> if highlighted, else <code>false</code>.
 	 */
 	public boolean isHighlighted(){
 		return highlighted;
@@ -134,7 +134,7 @@ public class Card implements Comparable<Card> {
 
 	/**
 	 * Sets whether or not the card is highlighted.
-	 * @param hidden The boolean value for hidden.
+	 * @param highlighted The boolean value for highlighted.
 	 */
 	public void setHighlighted(boolean highlighted){
 		this.highlighted = highlighted;
