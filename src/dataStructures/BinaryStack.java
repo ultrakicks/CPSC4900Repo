@@ -89,8 +89,9 @@ public class BinaryStack<T> implements StackADT<T> {
 	 * @return 	If this stack is not empty, the element at the top of the stack,
 	 * 			otherwise, null.
 	 */
-	@SuppressWarnings("unchecked")
+	//@SuppressWarnings("unchecked")
 	public T pop(){
+
 		if(isEmpty()) { //Then there is nothing to pop.
 			return null;
 		}
@@ -103,7 +104,6 @@ public class BinaryStack<T> implements StackADT<T> {
 		T temp = (T)queue[selected];
 		queue[selected] = null;
 		selected = 0;
-		size--;
 		return temp;
 	}
 
@@ -132,7 +132,7 @@ public class BinaryStack<T> implements StackADT<T> {
 	 * 			<code>false</code>
 	 */
 	public boolean isEmpty(){
-		return (size <= 0);
+		return (queue[0] == null);
 	}
 
 	/**

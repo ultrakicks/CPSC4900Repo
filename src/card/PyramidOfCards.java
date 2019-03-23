@@ -249,6 +249,7 @@ public class PyramidOfCards extends BinaryStack<Card> {
 	public boolean selectCard(int x, int y){
 		//Each card is checked to see if it contains the given location.
 		selected = findCard(x, y);
+		System.out.println("Card " + selected + " at " + x + ", " + y);
 		if(selected != 0)
 			return true;
 		return false;
