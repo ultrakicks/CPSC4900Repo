@@ -203,7 +203,7 @@ public class AmericanToad extends Klondike implements MouseListener, MouseMotion
 		int increment = 3;
 		foundations = new Foundation[numOfFoundations];
 		for(int i = 0; i < foundations.length; i++){
-			foundations[i] = new Foundation(increment*(stock.getX())+20,yCoord,cardWidth);
+			foundations[i] = new Foundation(increment*(stock.getX())+20,yCoord,cardWidth, 0);
 			increment++;
 		}
 		// THIS IS WHERE I TRIED TO SET THE FIRST CARD ON THE FOUNDATION

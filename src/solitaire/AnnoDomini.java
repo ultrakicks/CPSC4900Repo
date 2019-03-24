@@ -42,6 +42,9 @@ public class AnnoDomini extends Klondike
 	/** The x coordinate for the top foundations.									*/
 	protected int xCoord;
 	
+	/** Count of reshuffles									*/
+	protected int reshuffleCount = 0;
+	
 	/**
 	 * Instantiates the game with a {@link Container}.
 	 * @param container The Container (such as window or applet) in which the 
@@ -99,10 +102,12 @@ public class AnnoDomini extends Klondike
 	protected void initFoundations(int numOfFoundations)
 	{
 		foundations = new Foundation[numOfFoundations];
+		int foundationCount = 3;
 		for(int i = 0; i < foundations.length; i++)
 		{
 			foundations[i] = new Foundation(tableaux[tableaux.length - i - 1].getX() + xCoord,
-					yCoord, cardWidth);
+					yCoord, cardWidth, foundationCount);
+			foundationCount--;
 		}
 	}
 
@@ -132,7 +137,7 @@ public class AnnoDomini extends Klondike
 					&& foundation.shapeOfNextCard().contains(x, y))){
 				try {
 					//Peek is used in case the card is not appended.
-					foundation.push(inUse.peek());
+					foundation.annoPush(inUse.peek());
 					//if an exception was not thrown:
 					inUse.pop(); //we pop.
 					flipLastStack();
@@ -144,92 +149,50 @@ public class AnnoDomini extends Klondike
 		}
 		return false;
 	}
-
-	/**
-	 * Calls all of the release action methods. But if no action is performed,
-	 * then the cards in {@link #inUse} are returned to {@link #lastStack}
-	 */
-	@Override
-	public void mouseReleased(MouseEvent e){
-		if(inUse.isEmpty()){//Then there is nothing to do when the mouse
-			return;					 //is released.
-		}
-		int x = e.getX(), y = e.getY(); //The mouse's location.
-		if(!tableauxReleasedAction(x, y) && !foundationsReleasedAction(x, y)){
-			//Then no action was performed, so we return the cards to the
-			returnToLastStack();	//last stack.
-		} else {
-			moves++; //A move was made
-		}
-	}
-
-	/**
-	 * Return the cards that are in use to the last stack that was clicked.
-	 */
-	protected void returnToLastStack(){
-		new StackOfCardsAnimator(inUse, lastStack, container);
-	}
-
-	/**
-	 * Flips the top card of {@link #lastStack} if it is not empty.
-	 */
-	protected void flipLastStack(){
-		if(!lastStack.isEmpty()){ //We unhide the top card
-			lastStack.peek().setHidden(false); //of the last stack.
-		}
-		container.repaint();
-	}
 	
 	/**
-	 * Sets the location of the stack {@link #inUse} to the MouseEvent's location.
+	 * To make sure there are only two reshuffles
 	 */
-	@Override
-	public void mouseDragged(MouseEvent e){
-		if(inUse != null){//Just move the cards inUse When the mouse is dragged
-			inUse.setLocation(e.getX() - deltaX, e.getY() - deltaY);
-			container.repaint();                   //and repaint.
-		}
-	}
+	protected boolean stockPressedAction(int x, int y)
+	{
+		if(stock.contains(x, y))
+		{
+			//If the stock was clicked:
+			waste.push(stock.pop());	 //Move the top card from stock to waste.
+			waste.peek().setHidden(false);//And show it.
 
-	/**
-	 * Removes empty elements from the animation queue.
-	 */
-	protected void updateAnimationQueue(){
-		while(!animationQueue.isEmpty()){ //While it has elements.
-			if(animationQueue.peek().isEmpty()){//If the front element is empty,
-				animationQueue.dequeue();		//remove it.
-			} else {							//else it is not empty,
-				return;							//so we are done.
-			}
-		}
-	}
+			if(!stock.isEmpty())
+				stock.peek().setHidden(true);//Hides the new top card of the stack.
+			moves++; //This counts as a move.
+			container.repaint();
+			return true; //The action was performed.
 
-	/**
-	 * Paints all of the stacks. This should be placed in the container's paint
-	 * method.
-	 */
-	public void paint(Graphics pane){
-		if(initialized){
-			for(StackOfCards tableau : tableaux){
-				tableau.draw(pane);
-			}
-			for(StackOfCards foundation : foundations){
-				foundation.draw(pane);
-			}
-			if(stock != null && !stock.isEmpty())
-				stock.peek().draw(pane);
-			if(waste != null && !waste.isEmpty())
-				waste.peek().draw(pane);
-			if(inUse != null && !inUse.isEmpty())
-				inUse.draw(pane);
-			
-			updateAnimationQueue();
-			for(StackOfCards stack : animationQueue){
-				if(!stack.isEmpty()){
-					stack.draw(pane);
+		} 
+		else if(stock.shapeOfNextCard().contains(x, y))
+		{
+			//else if the mouse clicked the empty stock's area:
+			//Turn over all cards from the waste to the stock,
+			//This does not happen if the user has reshuffle
+			if(reshuffleCount < 2)
+			{
+				stock.appendStack(waste.reverseCopy());
+				waste.clear(); //and clear the waste.
+				reshuffleCount++;
+				if(!stock.isEmpty())
+				{
+					stock.peek().setHidden(true); //So that stock is turned form
+					moves++;					  //the user.
 				}
+				container.repaint();
+				return true; //The action was performed.
 			}
+			else
+			{
+				JOptionPane.showMessageDialog(container, "You're out of reshuffles!");
+			}
+			
 		}
+		return false; //The action was not performed.
 	}
 
 	/**
@@ -309,26 +272,4 @@ public class AnnoDomini extends Klondike
 			}
 		}
 	}
-
-	/**
-	 * Moves the top card of a source stack to the destination and animates it.
-	 * @param source		The stack whose top card is to be moved.
-	 * @param destination	The stack to receive the card.
-	 */
-	protected void animateTopCardOf(StackOfCards source, StackOfCards destination){
-		//Holds one of the cards in use for animation.
-		StackOfCards temp = new StackOfCards(
-				source.getX(), source.peek().getY(), 
-				cardWidth, 0, 0);
-
-		temp.push(source.pop()); //Moves a card to the temp.
-		animationQueue.enqueue(temp); //and add temp to the queue.
-		//Performs the animation.
-		new StackOfCardsAnimator(temp, destination, container);
-	}
-
-	public void mouseEntered(MouseEvent e){}
-	public void mouseExited(MouseEvent e){}
-	public void mouseClicked(MouseEvent e){}
-	public void mouseMoved(MouseEvent e){}
 }

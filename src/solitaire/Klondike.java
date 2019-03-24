@@ -193,7 +193,7 @@ public class Klondike implements MouseListener, MouseMotionListener {
 		foundations = new Foundation[numOfFoundations];
 		for(int i = 0; i < foundations.length; i++){
 			foundations[i] = new Foundation(tableaux[tableaux.length - i - 1].getX(),
-					yCoord, cardWidth);
+					yCoord, cardWidth, 0);
 		}
 	}
 

@@ -18,6 +18,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
+import card.Foundation;
+
 /**
  * A JPanel that plays Solitaire. This class contains a main method that will
  * open a new JFrame with this JPanel. The window contains a menu for user to
@@ -156,7 +158,6 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		aztecShowItem = new JCheckBoxMenuItem("Show Aztec"); 
 		aztecShowItem.addActionListener(this);
 		settingsMenu.add(aztecShowItem);   //Toggles show of Aztec
-		aztecShowItem.setSelected(true);
 		if (MainMenu.aztecBtn.isVisible())
 		{
 			aztecShowItem.setSelected(true);
@@ -170,7 +171,14 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		volumeItem = new JCheckBoxMenuItem("Volume Toggle"); 
 		volumeItem.addActionListener(this);
 		settingsMenu.add(volumeItem);
-		volumeItem.setSelected(true);
+		if (clip.isRunning())
+		{
+			volumeItem.setSelected(true);
+		}
+		else
+		{
+			volumeItem.setSelected(false);
+		}
 		volumeItem.addItemListener(this);
 
 		bar.add(settingsMenu);
@@ -267,10 +275,69 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 	public void actionPerformed(ActionEvent e)
 	{
 		//Open rules
-		if(e.getSource() == rulesItem){
-			try { //Opens the rules //TODO
-				Desktop.getDesktop().open(new File("User Manual.pdf"));
-			} catch (IOException ex){}
+		if(e.getSource() == rulesItem)
+		{
+			if(game instanceof AnnoDomini)
+			{
+				if (Desktop.isDesktopSupported()) 
+				{
+		            // File in user working directory, System.getProperty("user.dir");
+		            File file = new File("AnnoRules.pdf");
+		            if (!file.exists()) 
+		            {
+		                // In JAR
+		                InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream("resources/AnnoRules.pdf");
+		                // Copy file
+		                OutputStream outputStream = null;
+						try 
+						{
+							outputStream = new FileOutputStream(file);
+						} 
+						catch (FileNotFoundException e1) 
+						{
+							e1.printStackTrace();
+						}
+		                byte[] buffer = new byte[1024];
+		                int length;
+		                try 
+		                {
+							while ((length = inputStream.read(buffer)) > 0)
+							{
+							    outputStream.write(buffer, 0, length);
+							}
+						} 
+		                catch (IOException e1) 
+		                {
+							e1.printStackTrace();
+						}
+		                try 
+		                {
+							outputStream.close();
+						} 
+		                catch (IOException e1) 
+		                {
+							e1.printStackTrace();
+						}
+		                try 
+		                {
+							inputStream.close();
+						} 
+		                catch (IOException e1) 
+		                {
+							e1.printStackTrace();
+						}
+		            }
+		            // Open file
+		            try 
+		            {
+						Desktop.getDesktop().open(file);
+					} 
+		            catch (IOException e1) 
+		            {
+						e1.printStackTrace();
+					}
+		        }
+			}
 			
 			return; //So we don't remove the listeners.
 		}
@@ -360,6 +427,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		switch(selectedGame)
 		{
 			case MENU:
+				Foundation.suitsUsed.clear();
 				cardLayout.next(contentPane);
 				frame.setJMenuBar(gamePanel.makeMainMenuBar());
 				break;
@@ -394,12 +462,12 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 	{
 		try
 		{
-			File file = new File("Arcade_Yasper.wav");
+			File file = new File("dorf.wav");
 			AudioInputStream ais = AudioSystem.getAudioInputStream(Solitaire.class.getResource("/resources/" + file));
 			clip = AudioSystem.getClip();
 			clip.open(ais);
 			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-			gainControl.setValue(-24.0f); //lowers the volume by 24db
+			gainControl.setValue(-12.0f); //lowers the volume by 12db
 			clip.loop(-1);
 			
 
@@ -419,6 +487,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 	public static void main(String[] args)
 	{
 		//More GUI creation
+		Sound();
 		contentPane.setLayout(cardLayout);
 		contentPane.add(mainMenuPanel, "MainMenu");
 		contentPane.add(gamePanel, "Game");
@@ -429,6 +498,6 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		frame.setSize(gamePanel.getPreferredSize());
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Sound();
+		
 	}
 }
