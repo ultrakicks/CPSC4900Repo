@@ -8,6 +8,8 @@ import card.StackOfCards;
 import card.Tableau;
 import dataStructures.Stack;
 
+import javax.swing.*;
+
 /**
  *
  * Argos is a solitaire game unlike most others
@@ -75,7 +77,7 @@ public class Argos extends Klondike {
 
 		//Shuffle the cards
 		deck.shuffle();
-
+		/*
 		//Split into stock and play decks (still no kings yet)
 		for (int i=0; i<48; i++){
 			stockDeck.push(deck.pop());
@@ -90,6 +92,10 @@ public class Argos extends Klondike {
 
 		//Shuffle kings in to stock deck
 		stockDeck.shuffle();
+		*/
+
+		playDeck.fillBySuit();
+		stockDeck.fillBySuit();
 
 		initTableaux(playDeck);
 		initStockAndWaste(stockDeck);
@@ -106,23 +112,23 @@ public class Argos extends Klondike {
 
 		//Initialize the thirteenth column, with kings
 		for (int k = 0; k<4; k++) {
-			tableaux[k] = new Tableau(
+			tableaux[12+(k*13)] = new Tableau(
 					(cardWidth * 5 + (cardWidth + offset/2) * 12),
 					(int) (yCoord + (k*(2.25*cardWidth))), cardWidth, offset);
 
-			tableaux[k].push(source.pop());
+			tableaux[12+(k*13)].push(source.pop());
 		}
 
 		//Initializes each tableau except for the thirteenth column with remaining random cards
 		for(int j = 0; j <  4; j++){
-			for (int i = 1; i < 13; i++) {
+			for (int i = 0; i < 12; i++) {
 				//Instantiates each tableau
-				tableaux[(i-1)+(12*j)+4] = new Tableau(
-						(cardWidth * 5 + (cardWidth + offset/2) * (i-1)),
+				tableaux[i+(13*j)] = new Tableau(
+						(cardWidth * 5 + (cardWidth + offset/2) * i),
 						(int) (yCoord + (j*(2.25*cardWidth))), cardWidth, offset);
 
-				tableaux[(i-1)+(12*j)+4].push(source.pop());          //source to tableau
-				tableaux[(i-1)+(12*j)+4].peek().setHidden(false);
+				tableaux[i+(13*j)].push(source.pop());          //source to tableau
+				tableaux[i+(13*j)].peek().setHidden(false);
 			}
 		}
 	}
@@ -153,17 +159,18 @@ public class Argos extends Klondike {
 	 */
 	@Override
 	protected boolean stockPressedAction(int x, int y){
-		if(stock.contains(x, y)) {
-			//If the stock was clicked:
-			waste.push(stock.pop());     //Move the top card from stock to waste.
-			waste.peek().setHidden(false);//And show it.
+		if(stock.contains(x, y)&&!stock.isEmpty()) {
+			//If the stock was clicked, and it still contains cards:
+				waste.push(stock.pop());     //Move the top card from stock to waste.
+				waste.peek().setHidden(false);//And show it.
 
-			if (!stock.isEmpty())
 				stock.peek().setHidden(true);//Hides the new top card of the stack.
-			moves++; //This counts as a move.
-			container.repaint();
-			return true; //The action was performed.
+				moves++; //This counts as a move.
+				container.repaint();
+				return true; //The action was performed.
 		}
+		if (hasWon())
+			onWin();
 		return false;
 	}
 
@@ -181,25 +188,31 @@ public class Argos extends Klondike {
 	protected boolean tableauxReleasedAction(int x, int y){
 		for(Tableau tableau : tableaux){ //Check each of the tableaux
 			if(tableau.contains(x, y) || tableau.shapeOfNextCard().contains(x, y)){
-				//Then we check if the inUse stack can be appended to the
-				//tableau per the rules of solitaire.
+				//if there is exactly one card on the tableau, and we are only attempting to put one card on it
 				if (tableau.size()==1 && inUse.size()==1) {
-					try {
-						tableau.appendStack(inUse);
-						//This code is not executed if an exception was thrown.
-						inUse.clear();
-						flipLastStack();
+					//Card value must be 2x tableau value, or 2*tableau value - 13
+					if ((inUse.peek().getValue()==(2*tableau.peek().getValue()))||(inUse.peek().getValue()==(2*tableau.peek().getValue()-13))) {
+						try {
+							tableau.appendStack(inUse);
+							//This code is not executed if an exception was thrown.
+							inUse.clear();
+							flipLastStack();
 
-						//If we emptied the waste stack, deal another card automatically
-						if (waste.isEmpty()) {
-							stockPressedAction(stock.getX(),stock.getY());
+
+							//If we emptied the waste stack, deal another card automatically
+							if (waste.isEmpty()) {
+								stockPressedAction(stock.getX(), stock.getY());
+							}
+							if (hasWon())
+								onWin();
+							return true;
+						} catch (IllegalArgumentException ex) {
 						}
-
-						return true;
-					} catch (IllegalArgumentException ex) {}
+					}
 				}
 			}
 		}
+
 		return false;//If we have reached this point, then no action was performed
 	}
 
@@ -218,19 +231,53 @@ public class Argos extends Klondike {
 			//Do the tableaux action if the stock action wasn't done.
 			tableauxPressedAction(x, y);
 		}
+
 	}
 
 	/**
 	 * TODO: Set up win condition
 	 */
 	public  boolean hasWon(){
-		return false;
+		//Iterate through rows, then columns
+		boolean completeRow;
+		int rowsComplete = 0;
+		for (int i=0; i<4; i++) {
+			completeRow=true;
+			for (int j=0; j<13; j++) {
+				completeRow &= tableaux[j+(i*13)].size()==2;
+			}
+			if (completeRow)
+				rowsComplete++;
+		}
+		System.out.println("Complete Rows: "+rowsComplete);
+		return rowsComplete>=3;
 	}
+
+	public void onWin() {
+		Statistics.winGame("Argos");
+		//Then we show a dialog box to alert the user of the fact.
+		//We start another anonymous thread to show the dialog box because
+		//the dialog will pause all threads if it is in the main thread.
+		//Then we show a dialog box to alert the user of the fact.
+		//We start another anonymous thread to show the dialog box because
+		//the dialog will pause all threads if it is in the main thread.
+
+
+
+		new Thread(new Runnable(){
+			public void run() {
+				JOptionPane.showMessageDialog(container,"Congratulations, you won in " + moves + " moves!");
+			}
+		}).start();
+		Solitaire.switchScreens(Solitaire.games.MENU);
+	}
+
+
 
 	/**
 	 * Paints all of the stacks. This should be placed in the container's paint
 	 * method.
-	 * Same paint method as Klondike, without foundations
+	 * Draws stock/waste deck and play tableaus of Argos
 	 */
 	public void paint(Graphics pane){
 		if(initialized){
