@@ -94,6 +94,7 @@ public class Argos extends Klondike {
 		stockDeck.shuffle();
 		*/
 
+		
 		playDeck.fillBySuit();
 		stockDeck.fillBySuit();
 
