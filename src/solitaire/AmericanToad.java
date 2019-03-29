@@ -35,60 +35,9 @@ import java.awt.event.MouseMotionListener;
  * you must either move the whole pile or only the top card.
  */
 
-public class AmericanToad extends Klondike implements MouseListener, MouseMotionListener {
-	/** Holds each of the tableau stacks.									*/
-	protected Tableau[] tableaux;
-
-	/** The stacks of cards that will hold the sorted cards.				*/
-	protected Foundation[] foundations;
-
-	/** Holds cards that were not dealt into the tableaux.					*/
-	protected StackOfCards stock;
+public class AmericanToad extends Klondike {
 	protected StackOfCards stock2;
-	
-	/** Holds cards that are removed from the stock.						*/
-	protected StackOfCards waste;
-
-	/** Holds the cards being moved from stack to stack. 					*/
-	protected StackOfCards inUse;
-
-	/** A reference to the stack in which the current cards in inUse were taken
-	 *  from.																*/
-	protected StackOfCards lastStack;
-
-	/** Whether or not cards below the top cards in the tableaux are initially
-	 * 	hidden.																*/
-	protected boolean initiallyHidden = true;
-
-	/** An extra bit to check if everything has been initialized.	  	    */
-	protected boolean initialized;
-
-	/** The width of all cards in the stacks. This is used as a standard for most
-	 *  Measurements such as location of stacks.							*/
-	protected int cardWidth;
-
-	/** The tableaux' offset.												*/
-	protected int offset;
-
-	/** The y coordinate for the top stacks (stock, waste, & foundations).	*/
-	protected int yCoord;
-
-	/** Holds the number moves that the user has made.						*/
-	protected int moves;
-
-	/** Holds how off-center a the mouse was when it clicks a tableau relative
-	 *  to the cards when the mouse clicks a tableau.						*/
-	protected int deltaX, deltaY;
-
-	/** The {@link Container} in which the game will be played.				*/
-	protected Container container;
-
-	/** Holds cards being moved between stacks and are not in one of the instance
-	 * StackOfCards so that they can be animated.							  */
-	protected Queue<StackOfCards> animationQueue;
-	
-	
-
+	protected Card baseCard;
 	/** Do nothing constructor.												*/
 	public AmericanToad(){}
 
@@ -142,10 +91,9 @@ public class AmericanToad extends Klondike implements MouseListener, MouseMotion
 		//holds the initial tableau sizes.
 		initTableaux(deck,new int[]{1,1,1,1,1,1,1,1});
 		initStockAndWaste(deck,deck2); //Initializes the stocks and waste
-		initFoundations(8);		      //and foundations
+		initFoundations(8,deck);		      //and foundations
 		initialized = true; 		 	  //Everything is initialized,
-		container.repaint();           //So we repaint.
-		
+		container.repaint();  //So we repaint.
 	}
 
 	/**
@@ -190,8 +138,10 @@ public class AmericanToad extends Klondike implements MouseListener, MouseMotion
 		
 		// THIS IS WHERE I TRIED TO DECLARE THE SECOND STOCK AND PLACE IT DIRECTLY UNDER THE MAIN STOCK
 		stock2 = new StackOfCards(cardWidth+10,yCoord+cardWidth*2,cardWidth,0,0);
-		stock2.appendStack(deck2);
-		stock2.peek().setHidden(true);
+		for(int i=0;i<20;i++) {
+			stock2.push(deck2.pop());
+		}
+		stock2.peek().setHidden(false);
 		
 		waste = new StackOfCards(2*(stock.getX()), yCoord, cardWidth, 0, 0);
 	}
@@ -203,19 +153,53 @@ public class AmericanToad extends Klondike implements MouseListener, MouseMotion
 		int increment = 3;
 		foundations = new Foundation[numOfFoundations];
 		for(int i = 0; i < foundations.length; i++){
-			foundations[i] = new Foundation(increment*(stock.getX())+20,yCoord,cardWidth, 0);
+			foundations[i] = new Foundation(increment*(stock.getX())+20,yCoord,cardWidth);
 			increment++;
 		}
-		// THIS IS WHERE I TRIED TO SET THE FIRST CARD ON THE FOUNDATION
-		foundations[0].push(source.pop());
+		foundations[0].pushBase(source.pop());
+		baseCard = foundations[0].peek();
 		foundations[0].peek().setHidden(false);
 	}
 	
-	protected void determineFoundation(StackOfCards deck) {
-		foundations[0].push(deck.pop());
-		container.repaint();
+	/**
+	 * If one foundation in {@link #foundations} contains the given coordinates,
+	 * and only one card is in {@link #inUse}, and either:
+	 * <ul>
+	 * <li>that foundation is empty and that card is an ace, or
+	 * <li>that foundation is not empty and that card's value is one more than the
+	 * 		value of the top card of the foundation and of the same suit,
+	 * </ul>
+	 * then that card is added to the foundation and <code>true</code> is returned.
+	 * Otherwise nothing is performed and the method returns <code>false</code>.
+	 * 
+	 * @param x		The x coordinate of a mouse click.
+	 * @param y		The y coordinate.
+	 * @return <code>true</code> if the action above was performed, 
+	 * 			else <code>false</code>
+	 */
+	protected boolean foundationsReleasedAction(int x, int y){
+		if(inUse.isEmpty() || inUse.size() != 1){ //Only 1 card can be added to
+			return false;						  //a foundation at a time.
+		}
+		for(Foundation foundation : foundations){
+			//If the foundation was clicked.
+			if(foundation.contains(x, y) || (foundation.isEmpty()
+					&& foundation.shapeOfNextCard().contains(x, y))){
+				try {
+					//Peek is used in case the card is not appended.
+					foundation.push2(inUse.peek(),baseCard);
+					//if an exception was not thrown:
+					inUse.pop(); //we pop.
+					flipLastStack();
+					return true; //The action was performed
+				} catch(IllegalArgumentException ex){ //If an exception was thrown,
+					return false; //we return false as nothing was done.
+				}
+			}
+		}
+		return false;
 	}
-
+	
 	/**
 	 * Performs the action associated with stock when clicked. If the stock is not
 	 * empty, a card will be flipped from the stock to the waste, otherwise, the
@@ -232,7 +216,7 @@ public class AmericanToad extends Klondike implements MouseListener, MouseMotion
 	protected boolean stockPressedAction(int x, int y){
 		if(stock.contains(x, y)){
 			//If the stock was clicked:
-			waste.push(stock.pop());	 //Move the top card from stock to waste.
+			waste.push(stock.pop());waste.push(stock.pop());waste.push(stock.pop());	// Burn 3 cards.  
 			waste.peek().setHidden(false);//And show it.
 
 			if(!stock.isEmpty())
@@ -258,223 +242,6 @@ public class AmericanToad extends Klondike implements MouseListener, MouseMotion
 	}
 
 	/**
-	 * Performs the action associated with the waste if the waste contains
-	 * the given coordinates. The action is to pop a card from the waste and put
-	 * it inUse. In this method, the number of moves is incremented if the action
-	 * is performed.
-	 * @param x		The x coordinate of a mouse click.
-	 * @param y		The y coordinate.
-	 * @return <code>true</code> if the action was performed,
-	 * 			else <code>false</code>
-	 */
-	protected boolean wastePressedAction(int x, int y){
-		//If the waste has cards and the mouse clicked the waste,
-		if(waste.contains(x, y)){
-			inUse.push(waste.pop());//then the top card from the waste is put inUse
-			lastStack = waste;  //and the waste becomes the last stack to be used
-			moves++;
-			return true; //The action was performed.
-		}
-		return false; //The waste was not clicked.
-	}
-
-	/**
-	 * Performs the action associated with the tableaux. If one tableau contains
-	 * the coordinates, all cards below the mouse click will be put inUse and
-	 * removed from the tableau. The action will be deemed successful if cards
-	 * are put inUse
-	 * @param x		The x coordinate of a mouse click.
-	 * @param y		The y coordinate.
-	 * @return <code>true</code> if the action was successfully performed,
-	 * 			else <code>false</code>
-	 */
-	protected boolean tableauxPressedAction(int x, int y){
-		for(Tableau tableau : tableaux){ //Check each tableau,
-			if(tableau.contains(x, y)){  //and if the mouse clicked a tableau,
-
-				//The cards to be put inUse.
-				Stack<Card> cards = tableau.popCardsBelow(y);
-
-				if(!removableFromTableaux(cards)){
-					//the cards are not removable so we put them back.
-					tableau.appendStack(cards);
-					return false; //The action was not performed.
-				}
-
-				//The y coordinate of the bottom card that was popped.
-				int cardsY = cards.reverseCopy().peek().getY();
-
-				deltaX = x - tableau.getX(); //How off center the click was
-				deltaY = y - cardsY;		//relative to the card.
-
-				//Then put all cards below the click in use, if they are suitable.
-				inUse.appendStack(cards);
-
-				lastStack = tableau; //And the the tableau becomes the last stack.
-			}
-		}
-		return false; //No tableau was clicked.
-	}
-
-	/**
-	 *
-	 */
-	protected boolean removableFromTableaux(Stack<Card> cards){
-		return cards != null
-				&& Tableau.isVisible(cards)
-				&& Tableau.inSequence(cards)
-				&& Tableau.alternatesInColor(cards);
-	}
-
-
-	/**
-	 * Performs the pressed action methods.
-	 */
-	@Override
-	public void mousePressed(MouseEvent e){
-		if(hasWon()){				//If the user has won,
-			container.repaint();	//repaint and
-			onWin();				//perform the on win action
-			return;
-		}
-
-		int x = e.getX(), y = e.getY();
-
-		//Short circuit evaluation is used to perform each action if the
-		//previous action was not done.
-		if(inUse.isEmpty() && !stockPressedAction(x,y) && !wastePressedAction(x,y)){
-			tableauxPressedAction(x, y);
-		}
-
-	}
-
-	/**
-	 * If a tableau in {@link #tableaux} contains the given coordinates and the
-	 * cards in {@link #inUse} increment in value and alternated in color, then
-	 * the cards inUse will be appended to the tableau and inUse will be cleared.
-	 *
-	 * @param x		The x coordinate of a mouse click.
-	 * @param y		The y coordinate.
-	 * @return <code>true</code> if the action above was performed,
-	 * 			else <code>false</code>
-	 */
-	protected boolean tableauxReleasedAction(int x, int y){
-		for(Tableau tableau : tableaux){ //Check each of the tableaux
-			if(tableau.contains(x, y) || tableau.shapeOfNextCard().contains(x, y)){
-				//Then we check if the inUse stack can be appended to the
-				//tableau per the rules of solitaire.
-
-				try {
-					tableau.appendSuitableCards(inUse);
-					//This code is not executed if an exception was thrown.
-					inUse.clear();
-					flipLastStack();
-					return true;
-				} catch(IllegalArgumentException ex){}
-			}
-		}
-		return false;//If we have reached this point, then no action was performed
-	}
-
-	/**
-	 * If one foundation in {@link #foundations} contains the given coordinates,
-	 * and only one card is in {@link #inUse}, and either:
-	 * <ul>
-	 * <li>that foundation is empty and that card is an ace, or
-	 * <li>that foundation is not empty and that card's value is one more than the
-	 * 		value of the top card of the foundation and of the same suit,
-	 * </ul>
-	 * then that card is added to the foundation and <code>true</code> is returned.
-	 * Otherwise nothing is performed and the method returns <code>false</code>.
-	 *
-	 * @param x		The x coordinate of a mouse click.
-	 * @param y		The y coordinate.
-	 * @return <code>true</code> if the action above was performed,
-	 * 			else <code>false</code>
-	 */
-	protected boolean foundationsReleasedAction(int x, int y){
-		if(inUse.isEmpty() || inUse.size() != 1){ //Only 1 card can be added to
-			return false;						  //a foundation at a time.
-		}
-		for(Foundation foundation : foundations){
-			//If the foundation was clicked.
-			if(foundation.contains(x, y) || (foundation.isEmpty()
-					&& foundation.shapeOfNextCard().contains(x, y))){
-				try {
-					//Peek is used in case the card is not appended.
-					foundation.push(inUse.peek());
-					//if an exception was not thrown:
-					inUse.pop(); //we pop.
-					flipLastStack();
-					return true; //The action was performed
-				} catch(IllegalArgumentException ex){ //If an exception was thrown,
-					return false; //we return false as nothing was done.
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Calls all of the release action methods. But if no action is performed,
-	 * then the cards in {@link #inUse} are returned to {@link #lastStack}
-	 */
-	@Override
-	public void mouseReleased(MouseEvent e){
-		if(inUse.isEmpty()){//Then there is nothing to do when the mouse
-			return;					 //is released.
-		}
-		int x = e.getX(), y = e.getY(); //The mouse's location.
-		if(!tableauxReleasedAction(x, y) && !foundationsReleasedAction(x, y)){
-			//Then no action was performed, so we return the cards to the
-			returnToLastStack();	//last stack.
-		} else {
-			moves++; //A move was made
-		}
-	}
-
-	/**
-	 * Return the cards that are in use to the last stack that was clicked.
-	 */
-	protected void returnToLastStack(){
-		new StackOfCardsAnimator(inUse, lastStack, container);
-	}
-
-	/**
-	 * Flips the top card of {@link #lastStack} if it is not empty.
-	 */
-	protected void flipLastStack(){
-		if(!lastStack.isEmpty()){ //We unhide the top card
-			lastStack.peek().setHidden(false); //of the last stack.
-		}
-		container.repaint();
-	}
-
-	/**
-	 * Sets the location of the stack {@link #inUse} to the MouseEvent's location.
-	 */
-	@Override
-	public void mouseDragged(MouseEvent e){
-		if(inUse != null){//Just move the cards inUse When the mouse is dragged
-			inUse.setLocation(e.getX() - deltaX, e.getY() - deltaY);
-			container.repaint();                   //and repaint.
-		}
-	}
-
-	/**
-	 * Removes empty elements from the animation queue.
-	 */
-	protected void updateAnimationQueue(){
-		while(!animationQueue.isEmpty()){ //While it has elements.
-			if(animationQueue.peek().isEmpty()){//If the front element is empty,
-				animationQueue.dequeue();		//remove it.
-			} else {							//else it is not empty,
-				return;							//so we are done.
-			}
-		}
-	}
-
-	/**
 	 * Paints all of the stacks. This should be placed in the container's paint
 	 * method.
 	 */
@@ -488,6 +255,8 @@ public class AmericanToad extends Klondike implements MouseListener, MouseMotion
 			}
 			if(stock != null && !stock.isEmpty())
 				stock.peek().draw(pane);
+			if(stock2 !=null&& !stock2.isEmpty()) 
+				stock2.peek().draw(pane);
 			if(waste != null && !waste.isEmpty())
 				waste.peek().draw(pane);
 			if(inUse != null && !inUse.isEmpty())
@@ -500,105 +269,5 @@ public class AmericanToad extends Klondike implements MouseListener, MouseMotion
 				}
 			}
 		}
-	}
-
-	/**
-	 * Determines whether the following winning condition has been met:
-	 * <ul>
-	 * <li>The stock and waste are both empty.
-	 * <li>All cards in the tableaux are not hidden.
-	 * <li>Only four or fewer of the tableaux are not empty.
-	 * <li>All foundations have at least one card.
-	 * </ul>
-	 * When these conditions are met, the user has won because all that is done
-	 * is to move cards to the foundation without any transfers among the stock,
-	 * waste, and tableaux.
-	 * @return <code>true</code> if the above condition has been met, else
-	 * 			<code>false</code>.
-	 */
-	protected boolean hasWon(){
-		for(Foundation f : foundations){
-			if(f.isEmpty()){
-				return false; //a foundation is empty so the user hasn't won.
-			}
-		}
-
-		int numOfNonEmptyTableaux = 0; //To check how many tableaux have cards
-		for(Tableau tableau : tableaux){ //Checks each tableau if it is suitable.
-
-			if(!Tableau.isSuitable(tableau)){ //If any tableaux is not suitable,
-				return false;				  //the user has not won.
-			} else if(tableau.size() != 0){
-				numOfNonEmptyTableaux++;
-			}
-		}
-		//If there are fewer than 4 nonempty tableaux, and the stock and waste
-		//are empty, then the user has effectively won.
-		return numOfNonEmptyTableaux <= 4 && stock.isEmpty() && waste.isEmpty();
-	}
-
-	/**
-	 * Plays the winning animation.
-	 * Pre. <code>hasWon()</code> returns <code>true</code>.
-	 */
-	protected void winningAnimation(){
-		//We calculate the number of cards in all of the foundations.
-		int sizeOfFoundations = 0;
-		for(Foundation f : foundations){
-			sizeOfFoundations += f.size();
-		}
-
-		while(sizeOfFoundations < 52){ //until all cards are in the foundations.
-			//If the animation queue has more than 5 cards, then we wait so as to
-			//prevent the program from crashing by creating too many threads at
-			if(animationQueue.size() > 6){						//the same time.
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e){}
-				continue; //try again.
-			}
-			for(Foundation foundation : foundations){ //For each foundation:
-				Card temp = foundation.peek(); //For comparisons.
-
-				for(Tableau tableau : tableaux){
-					//If the tableau:
-					//-is not empty
-					//-its top card's value is one greater than temp
-					//-and it has the same suit as temp, then:
-					if(!tableau.isEmpty() &&
-							temp.compareTo(tableau.peek()) == -1
-							&& temp.getSuit() == tableau.peek().getSuit()){
-
-						//move the top card to the foundation and animate it.
-						animateTopCardOf(tableau, foundation);
-						sizeOfFoundations++;//One more card is in a foundation.
-
-						break; //We don't need to look in another tableau.
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Moves the top card of a source stack to the destination and animates it.
-	 * @param source		The stack whose top card is to be moved.
-	 * @param destination	The stack to receive the card.
-	 */
-	protected void animateTopCardOf(StackOfCards source, StackOfCards destination){
-		//Holds one of the cards in use for animation.
-		StackOfCards temp = new StackOfCards(
-				source.getX(), source.peek().getY(),
-				cardWidth, 0, 0);
-
-		temp.push(source.pop()); //Moves a card to the temp.
-		animationQueue.enqueue(temp); //and add temp to the queue.
-		//Performs the animation.
-		new StackOfCardsAnimator(temp, destination, container);
-	}
-
-	public void mouseEntered(MouseEvent e){}
-	public void mouseExited(MouseEvent e){}
-	public void mouseClicked(MouseEvent e){}
-	public void mouseMoved(MouseEvent e){}
+	}	
 }
