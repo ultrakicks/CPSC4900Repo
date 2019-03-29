@@ -300,4 +300,8 @@ public class Argos extends Klondike {
 			}
 		}
 	}
+
+	public String getName() {
+		return "Argos";
+	}
 }

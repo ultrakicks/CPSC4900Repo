@@ -272,4 +272,8 @@ public class AnnoDomini extends Klondike
 			}
 		}
 	}
+
+	public String getName() {
+		return "AnnoDomini";
+	}
 }

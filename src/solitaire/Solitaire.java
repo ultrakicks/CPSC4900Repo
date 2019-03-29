@@ -277,12 +277,12 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		//Open rules
 		if(e.getSource() == rulesItem)
 		{
-			if(game instanceof AnnoDomini)
+			if(game != null)
 			{
 				if (Desktop.isDesktopSupported()) 
 				{
 		            // File in user working directory, System.getProperty("user.dir");
-		            File file = new File("AnnoRules.pdf");
+		            File file = new File(game.getName() + "Rules.pdf");
 		            if (!file.exists()) 
 		            {
 		                // In JAR
