@@ -344,6 +344,10 @@ public class Pyramid extends Klondike {
 			return true;
 		return false;
 	}
+
+	public String getName() {
+		return "AztecPyramid";
+	}
 	
 	@Override
 	public void mouseReleased(MouseEvent e){}

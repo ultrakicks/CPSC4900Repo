@@ -615,6 +615,10 @@ public class Klondike implements MouseListener, MouseMotionListener {
 		new StackOfCardsAnimator(temp, destination, container);
 	}
 
+	public String getName() {
+		return "Klondike";
+	}
+
 	public void mouseEntered(MouseEvent e){}
 	public void mouseExited(MouseEvent e){}
 	public void mouseClicked(MouseEvent e){}
