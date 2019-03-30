@@ -38,6 +38,7 @@ import java.awt.event.MouseMotionListener;
 public class AmericanToad extends Klondike {
 	protected StackOfCards stock2;
 	protected Card baseCard;
+	
 	/** Do nothing constructor.												*/
 	public AmericanToad(){}
 
@@ -78,7 +79,7 @@ public class AmericanToad extends Klondike {
 	 * initialized here but the parameters for calling <code>initTableaux</code>
 	 * are.
 	 */
-	@Override
+
 	protected void init(){
 		//The initial decks.
 		StackOfCards deck = new StackOfCards();
@@ -86,12 +87,13 @@ public class AmericanToad extends Klondike {
 		//fill deck & deck2 twice to hold 104 cards & shuffle
 		deck.fillBySuit(); deck.fillBySuit(); deck.shuffle();
 		deck2.fillBySuit(); deck2.shuffle();
-
+		baseCard = deck.pop();
 		//Calls initTableaux with the random deck and an anonymous array that
 		//holds the initial tableau sizes.
 		initTableaux(deck,new int[]{1,1,1,1,1,1,1,1});
 		initStockAndWaste(deck,deck2); //Initializes the stocks and waste
 		initFoundations(8,deck);		      //and foundations
+		pushFoundation(foundations,baseCard);
 		initialized = true; 		 	  //Everything is initialized,
 		container.repaint();  //So we repaint.
 	}
@@ -156,9 +158,10 @@ public class AmericanToad extends Klondike {
 			foundations[i] = new Foundation(increment*(stock.getX())+20,yCoord,cardWidth);
 			increment++;
 		}
-		foundations[0].pushBase(source.pop());
-		baseCard = foundations[0].peek();
-		foundations[0].peek().setHidden(false);
+	}
+	protected void pushFoundation(Foundation[] foundations, Card card) {
+		foundations[0].pushBase(baseCard);
+		container.repaint();
 	}
 	
 	/**
@@ -271,3 +274,4 @@ public class AmericanToad extends Klondike {
 		}
 	}	
 }
+
