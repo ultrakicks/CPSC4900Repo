@@ -272,6 +272,15 @@ public class AmericanToad extends Klondike {
 				}
 			}
 		}
-	}	
+	}
+
+	/**
+	 * logic to show rules for game
+	 */
+	public String getName() {
+		return "AmericanToad";
+	}
+
+
 }
 

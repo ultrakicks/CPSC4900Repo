@@ -385,7 +385,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 			Statistics.startGame("Argos");
         } else if(e.getSource() == americanItem){
 			Statistics.leaveGame(gameName);
-            game = new Klondike(this);
+            game = new AmericanToad(this);
 			Statistics.startGame("American Toad");
         } else if(e.getSource() == annoItem){
 			Statistics.leaveGame(gameName);
