@@ -155,7 +155,7 @@ public class AmericanToad extends Klondike {
 		int increment = 3;
 		foundations = new Foundation[numOfFoundations];
 		for(int i = 0; i < foundations.length; i++){
-			foundations[i] = new Foundation(increment*(stock.getX())+20,yCoord,cardWidth);
+			foundations[i] = new Foundation(increment*(stock.getX())+20,yCoord,cardWidth,0);
 			increment++;
 		}
 	}
@@ -190,7 +190,7 @@ public class AmericanToad extends Klondike {
 					&& foundation.shapeOfNextCard().contains(x, y))){
 				try {
 					//Peek is used in case the card is not appended.
-					foundation.push2(inUse.peek(),baseCard);
+					foundation.americanPush(inUse.peek(),baseCard);
 					//if an exception was not thrown:
 					inUse.pop(); //we pop.
 					flipLastStack();

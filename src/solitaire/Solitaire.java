@@ -427,7 +427,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		switch(selectedGame)
 		{
 			case MENU:
-				Foundation.suitsUsed.clear();
+				//Foundation.suitsUsed.clear();
 				cardLayout.next(contentPane);
 				frame.setJMenuBar(gamePanel.makeMainMenuBar());
 				break;
