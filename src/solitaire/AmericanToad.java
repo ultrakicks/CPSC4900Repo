@@ -222,12 +222,12 @@ public class AmericanToad extends Klondike {
 			waste.push(stock.pop());waste.push(stock.pop());waste.push(stock.pop());	// Burn 3 cards.  
 			waste.peek().setHidden(false);//And show it.
 
-			if(!stock.isEmpty())
+			if(!stock.isEmpty()) {
 				stock.peek().setHidden(true);//Hides the new top card of the stack.
-			moves++; //This counts as a move.
-			container.repaint();
-			return true; //The action was performed.
-
+				moves++; //This counts as a move.
+				container.repaint();
+				return true; //The action was performed.
+			}
 		} else if(stock.shapeOfNextCard().contains(x, y)){
 			//else if the mouse clicked the empty stock's area:
 			//Turn over all cards from the waste to the stock,
@@ -238,10 +238,47 @@ public class AmericanToad extends Klondike {
 				stock.peek().setHidden(true); //So that stock is turned form
 				moves++;					  //the user.
 			}
+		
+		} else if(stock2.contains(x, y)) {	//Check if mouse click or dragged on Stack 2
+			inUse.push(stock2.pop()); lastStack = stock2;	// stack 2 set as last object to be in use.
+			moves++;				// count as move
+			
 			container.repaint();
 			return true; //The action was performed.
+		  }  
+	return false; //The action was not performed.
+  }
+	
+	/**
+	 * If a tableau in {@link #tableaux} contains the given coordinates and the 
+	 * cards in {@link #inUse} increment in value and alternated in color, then
+	 * the cards inUse will be appended to the tableau and inUse will be cleared.
+	 * 
+	 * @param x		The x coordinate of a mouse click.
+	 * @param y		The y coordinate.
+	 * @return <code>true</code> if the action above was performed, 
+	 * 			else <code>false</code>
+	 */
+	protected boolean tableauxReleasedAction(int x, int y){
+		for(Tableau tableau : tableaux){ //Check each of the tableaux
+			if(tableau.contains(x, y) || tableau.shapeOfNextCard().contains(x, y)){
+				//Then we check if the inUse stack can be appended to the
+				//tableau per the rules of solitaire.
+
+				try {
+					tableau.appendSuitableCards(inUse);
+					//This code is not executed if an exception was thrown.
+					inUse.clear();
+					flipLastStack();
+					return true;
+				} catch(IllegalArgumentException ex){}
+			}
+			if(tableau.isEmpty()) {		// Test for empty tableau column.
+				tableau.push(stock2.pop());   // Pop top card from Stock 2
+				return true;
+			}
 		}
-		return false; //The action was not performed.
+		return false;//If we have reached this point, then no action was performed
 	}
 
 	/**
@@ -272,15 +309,6 @@ public class AmericanToad extends Klondike {
 				}
 			}
 		}
-	}
-
-	/**
-	 * logic to show rules for game
-	 */
-	public String getName() {
-		return "AmericanToad";
-	}
-
-
+	}	
 }
 
