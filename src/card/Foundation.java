@@ -104,7 +104,7 @@ public class Foundation extends StackOfCards
 			//Otherwise the card's value must be 1 greater than the top card
 			//and be of the same suit.
 			if(card.getValue() == peek().getValue() + 1
-					&& card.getSuit() == peek().getSuit()){
+					&& card.getSuit() == peek().getSuit() || card.getValue() == 13 && peek().getValue() == 1  || card.getValue() == 1 && peek().getValue() == 13){
 				super.push(card);
 			} else {
 				throw new IllegalArgumentException();

@@ -51,7 +51,7 @@ public class AmericanToad extends Klondike {
 		this.container = container;
 		container.addMouseListener(this); 		//To respond to clicks
 		container.addMouseMotionListener(this); //and dragging.
-		container.setBackground(new Color(50, 35, 150)); //A green color.
+		container.setBackground(new Color(0, 60, 0)); //A green color.
 		container.setSize(790, 720);
 		container.setPreferredSize(container.getSize());
 
@@ -319,6 +319,43 @@ public class AmericanToad extends Klondike {
 			}
 		}
 	}
+
+	/**
+	 * Determines whether the following winning condition has been met:
+	 * <ul>
+	 * <li>The stock and waste are both empty.
+	 * <li>All cards in the tableaux are not hidden.
+	 * <li>Only four or fewer of the tableaux are not empty.
+	 * <li>All foundations have at least one card.
+	 * </ul>
+	 * When these conditions are met, the user has won because all that is done
+	 * is to move cards to the foundation without any transfers among the stock,
+	 * waste, and tableaux.
+	 * @return <code>true</code> if the above condition has been met, else
+	 * 			<code>false</code>.
+	 */
+	protected boolean hasWon(){
+		for(Foundation f : foundations){
+			if(f.isEmpty()){
+				return false; //a foundation is empty so the user hasn't won.
+			}
+		}
+
+		int numOfNonEmptyTableaux = 0; //To check how many tableaux have cards
+		for(Tableau tableau : tableaux){ //Checks each tableau if it is suitable.
+
+			if(!Tableau.isSuitable(tableau)){ //If any tableaux is not suitable,
+				return false;				  //the user has not won.
+			} else if(tableau.size() != 0){
+				numOfNonEmptyTableaux++;
+			}
+		}
+		//If there are fewer than 4 nonempty tableaux, and the stock and waste
+		//are empty, then the user has effectively won.
+		return numOfNonEmptyTableaux <= 8 && stock.isEmpty() && waste.isEmpty() && reserve.isEmpty();
+	}
+
+
 
 	public String getName() {
 		return "AmericanToad";
