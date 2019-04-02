@@ -36,7 +36,7 @@ import java.awt.event.MouseMotionListener;
  */
 
 public class AmericanToad extends Klondike {
-	protected StackOfCards stock2;
+	protected StackOfCards reserve;
 	protected Card baseCard;
 	
 	/** Do nothing constructor.												*/
@@ -83,15 +83,17 @@ public class AmericanToad extends Klondike {
 	protected void init(){
 		//The initial decks.
 		StackOfCards deck = new StackOfCards();
-		StackOfCards deck2 = new StackOfCards();
+		StackOfCards reserve = new StackOfCards();
 		//fill deck & deck2 twice to hold 104 cards & shuffle
 		deck.fillBySuit(); deck.fillBySuit(); deck.shuffle();
-		deck2.fillBySuit(); deck2.shuffle();
+		for(int i=0;i<20;i++) {
+			reserve.push(deck.pop());
+		}
 		baseCard = deck.pop();
 		//Calls initTableaux with the random deck and an anonymous array that
 		//holds the initial tableau sizes.
 		initTableaux(deck,new int[]{1,1,1,1,1,1,1,1});
-		initStockAndWaste(deck,deck2); //Initializes the stocks and waste
+		initStockAndWaste(deck,reserve); //Initializes the stocks and waste
 		initFoundations(8,deck);		      //and foundations
 		pushFoundation(foundations,baseCard);
 		initialized = true; 		 	  //Everything is initialized,
@@ -133,17 +135,15 @@ public class AmericanToad extends Klondike {
 	 * deck.
 	 * @param deck The source of cards for the stock.
 	 */
-	protected void initStockAndWaste(StackOfCards deck,StackOfCards deck2){
+	protected void initStockAndWaste(StackOfCards deck,StackOfCards partialdeck){
 		stock = new StackOfCards(cardWidth + 10, yCoord, cardWidth, 0, 0);
 		stock.appendStack(deck); //The stock contains all of its cards.
 		stock.peek().setHidden(true); //So that the stock is hidden.
 		
 		// THIS IS WHERE I TRIED TO DECLARE THE SECOND STOCK AND PLACE IT DIRECTLY UNDER THE MAIN STOCK
-		stock2 = new StackOfCards(cardWidth+10,yCoord+cardWidth*2,cardWidth,0,0);
-		for(int i=0;i<20;i++) {
-			stock2.push(deck2.pop());
-		}
-		stock2.peek().setHidden(false);
+		reserve = new StackOfCards(cardWidth+10,yCoord+cardWidth*2,cardWidth,0,0);
+		reserve.appendStack(partialdeck);
+		reserve.peek().setHidden(false);
 		
 		waste = new StackOfCards(2*(stock.getX()), yCoord, cardWidth, 0, 0);
 	}
@@ -239,8 +239,8 @@ public class AmericanToad extends Klondike {
 				moves++;					  //the user.
 			}
 		
-		} else if(stock2.contains(x, y)) {	//Check if mouse click or dragged on Stack 2
-			inUse.push(stock2.pop()); lastStack = stock2;	// stack 2 set as last object to be in use.
+		} else if(reserve.contains(x, y)) {	//Check if mouse click or dragged on Stack 2
+			inUse.push(reserve.pop()); lastStack = reserve;	// stack 2 set as last object to be in use.
 			moves++;				// count as move
 			
 			container.repaint();
@@ -273,9 +273,18 @@ public class AmericanToad extends Klondike {
 					return true;
 				} catch(IllegalArgumentException ex){}
 			}
-			if(tableau.isEmpty()) {		// Test for empty tableau column.
-				tableau.push(stock2.pop());   // Pop top card from Stock 2
-				return true;
+
+			//TODO "fix strange bug"
+			if(tableau.isEmpty() && inUse.isEmpty()) {		// Test for empty tableau column.
+
+				System.out.println("here");
+				try {
+					tableau.push(reserve.pop());   // Pop top card from reserve
+					return true;
+				} catch(IllegalArgumentException ex) {}
+
+				container.repaint();
+
 			}
 		}
 		return false;//If we have reached this point, then no action was performed
@@ -295,8 +304,8 @@ public class AmericanToad extends Klondike {
 			}
 			if(stock != null && !stock.isEmpty())
 				stock.peek().draw(pane);
-			if(stock2 !=null&& !stock2.isEmpty()) 
-				stock2.peek().draw(pane);
+			if(reserve !=null&& !reserve.isEmpty())
+				reserve.peek().draw(pane);
 			if(waste != null && !waste.isEmpty())
 				waste.peek().draw(pane);
 			if(inUse != null && !inUse.isEmpty())

@@ -104,6 +104,19 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		rulesMenu.add(rulesItem);
 		bar.add(rulesMenu);
 
+		volumeItem = new JCheckBoxMenuItem("Volume Toggle");
+		volumeItem.addActionListener(this);
+		bar.add(volumeItem);
+		if (clip.isRunning())
+		{
+			volumeItem.setSelected(true);
+		}
+		else
+		{
+			volumeItem.setSelected(false);
+		}
+		volumeItem.addItemListener(this); //Adds volume toggle in-game
+
 		return bar; //The bar has been created.
 	}
 	
