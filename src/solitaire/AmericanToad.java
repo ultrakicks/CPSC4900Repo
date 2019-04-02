@@ -309,6 +309,10 @@ public class AmericanToad extends Klondike {
 				}
 			}
 		}
-	}	
+	}
+
+	public String getName() {
+		return "AmericanToad";
+	}
 }
 
