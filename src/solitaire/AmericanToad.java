@@ -214,7 +214,7 @@ public class AmericanToad extends Klondike {
 	public void mouseReleased(MouseEvent e){
 		System.out.println("MouseReleased function called...");
 		if(inUse.isEmpty()){			//Then there is nothing to do when the mouse
-			System.out.println( "inUse is empty, return"); line();
+			System.out.println( "final inUse check; empty? "+inUse.isEmpty()); line();
 			return;					 //is released.
 		}
 		
@@ -226,10 +226,26 @@ public class AmericanToad extends Klondike {
 			System.out.println("Return inUse card(s) to last stock Called");
 			System.out.println("mouseRelease call returnToLastStock...");
 			returnToLastStack();		//last stack.
+			//Returned from function call returnToLastStack()
+			for(Tableau tableau: tableaux) {
+				if(tableau.isEmpty()) {
+					System.out.println("Triggered if check on tableEmpty from mouseRelease... is it?");
+					System.out.println("Tableau should not be empty...");
+				}
+			}
 		} else {
 			moves++; //A move was made
 			System.out.println("Return from releaseAction function...");
 			System.out.println("final inUse Check; empty? "+inUse.isEmpty());
+			for(Tableau tableau: tableaux) {
+				if(tableau.isEmpty()) {
+					System.out.println("Triggered if check on tableEmpty from mouseRelease... is it?");
+					System.out.println("Tableau should be empty...");
+					tableau.push(reserve.pop()); // Pop top reserve card into empty tableau
+					System.out.println("Tableau should be filled now...");
+				}
+			}
+			System.out.println("Tableau's are not empty..."); line();
 		}
 	}
 	
@@ -364,7 +380,7 @@ public class AmericanToad extends Klondike {
 				inUse.appendStack(cards);
 				lastStack = tableau; //And the the tableau becomes the last stack.
 				System.out.println("inUse was appended: inUse empty? "+inUse.isEmpty());
-				System.out.println("lastStack = "+ tableau.toString());
+				System.out.println("lastStack = tableau");
 			}
 		}
 		if(!inUse.isEmpty()) { 
@@ -395,9 +411,11 @@ public class AmericanToad extends Klondike {
 	 * 			else <code>false</code>
 	 */
 	protected boolean foundationsReleasedAction(int x, int y){
+		//TRACKING & TESTING CONSOLE INFORMATION
 		System.out.println("foundationsReleasedAction called...");
 		System.out.println("Mouse X-Coord: "+x+", Mouse Y-Coord: "+y);
-		
+		System.out.println("Card attempting to be pushed--> Suit: "+ inUse.peek().getSuit()+" | Value: "+ inUse.peek().getValue());
+
 		if(inUse.isEmpty() || inUse.size() != 1){ //Only 1 card can be added to
 			return false;						  //a foundation at a time.
 		}
@@ -443,10 +461,8 @@ public class AmericanToad extends Klondike {
 		for(Tableau tableau : tableaux){ //Check each of the tableaux
 			if(tableau.contains(x, y) || tableau.shapeOfNextCard().contains(x, y)){
 				System.out.println("Mouse Released on tableau..");
-				if(tableau.isEmpty()) System.out.println("Tableau is empty...");
 				//Then we check if the inUse stack can be appended to the
 				//tableau per the rules of solitaire.
-
 				try {
 					tableau.appendSuitableCards(inUse);
 					System.out.println("Cards were appended to tableau column..");
@@ -494,47 +510,5 @@ public class AmericanToad extends Klondike {
 			}
 		}
 	}	
-
-
-	/**
-	 * Determines whether the following winning condition has been met:
-	 * <ul>
-	 * <li>The stock and waste are both empty.
-	 * <li>All cards in the tableaux are not hidden.
-	 * <li>Only four or fewer of the tableaux are not empty.
-	 * <li>All foundations have at least one card.
-	 * </ul>
-	 * When these conditions are met, the user has won because all that is done
-	 * is to move cards to the foundation without any transfers among the stock,
-	 * waste, and tableaux.
-	 * @return <code>true</code> if the above condition has been met, else
-	 * 			<code>false</code>.
-	 */
-	protected boolean hasWon(){
-		for(Foundation f : foundations){
-			if(f.isEmpty()){
-				return false; //a foundation is empty so the user hasn't won.
-			}
-		}
-
-		int numOfNonEmptyTableaux = 0; //To check how many tableaux have cards
-		for(Tableau tableau : tableaux){ //Checks each tableau if it is suitable.
-
-			if(!Tableau.isSuitable(tableau)){ //If any tableaux is not suitable,
-				return false;				  //the user has not won.
-			} else if(tableau.size() != 0){
-				numOfNonEmptyTableaux++;
-			}
-		}
-		//If there are fewer than 4 nonempty tableaux, and the stock and waste
-		//are empty, then the user has effectively won.
-		return numOfNonEmptyTableaux <= 8 && stock.isEmpty() && waste.isEmpty() && reserve.isEmpty();
-	}
-
-
-
-	public String getName() {
-		return "AmericanToad";
-	}
 }
 
