@@ -36,15 +36,14 @@ import java.awt.event.MouseMotionListener;
  */
 
 public class AmericanToad extends Klondike {
-	protected static StackOfCards reserve;
+	protected StackOfCards reserve;
 	protected Card baseCard;
-	protected static StackOfCards deck2;
-	
+
 	public void line() {
-	System.out.println("________________________________________");
-	//System.out.println();
+		System.out.println("________________________________________");
+		//System.out.println();
 	}
-	
+
 	/** Do nothing constructor.												*/
 	public AmericanToad(){}
 
@@ -57,7 +56,7 @@ public class AmericanToad extends Klondike {
 		this.container = container;
 		container.addMouseListener(this); 		//To respond to clicks
 		container.addMouseMotionListener(this); //and dragging.
-		container.setBackground(new Color(50, 35, 150)); //A green color.
+		container.setBackground(new Color(0, 60, 0)); //A green color.
 		container.setSize(790, 720);
 		container.setPreferredSize(container.getSize());
 
@@ -89,20 +88,20 @@ public class AmericanToad extends Klondike {
 	protected void init(){
 		//The initial decks.
 		StackOfCards deck = new StackOfCards();
-	    deck2 = new StackOfCards();
-		//fill deck & deck2 twice to hold 104 cards & shuffle
+		StackOfCards reserve = new StackOfCards();
+		//fill deck twice to hold 104 cards & shuffle
 		deck.fillBySuit(); deck.fillBySuit(); deck.shuffle();
-		baseCard = deck.pop();
+		//take 20 cards from deck to make reserve
 		for(int i=0;i<20;i++) {
-			deck2.push(deck.pop());
+			reserve.push(deck.pop());
 		}
+		baseCard = deck.pop();
 		//Calls initTableaux with the random deck and an anonymous array that
 		//holds the initial tableau sizes.
 		initTableaux(deck,new int[]{1,1,1,1,1,1,1,1});
-		initStockAndWaste(deck); //Initializes the stocks and waste
+		initStockAndWaste(deck,reserve); //Initializes the stocks and waste
 		initFoundations(8,deck);		      //and foundations
 		pushFoundation(foundations,baseCard);
-		
 		initialized = true; 		 	  //Everything is initialized,
 		container.repaint();  //So we repaint.
 	}
@@ -142,14 +141,15 @@ public class AmericanToad extends Klondike {
 	 * deck.
 	 * @param deck The source of cards for the stock.
 	 */
-	protected void initStockAndWaste(StackOfCards deck){
+	protected void initStockAndWaste(StackOfCards deck,StackOfCards partialdeck){
 		stock = new StackOfCards(cardWidth + 10, yCoord, cardWidth, 0, 0);
 		stock.appendStack(deck); //The stock contains all of its cards.
 		stock.peek().setHidden(true); //So that the stock is hidden.
 		
 		// THIS IS WHERE I TRIED TO DECLARE THE SECOND STOCK AND PLACE IT DIRECTLY UNDER THE MAIN STOCK
 		reserve = new StackOfCards(cardWidth+10,yCoord+cardWidth*2,cardWidth,0,0);
-		reserve.appendStack(deck2);
+		reserve.appendStack(partialdeck);
+		reserve.peek().setHidden(false);
 		
 		waste = new StackOfCards(2*(stock.getX()), yCoord, cardWidth, 0, 0);
 	}
@@ -169,9 +169,8 @@ public class AmericanToad extends Klondike {
 		foundations[0].pushBase(baseCard);
 		container.repaint();
 	}
-	
-	
-// MOUSE PRESSED & RELEASED FUNCTIONS
+
+	// MOUSE PRESSED & RELEASED FUNCTIONS
 	/**
 	 * Performs the pressed action methods.
 	 */
@@ -185,17 +184,17 @@ public class AmericanToad extends Klondike {
 
 		int x = e.getX(), y = e.getY();
 		System.out.println("X = "+x+" Y =  " +y);
-		
+
 		//Short circuit evaluation is used to perform each action if the
 		//previous action was not done.
 		if(inUse.isEmpty() && !stockPressedAction(x,y) && !wastePressedAction(x,y)){
 			System.out.println("Mouse not in stock or waste & Empty, deafult tableauxPressed"); line();
 			tableauxPressedAction(x, y);
-			
+
 		}
 
 	}
-	
+
 	/**
 	 * Sets the location of the stack {@link #inUse} to the MouseEvent's location.
 	 */
@@ -206,7 +205,7 @@ public class AmericanToad extends Klondike {
 			container.repaint();                   //and repaint.
 		}
 	}
-	
+
 	/**
 	 * Calls all of the release action methods. But if no action is performed,
 	 * then the cards in {@link #inUse} are returned to {@link #lastStack}
@@ -217,7 +216,7 @@ public class AmericanToad extends Klondike {
 			System.out.println( "final inUse check; empty? "+inUse.isEmpty()); line();
 			return;					 //is released.
 		}
-		
+
 		int x = e.getX(), y = e.getY(); //The mouse's location.
 		System.out.println("Moused Released at: X = "+x+" Y = "+y);
 		line();
@@ -248,10 +247,10 @@ public class AmericanToad extends Klondike {
 			System.out.println("Tableau's are not empty..."); line();
 		}
 	}
-	
-	
+
+
 // PRESSED ACTION FUNCTIONS
-	
+
 	/**
 	 * Performs the action associated with stock when clicked. If the stock is not
 	 * empty, a card will be flipped from the stock to the waste, otherwise, the
@@ -270,10 +269,10 @@ public class AmericanToad extends Klondike {
 		if(stock.contains(x, y)){
 			//If the stock was clicked:
 			System.out.println("Mouse was clicked on main Stock...");
-			waste.push(stock.pop());waste.push(stock.pop());waste.push(stock.pop());	// Burn 3 cards.  
+			waste.push(stock.pop());waste.push(stock.pop());waste.push(stock.pop());	// Burn 3 cards.
 			waste.peek().setHidden(false);//And show it.
 			System.out.println("Stock was pushed, 3 cards burned");
-			
+
 			if(!stock.isEmpty()) {
 				System.out.println("Stock not empty");
 				stock.peek().setHidden(true);//Hides the new top card of the stack.
@@ -281,7 +280,7 @@ public class AmericanToad extends Klondike {
 				container.repaint();
 				return true; //The action was performed.
 			}
-		} 
+		}
 		if(reserve.contains(x, y)) {
 			//If the reserve stock was clicked
 			System.out.println("Mouse was clicked on reserve stock...");
@@ -303,27 +302,27 @@ public class AmericanToad extends Klondike {
 				stock.peek().setHidden(true); //So that stock is turned form
 				moves++;					  //the user.
 			}
-		return true; //The action was performed.
-	 }  
-	
-	System.out.println("Mouse was not pressed on the stock..."); line();
-	return false; //The action was not performed.
-	
-  }
-	
+			return true; //The action was performed.
+		}
+
+		System.out.println("Mouse was not pressed on the stock..."); line();
+		return false; //The action was not performed.
+
+	}
+
 	/**
 	 * Performs the action associated with the waste if the waste contains
 	 * the given coordinates. The action is to pop a card from the waste and put
-	 * it inUse. In this method, the number of moves is incremented if the action 
+	 * it inUse. In this method, the number of moves is incremented if the action
 	 * is performed.
 	 * @param x		The x coordinate of a mouse click.
 	 * @param y		The y coordinate.
-	 * @return <code>true</code> if the action was performed, 
+	 * @return <code>true</code> if the action was performed,
 	 * 			else <code>false</code>
 	 */
 	protected boolean wastePressedAction(int x, int y){
-	  System.out.println("wastePressedAction function called...");	
-	//If the waste has cards and the mouse clicked the waste,
+		System.out.println("wastePressedAction function called...");
+		//If the waste has cards and the mouse clicked the waste,
 		if(waste.contains(x, y)){
 			System.out.println("waste was clicked on...");
 			inUse.push(waste.pop());			//then the top card from the waste is put inUse
@@ -340,29 +339,29 @@ public class AmericanToad extends Klondike {
 		}
 		return false; 						//The waste was not clicked.
 	}
-	
-	
+
+
 	/**
 	 * Performs the action associated with the tableaux. If one tableau contains
 	 * the coordinates, all cards below the mouse click will be put inUse and
 	 * removed from the tableau. The action will be deemed successful if cards
-	 * are put inUse 
+	 * are put inUse
 	 * @param x		The x coordinate of a mouse click.
 	 * @param y		The y coordinate.
-	 * @return <code>true</code> if the action was successfully performed, 
+	 * @return <code>true</code> if the action was successfully performed,
 	 * 			else <code>false</code>
 	 */
 	protected boolean tableauxPressedAction(int x, int y){
 		System.out.println("tableauPressedAction called");
-		
+
 		for(Tableau tableau : tableaux){ //Check each tableau,
 			if(tableau.contains(x, y)){  //and if the mouse clicked a tableau,
 				System.out.println("Tableau was clicked");
-				
+
 				//The cards to be put inUse.
 				Stack<Card> cards = tableau.popCardsBelow(y);
 				if(tableau.isEmpty()) System.out.println("tableau is now empty...");
-				
+
 				if(!removableFromTableaux(cards)){
 					System.out.println("Cards not removable, return back");
 					//the cards are not removable so we put them back.
@@ -383,17 +382,17 @@ public class AmericanToad extends Klondike {
 				System.out.println("lastStack = tableau");
 			}
 		}
-		if(!inUse.isEmpty()) { 
+		if(!inUse.isEmpty()) {
 			System.out.println("tableau card(s) is being dragged..."); line();
 		} else {
 			System.out.println("Mouse was not pressed on a tableau..."); line();
 		}
-	  return false; //No tableau was clicked.
+		return false; //No tableau was clicked.
 	}
-	
-	
-// RELEASED ACTION FUNCTIONS	
-	
+
+
+// RELEASED ACTION FUNCTIONS
+
 	/**
 	 * If one foundation in {@link #foundations} contains the given coordinates,
 	 * and only one card is in {@link #inUse}, and either:
@@ -404,7 +403,7 @@ public class AmericanToad extends Klondike {
 	 * </ul>
 	 * then that card is added to the foundation and <code>true</code> is returned.
 	 * Otherwise nothing is performed and the method returns <code>false</code>.
-	 * 
+	 *
 	 * @param x		The x coordinate of a mouse click.
 	 * @param y		The y coordinate.
 	 * @return <code>true</code> if the action above was performed, 
@@ -443,21 +442,21 @@ public class AmericanToad extends Klondike {
 		System.out.println("Mouse was not released on a foundation..."); line();
 		return false;
 	}
-	
+
 	/**
-	 * If a tableau in {@link #tableaux} contains the given coordinates and the 
+	 * If a tableau in {@link #tableaux} contains the given coordinates and the
 	 * cards in {@link #inUse} increment in value and alternated in color, then
 	 * the cards inUse will be appended to the tableau and inUse will be cleared.
-	 * 
+	 *
 	 * @param x		The x coordinate of a mouse click.
 	 * @param y		The y coordinate.
-	 * @return <code>true</code> if the action above was performed, 
+	 * @return <code>true</code> if the action above was performed,
 	 * 			else <code>false</code>
 	 */
 	protected boolean tableauxReleasedAction(int x, int y){
 		System.out.println("tableauReleasedAction called");
 		System.out.println("Mouse X-Coord: "+x+", Mouse Y-Coord: "+y);
-		
+
 		for(Tableau tableau : tableaux){ //Check each of the tableaux
 			if(tableau.contains(x, y) || tableau.shapeOfNextCard().contains(x, y)){
 				System.out.println("Mouse Released on tableau..");
@@ -473,14 +472,14 @@ public class AmericanToad extends Klondike {
 				} catch(IllegalArgumentException ex){
 					System.out.println("Invalid operation...");
 				}
-			  return false;
+				return false;
 			}
-			
+
 		}
 		System.out.println("Mouse was not released on a tableau column.."); line();
 		return false;//If we have reached this point, then no action was performed
 	}
-	
+
 	/**
 	 * Paints all of the stacks. This should be placed in the container's paint
 	 * method.
@@ -495,7 +494,7 @@ public class AmericanToad extends Klondike {
 			}
 			if(stock != null && !stock.isEmpty())
 				stock.peek().draw(pane);
-			if(reserve !=null&& !reserve.isEmpty()) 
+			if(reserve !=null&& !reserve.isEmpty())
 				reserve.peek().draw(pane);
 			if(waste != null && !waste.isEmpty())
 				waste.peek().draw(pane);
@@ -509,6 +508,47 @@ public class AmericanToad extends Klondike {
 				}
 			}
 		}
-	}	
+	}
+
+	/**
+	 * Determines whether the following winning condition has been met:
+	 * <ul>
+	 * <li>The stock and waste are both empty.
+	 * <li>All cards in the tableaux are not hidden.
+	 * <li>Only four or fewer of the tableaux are not empty.
+	 * <li>All foundations have at least one card.
+	 * </ul>
+	 * When these conditions are met, the user has won because all that is done
+	 * is to move cards to the foundation without any transfers among the stock,
+	 * waste, and tableaux.
+	 * @return <code>true</code> if the above condition has been met, else
+	 * 			<code>false</code>.
+	 */
+	protected boolean hasWon(){
+		for(Foundation f : foundations){
+			if(f.isEmpty()){
+				return false; //a foundation is empty so the user hasn't won.
+			}
+		}
+
+		int numOfNonEmptyTableaux = 0; //To check how many tableaux have cards
+		for(Tableau tableau : tableaux){ //Checks each tableau if it is suitable.
+
+			if(!Tableau.isSuitable(tableau)){ //If any tableaux is not suitable,
+				return false;				  //the user has not won.
+			} else if(tableau.size() != 0){
+				numOfNonEmptyTableaux++;
+			}
+		}
+		//If there are fewer than 4 nonempty tableaux, and the stock and waste
+		//are empty, then the user has effectively won.
+		return numOfNonEmptyTableaux <= 8 && stock.isEmpty() && waste.isEmpty() && reserve.isEmpty();
+	}
+
+
+
+	public String getName() {
+		return "AmericanToad";
+	}
 }
 
