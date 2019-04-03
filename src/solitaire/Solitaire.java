@@ -481,7 +481,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 			clip.open(ais);
 			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 			gainControl.setValue(-12.0f); //lowers the volume by 12db
-			clip.loop(-1);
+	        clip.loop(clip.LOOP_CONTINUOUSLY);              
 			
 
 		} catch (Exception e) {

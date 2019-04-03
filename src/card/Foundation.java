@@ -41,6 +41,10 @@ public class Foundation extends StackOfCards
 	 * @param cardWidth	The width of each card in the stack.
 	 */
 
+	public static void SuitClear()
+	{
+		suitsUsed.clear();
+	}
 
 	public Foundation(int x, int y, int cardWidth, int digit){
 		super(x, y, cardWidth, 0, 0);
