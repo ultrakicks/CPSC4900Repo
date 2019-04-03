@@ -93,20 +93,35 @@ public class Foundation extends StackOfCards
 		}
 	}
 
-	public void americanPush(Card card, Card base) {
-		if(isEmpty()){                //If this is empty,
-			if(card.getValue() == base.getValue()){ //then the card must be an ace to be pushed.
+		public void americanPush(Card card, Card base) {
+		System.out.println("americanPush function called...");
+		//Test if foundation is empty
+		if(isEmpty()){                
+			if(card.getValue() == base.getValue()){ 
+				//Card value being pushed = foundation[0] card value
 				super.push(card);
 			} else {
-				throw new IllegalArgumentException();//TODO ""
+				System.out.println("Card not equal to foundation[0]'s value; illegal move...");
+				throw new IllegalArgumentException();
 			}
 		} else {
-			//Otherwise the card's value must be 1 greater than the top card
-			//and be of the same suit.
-			if(card.getValue() == peek().getValue() + 1
-					&& card.getSuit() == peek().getSuit() || card.getValue() == 13 && peek().getValue() == 1  || card.getValue() == 1 && peek().getValue() == 13){
+			/**
+			 * Otherwise the card's value must be 1 greater than the top card..
+			 * If top card is a King(13) and Ace was NOT the base card's value,
+			 * the card being pushed must be an Ace(1)
+		         */
+			System.out.println("Reached second if statement in americanPush()...");
+			System.out.println("card's.getValue() = "+card.getValue()+" | peek's.getValue() = "+peek().getValue());
+			
+			if(card.getValue()==1 && peek().getValue()==13) {
+				System.out.println("inside king/ace if check.. should push");
+				super.push(card);
+			}
+			else if(card.getValue() == peek().getValue() + 1
+					&& card.getSuit() == peek().getSuit()){
 				super.push(card);
 			} else {
+				System.out.println("Illegal move attempt...");
 				throw new IllegalArgumentException();
 			}
 		}
