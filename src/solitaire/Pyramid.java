@@ -5,6 +5,7 @@ import java.awt.Container;
 import java.awt.event.MouseEvent;
 import java.awt.Graphics;
 import java.awt.Color;
+import javax.swing.JLabel;
 
 import card.Card;
 import card.StackOfCards;
@@ -37,8 +38,20 @@ public class Pyramid extends Klondike {
 	/** Holds the free card slot.											*/
 	protected StackOfCards freeSlot;
 
+	/** Holds the free card slot.											*/
+	protected JLabel scoreText;
+
 	/** The x coordinate for the pyramid.									*/
 	protected int xCoord;
+
+	/** Keeps track of time between frames to remove some score every second.*/
+	protected int lastSecondStamp;
+
+	/** Score bonus for winning. Decreases as time goes on					*/
+	protected int timeBonus;
+
+	/** Score bonus for matches made. Increases for each match				*/
+	protected int moveScore;
 
 	/** Do nothing constructor.												*/
 	public Pyramid(){}
@@ -85,6 +98,9 @@ public class Pyramid extends Klondike {
 				return false;
 			}
 		};
+
+		//Create score text
+		scoreText = new JLabel("0", JLabel.LEFT);
 
 		initialized = true; //Everything is initialized,
 		container.repaint();//So we repaint.
