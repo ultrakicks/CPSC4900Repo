@@ -2,10 +2,13 @@ package solitaire;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import card.Card;
 import card.StackOfCards;
 import card.Tableau;
+import dataStructures.Queue;
 import dataStructures.Stack;
 
 import javax.swing.*;
@@ -20,52 +23,68 @@ import javax.swing.*;
  * @author Team1
  */
 public class Argos extends Klondike {
-
-	//TODO: Use these max values to set screen to full size, scale cards
-	//Maximum width and height of screen
-	private int maxHeight;
-	private int maxWidth;
-	private int screenWidth;
-	private int screenHeight;
-	{
-		//Get screen size. We base all of our positioning on screen size so everything scales
-		Toolkit sys = Toolkit.getDefaultToolkit();
-		maxHeight = (int) sys.getScreenSize().getHeight();
-		maxWidth = (int) sys.getScreenSize().getWidth();
-	}
+    StackOfCards playDeck = new StackOfCards();
+    StackOfCards stockDeck = new StackOfCards();
+    int numDraws = 0;
 	/**
 	 * Instantiates the game and the panel.
 	 * @param container The container for the game.
 	 */
 	public Argos(Container container){
-		super(container);
+        this.container = container;
 
-		//TODO: figure out how to set size of game window - this method doesn't work
-		//container.setSize(maxWidth, maxHeight);
-		//container.setPreferredSize(container.getSize());
+        container.addMouseListener(this); 		//To respond to clicks
+        container.addMouseMotionListener(this); //and dragging.
+        container.setBackground(new Color(0, 100, 0)); //A green color.
+        container.setSize(790, 720);
+        container.setPreferredSize(container.getSize());
 
-		this.container = container;
-		screenHeight = container.getHeight();
-		screenWidth  = container.getWidth();
+        setCoord(container);
 
-		yCoord = (int) (screenHeight * 0.1);
-		cardWidth = (int) (screenWidth * 0.05);
+		yCoord = (int) (container.getHeight() * 0.1);
+		cardWidth = (container.getWidth()/17);
 		offset = cardWidth/2;
-	}
+
+        //Instantiates the in use stack and animation queue.
+        inUse = new StackOfCards(0, 0, cardWidth, 0, offset * 3/2);
+        animationQueue = new Queue<StackOfCards>();
+
+        init();
+
+        container.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent componentEvent) {
+                yCoord = (int) (container.getHeight() * 0.1);
+                cardWidth = (container.getWidth()/17);
+                //If card width would make cards too tall...
+                if (cardWidth > container.getHeight()/12)
+                {
+                    //Limit it to maximum width possible based on height
+                    cardWidth = (container.getHeight()/12);
+                }
+                offset = cardWidth/2;
+
+                StackOfCards copyPlay = new StackOfCards();
+                copyPlay.appendStack(playDeck.copy());
+                StackOfCards copyStock = new StackOfCards();
+                copyStock.appendStack(stockDeck.copy());
+                initTableaux(copyPlay);
+                initStockAndWaste(copyStock);
+                int temp = numDraws;
+                for (int i=0; i<temp; i++)
+                    stockPressedAction(stock.getX(), stock.getY());
+                numDraws = temp;
+            }
+        });
+
+    }
 
 	/**
 	 * Initializes all of the stacks.
 	 */
 	@Override
 	protected void init(){
-		//TODO: Split into two decks, make sure four kings are in each
 		//Two standard decks, shuffled together, less the kings
 		StackOfCards deck = new StackOfCards();
-		//48 random cards and four kings for play tableaux
-		StackOfCards playDeck = new StackOfCards();
-
-		//48 random cards and four kings for stock deck
-		StackOfCards stockDeck = new StackOfCards();
 
 		//Add two of each value/suit combination except kings to the deck (96 cards)
 		for (card.Suit suit: card.Suit.values()) {
@@ -77,7 +96,7 @@ public class Argos extends Klondike {
 
 		//Shuffle the cards
 		deck.shuffle();
-		/*
+
 		//Split into stock and play decks (still no kings yet)
 		for (int i=0; i<48; i++){
 			stockDeck.push(deck.pop());
@@ -92,14 +111,14 @@ public class Argos extends Klondike {
 
 		//Shuffle kings in to stock deck
 		stockDeck.shuffle();
-		*/
 
-		
-		playDeck.fillBySuit();
-		stockDeck.fillBySuit();
+        StackOfCards copyPlay = new StackOfCards();
+        copyPlay.appendStack(playDeck.copy());
+        StackOfCards copyStock = new StackOfCards();
+        copyStock.appendStack(stockDeck.copy());
 
-		initTableaux(playDeck);
-		initStockAndWaste(stockDeck);
+		initTableaux(copyPlay);
+		initStockAndWaste(copyStock);
 
 		//Automatically draw the first card
 		stockPressedAction(stock.getX(),stock.getY());
@@ -114,7 +133,7 @@ public class Argos extends Klondike {
 		//Initialize the thirteenth column, with kings
 		for (int k = 0; k<4; k++) {
 			tableaux[12+(k*13)] = new Tableau(
-					(cardWidth * 5 + (cardWidth + offset/2) * 12),
+                    cardWidth+(cardWidth+offset/2)*12,
 					(int) (yCoord + (k*(2.25*cardWidth))), cardWidth, offset);
 
 			tableaux[12+(k*13)].push(source.pop());
@@ -125,7 +144,7 @@ public class Argos extends Klondike {
 			for (int i = 0; i < 12; i++) {
 				//Instantiates each tableau
 				tableaux[i+(13*j)] = new Tableau(
-						(cardWidth * 5 + (cardWidth + offset/2) * i),
+						(cardWidth + (cardWidth + offset/2) * i),
 						(int) (yCoord + (j*(2.25*cardWidth))), cardWidth, offset);
 
 				tableaux[i+(13*j)].push(source.pop());          //source to tableau
@@ -145,11 +164,11 @@ public class Argos extends Klondike {
 	 */
 	@Override
 	protected void initStockAndWaste(StackOfCards deck){
-		stock = new StackOfCards((int) (cardWidth*1.5), yCoord, cardWidth, 0, 0);
+		stock = new StackOfCards((cardWidth + (cardWidth + offset/2) * 5), 9*cardWidth+yCoord, cardWidth, 0, 0);
 		stock.appendStack(deck); //The stock contains all of its cards.
 		stock.peek().setHidden(true); //So that the stock is hidden.
 
-		waste = new StackOfCards(stock.getX(), (int) (yCoord+(cardWidth*6.75)),cardWidth,0,0);
+		waste = new StackOfCards((cardWidth + (cardWidth + offset/2) * 7), (yCoord+(cardWidth*9)),cardWidth,0,0);
 	}
 
 	/**
@@ -162,12 +181,12 @@ public class Argos extends Klondike {
 	protected boolean stockPressedAction(int x, int y){
 		if(stock.contains(x, y)&&!stock.isEmpty()) {
 			//If the stock was clicked, and it still contains cards:
-				waste.push(stock.pop());     //Move the top card from stock to waste.
-				waste.peek().setHidden(false);//And show it.
-
-				stock.peek().setHidden(true);//Hides the new top card of the stack.
+				waste.push(stock.pop());        //Move the top card from stock to waste.
+				waste.peek().setHidden(false);  //And show it.
+				stock.peek().setHidden(true);   //Hides the new top card of the stack.
 				moves++; //This counts as a move.
 				container.repaint();
+                numDraws++;
 				return true; //The action was performed.
 		}
 		if (hasWon())
