@@ -34,7 +34,7 @@ public class Statistics extends JPanel implements ActionListener {
 					  	AmericanItem, AztecItem;
 
 	private JLabel gameTitle, gameTotal, gameWins,
-						gameAverageTime, gameBestTime, gameWinPercentage;
+						gameAverageTime, gameBestTime, gameWinPercentage, gameBestScore;
 
 	private Statistics(String gameName) {
 		//Create panel objects
@@ -81,6 +81,10 @@ public class Statistics extends JPanel implements ActionListener {
 		gameBestTime = new JLabel("Best Time: ");
 		gameBestTime.setAlignmentX(CENTER_ALIGNMENT);
 		infoPanel.add(gameBestTime);
+
+		gameBestScore = new JLabel("Best Record: ");
+		gameBestScore.setAlignmentX(CENTER_ALIGNMENT);
+		infoPanel.add(gameBestScore);
 
 		add(infoPanel);
 
@@ -144,6 +148,8 @@ public class Statistics extends JPanel implements ActionListener {
 	 * the file of the specified game
 	 */
 	private void reloadStatistics(String gameName) {
+		int wins = 0, totalGames = 0, bestRecord = 0;
+		long totalTime = 0, bestTime = 0;
 		frame.setTitle(gameName + "Statistics");
 		//Open files
 		try
@@ -151,32 +157,34 @@ public class Statistics extends JPanel implements ActionListener {
 			File file = new File(gameName + ".txt");
 			Scanner infile = new Scanner(file);
 			
-			int totalGames = infile.nextInt();
-			int wins = infile.nextInt();
-			int totalTime = infile.nextInt();
-			int bestTime = infile.nextInt();
-
-			//Set values of each item
-			gameTitle.setText(gameName);
-			gameTotal.setText("Total Games: " + totalGames);
-			gameWins.setText("Wins: " + wins);
-			int timeTaken;
-			if(totalGames > 0) {
-				gameWinPercentage.setText("Wins (%): " + ((double) wins*100)/totalGames);
-				timeTaken = totalTime/totalGames;
-			}
-			else {
-				gameWinPercentage.setText("Wins (%): N/A");
-				timeTaken = 0;
-			}
-
-			gameAverageTime.setText("Average Time: " + (timeTaken/60) + "m " + (timeTaken%60) + "s");
-			gameBestTime.setText("Best Time: " + (bestTime/60) + "m " + (bestTime%60) + "s");
+			totalGames = infile.nextInt();
+			wins = infile.nextInt();
+			totalTime = infile.nextInt();
+			bestTime = infile.nextInt();
+			bestRecord = infile.nextInt();
 
 			infile.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		//Set values of each item
+		gameTitle.setText(gameName);
+		gameTotal.setText("Total Games: " + totalGames);
+		gameWins.setText("Wins: " + wins);
+		int timeTaken;
+		if(totalGames > 0) {
+			gameWinPercentage.setText("Wins (%): " + ((double) wins*100)/totalGames);
+			timeTaken = (int) totalTime/totalGames;
+		}
+		else {
+			gameWinPercentage.setText("Wins (%): N/A");
+			timeTaken = 0;
+		}
+
+		gameAverageTime.setText("Average Time: " + (timeTaken/60) + "m " + (timeTaken%60) + "s");
+		gameBestTime.setText("Best Time: " + (bestTime/60) + "m " + (bestTime%60) + "s");
+		gameBestScore.setText("Best Record: " + bestRecord);
 
 	}
 
@@ -188,7 +196,7 @@ public class Statistics extends JPanel implements ActionListener {
 	 * and then, if the statistics tab is open, reloads it automatically
 	 */
 	public static void startGame(String gameName) {
-		int wins = 0, games = 0;
+		int wins = 0, games = 0, bestRecord = 0;
 		long totalTime = 0, bestTime = 0;
 
 		//If a game was started before consider all this time taken as time played.
@@ -208,6 +216,7 @@ public class Statistics extends JPanel implements ActionListener {
 			wins = infile.nextInt();
 			totalTime += infile.nextInt();
 			bestTime = infile.nextInt();
+			bestRecord = infile.nextInt();
 			infile.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -216,7 +225,7 @@ public class Statistics extends JPanel implements ActionListener {
 		games++;
 
 		//Rewrite file
-		writeFile(gameName, games, wins, totalTime, bestTime);
+		writeFile(gameName, games, wins, totalTime, bestTime, bestRecord);
 
 		//If statsPanel is open, reload stats
 		if(statsPanel != null) {
@@ -224,8 +233,14 @@ public class Statistics extends JPanel implements ActionListener {
 		}
 	}
 
+	/**
+	 * Records a game's win in the game's data file. Requires that startGame is called before
+	 * in order to properly register time taken.
+	 * 
+	 * @param gameName the name of the game. This specifies the txt file being opened
+	 */
 	public static void winGame(String gameName) {
-		int wins = 0, games = 0;
+		int wins = 0, games = 0, bestRecord = 0;
 		long totalTime = 0, bestTime = 0;
 		try
 		{
@@ -237,6 +252,7 @@ public class Statistics extends JPanel implements ActionListener {
 			wins = infile.nextInt();
 			totalTime = infile.nextInt();
 			bestTime = infile.nextInt();
+			bestRecord = infile.nextInt();
 			infile.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -253,16 +269,23 @@ public class Statistics extends JPanel implements ActionListener {
 		timeStarted = 0;
 
 		//Rewrite file
-		writeFile(gameName, games, wins, totalTime, bestTime);
+		writeFile(gameName, games, wins, totalTime, bestTime, bestRecord);
 
 		//If statsPanel is open, reload stats
 		if(statsPanel != null) {
 			statsPanel.reloadStatistics(gameName);
 		}
 	}
-
-	public static void leaveGame(String gameName) {
-		int wins = 0, games = 0;
+	
+	/**
+	 * Records a game's score in the game's data file. Returns true if this score is higher than
+	 * the previous high score (and so replaces the past score)
+	 * 
+	 * @param gameName the name of the game. This specifies the txt file being opened
+	 * @param score the score of the past game, which MAY replace the current high score
+	 */
+	public static boolean recordScore(String gameName, int score) {
+		int wins = 0, games = 0, bestRecord = 0;
 		long totalTime = 0, bestTime = 0;
 		try
 		{
@@ -274,6 +297,44 @@ public class Statistics extends JPanel implements ActionListener {
 			wins = infile.nextInt();
 			totalTime = infile.nextInt();
 			bestTime = infile.nextInt();
+			bestRecord = infile.nextInt();
+			infile.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if(score > bestRecord) {
+			bestRecord = score;
+		}
+
+		//Rewrite file
+		writeFile(gameName, games, wins, totalTime, bestTime, bestRecord);
+
+		//If statsPanel is open, reload stats
+		if(statsPanel != null) {
+			statsPanel.reloadStatistics(gameName);
+		}
+		//Tell game this was a new record if given score is higher than existing
+		if(score == bestRecord) {
+			return true;
+		}
+		return false;
+	}
+
+	public static void leaveGame(String gameName) {
+		int wins = 0, games = 0, bestRecord = 0;
+		long totalTime = 0, bestTime = 0;
+		try
+		{
+			//Open file
+			File file = new File(System.getProperty("user.dir"), gameName + ".txt");
+			Scanner infile = new Scanner(file);
+			
+			games = infile.nextInt();
+			wins = infile.nextInt();
+			totalTime = infile.nextInt();
+			bestTime = infile.nextInt();
+			bestRecord = infile.nextInt();
 			infile.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -286,7 +347,7 @@ public class Statistics extends JPanel implements ActionListener {
 		timeStarted = 0;
 
 		//Rewrite file
-		writeFile(gameName, games, wins, totalTime, bestTime);
+		writeFile(gameName, games, wins, totalTime, bestTime, bestRecord);
 
 		//If statsPanel is open, reload stats
 		if(statsPanel != null) {
@@ -294,7 +355,7 @@ public class Statistics extends JPanel implements ActionListener {
 		}
 	}
 
-	public static void writeFile(String gameName, int games, int wins, long totalTime, long bestTime) {
+	public static void writeFile(String gameName, int games, int wins, long totalTime, long bestTime, int bestRecord) {
 		try
 		{
 			//Open File
@@ -306,6 +367,7 @@ public class Statistics extends JPanel implements ActionListener {
 			printWriter.println(wins);
 			printWriter.println(totalTime);
 			printWriter.println(bestTime);
+			printWriter.println(bestRecord);
 			//Clean up
 			printWriter.close();
 		} catch (Exception e) {
@@ -331,7 +393,7 @@ public class Statistics extends JPanel implements ActionListener {
 			frame.setJMenuBar(statsPanel.makeMenuBar());
 			//Set size to double the height of original for java swing
 			//problems I don't understand on my machine... Oh dear.
-			frame.setSize(175, 208);
+			frame.setSize(185, 220);
 			frame.setVisible(true);
 			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		} else {

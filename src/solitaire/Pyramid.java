@@ -4,6 +4,13 @@ import java.awt.geom.RoundRectangle2D;
 import java.awt.Container;
 import java.awt.event.MouseEvent;
 import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+import javax.swing.Timer;
+import javax.swing.JOptionPane;
 
 import card.Card;
 import card.StackOfCards;
@@ -17,13 +24,13 @@ import dataStructures.StackADT;
  * cards do not have to be in sequence with alternating colors to be removed
  * from a tableaux. Moreover, only the bottom card in use and the top card of a
  * tableau is relevant for appending the cards in use to said tableau column.
- * 
+ *
  * @author Warren Godone-Maresca
  *
  */
 public class Pyramid extends Klondike {
 
-	/**A reference to the stack of cards card that can be used to remove the 
+	/**A reference to the stack of cards card that can be used to remove the
 	 * top card. Can be null if no card is selected */
 	protected StackADT<Card> selectedStack;
 	 //NOTE THAT THE PyramidOfCards CLASS WILL HAVE A SELECT( ) METHOD TO SELECT
@@ -39,16 +46,26 @@ public class Pyramid extends Klondike {
 	/** The x coordinate for the pyramid.									*/
 	protected int xCoord;
 
+	/** Keeps track of time between frames to remove some score every second.*/
+	protected Timer timeBonusTimer;
+
+	/** Score bonus for winning. Decreases as time goes on					*/
+	protected int timeBonus;
+
+	/** Score bonus for matches made. Increases for each match				*/
+	protected int moveScore;
+
 	/** Do nothing constructor.												*/
 	public Pyramid(){}
 
 	/**
 	 * Instantiates the game with a {@link Container}.
-	 * @param container The Container (such as window or applet) in which the 
+	 * @param container The Container (such as window or applet) in which the
 	 * 					game will be played.
 	 */
 	public Pyramid(Container container){
 		super(container);
+		container.setBackground(new Color(138, 43, 226)); //A green color.
 	}
 
 	/*
@@ -79,10 +96,22 @@ public class Pyramid extends Klondike {
 				if(new RoundRectangle2D.Double(this.x - cardWidth/2 - offsetX*size,
 					this.y - cardWidth*3/4 + offsetY*size, cardWidth,
 					cardWidth*3/2, cardWidth/10, cardWidth/10).contains(x,y)) {return true;}
-						
+
 				return false;
 			}
 		};
+
+		timeBonus = 10000;
+		ActionListener updateTimeScore = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(timeBonus > 0)
+				timeBonus -= 50;
+				container.repaint();//So we repaint.
+			}
+		};
+		timeBonusTimer = new Timer(1000, updateTimeScore);
+		timeBonusTimer.start();
+		recordedVictory = false;
 
 		initialized = true; //Everything is initialized,
 		container.repaint();//So we repaint.
@@ -114,7 +143,7 @@ public class Pyramid extends Klondike {
 		}
 	}
 
-	/**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+	/**
 	 * Initializes the pyramid.
 	 */
 	protected void initPyramid(StackOfCards source, int size) {
@@ -137,7 +166,7 @@ public class Pyramid extends Klondike {
 	 * the coordinates and the card chosen is on top, that card will be highlighted
 	 * @param x		The x coordinate of a mouse click.
 	 * @param y		The y coordinate.
-	 * @return <code>true</code> if the action was successfully performed, 
+	 * @return <code>true</code> if the action was successfully performed,
 	 * 			else <code>false</code>
 	 */
 	protected boolean tableauxPressedAction(int x, int y){
@@ -153,10 +182,12 @@ public class Pyramid extends Klondike {
 						tableau.pop();
 						selectedStack.pop();
 						setSelected(null);
+						moveScore += 500;
 					} else {
 						if(tableau.peek().getValue() == 13) {
 							tableau.pop();
 							setSelected(null);
+							moveScore += 500;
 						} else {
 							//Set this tableau as the new selectedStack
 							setSelected(tableau);
@@ -176,7 +207,7 @@ public class Pyramid extends Klondike {
 	 * the top card being collided with. That card will be highlighted
 	 * @param x		The x coordinate of a mouse click.
 	 * @param y		The y coordinate.
-	 * @return <code>true</code> if the action was successfully performed, 
+	 * @return <code>true</code> if the action was successfully performed,
 	 * 			else <code>false</code>
 	 */
 	protected boolean pyramidPressedAction(int x, int y){
@@ -194,12 +225,14 @@ public class Pyramid extends Klondike {
 					pyramid.selectCard(x, y);
 					pyramid.pop();
 					setSelected(null);
+					moveScore += 500;
 				} else {
 					//Removing Kings
 					if(selectedCard.getValue() == 13) {
 						pyramid.selectCard(x, y);
 						pyramid.pop();
 						setSelected(null);
+						moveScore += 500;
 					} else {
 						//Set the pyramid as the new selectedStack
 						pyramid.selectCard(x, y);
@@ -220,7 +253,7 @@ public class Pyramid extends Klondike {
 	 * If not, the selected card will be placed in the free slot
 	 * @param x		The x coordinate of a mouse click.
 	 * @param y		The y coordinate.
-	 * @return <code>true</code> if the action was successfully performed, 
+	 * @return <code>true</code> if the action was successfully performed,
 	 * 			else <code>false</code>
 	 */
 	protected boolean freeSlotPressedAction(int x, int y){
@@ -235,6 +268,7 @@ public class Pyramid extends Klondike {
 					freeSlot.pop();
 					selectedStack.pop();
 					setSelected(null);
+					moveScore += 500;
 				} else {
 					//Select what's in the free slot
 					setSelected(freeSlot);
@@ -264,9 +298,9 @@ public class Pyramid extends Klondike {
 
 	/**
 	 * Highlights the selected card of the given stack
-	 * 
+	 *
 	 * @param highlightedCard		newly selected card.
-	 * 
+	 *
 	 */
 	protected void setSelected(StackADT<Card> highlightedStack){
 		//If the parameter is not null, highlight new card
@@ -291,12 +325,65 @@ public class Pyramid extends Klondike {
 		}
 
 		int x = e.getX(), y = e.getY();
-		
+//
+// TEST LINE: DELETE AFTER FINISH TESTING
+//
+		System.out.print(Integer.toString(x)+","+Integer.toString(y)+"\n");
+
 		if(!freeSlotPressedAction(x,y) && !pyramidPressedAction(x,y) && !tableauxPressedAction(x, y)){
 		} else {
 			//If any of the above actions returned true, that's an action
 			moves++;
 		}
+		
+		if(hasWon()){				//If the user has won,
+			container.repaint();	//repaint and
+			onWin();				//perform the on win action
+			return;
+		}
+	}
+
+	/**
+	 * Alerts the user that s/he has won and plays the winning animation.
+	 * Pre. <code>hasWon()</code> returns <code>true</code>.
+	 */
+	protected void onWin(){
+		boolean newRecord = false;
+		if(!recordedVictory) {
+			moveScore += timeBonus;
+			Statistics.winGame("Aztec Pyramid");
+			newRecord = Statistics.recordScore("Aztec Pyramid", moveScore);
+			recordedVictory = true;
+		}
+
+		//If we've made a new record, make the text box's message say so
+		String tempMessage = "Congratulations, you won in " + moves + " moves!.\n"
+			+ "Your final score is " + moveScore + "!";
+		if(newRecord) {
+			tempMessage = "NEW RECORD!\n" + tempMessage;
+		}
+
+		final String message = tempMessage; //To call a message outside of the thread's scope, it must be final
+
+		//Then we show a dialog box to alert the user of the fact.
+		//We start another anonymous thread to show the dialog box because
+		//the dialog will pause all threads if it is in the main thread.
+		new Thread(new Runnable(){
+			Object[] options = {"OK", "Play again!"};
+			public void run(){
+				timeBonusTimer.stop();
+				int option = JOptionPane.showOptionDialog(container,
+						message,
+						"You win!", JOptionPane.OK_CANCEL_OPTION,
+						JOptionPane.QUESTION_MESSAGE, null,
+						options, options[0]);
+				//If the player chooses "Play Again!" reinitialize the game while keeping the score
+				if(option == 1) {
+					moves = 0;
+					init();
+				}
+			}
+		}).start();
 	}
 
 	/**
@@ -306,6 +393,10 @@ public class Pyramid extends Klondike {
 	@Override
 	public void paint(Graphics pane){
 		if(initialized){
+			pane.setColor(Color.BLACK);
+			pane.setFont(new Font("Serif", Font.PLAIN, 20));
+			pane.drawString("Score: " + moveScore, 5, 25);
+			pane.drawString("Time Bonus: " + timeBonus, 5, 45);
 			for(StackOfCards tableau : tableaux){
 				tableau.draw(pane);
 			}
@@ -348,7 +439,7 @@ public class Pyramid extends Klondike {
 	public String getName() {
 		return "AztecPyramid";
 	}
-	
+
 	@Override
 	public void mouseReleased(MouseEvent e){}
 	@Override

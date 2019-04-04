@@ -534,6 +534,7 @@ public class Klondike implements MouseListener, MouseMotionListener {
 				Statistics.winGame("Aztec Pyramid");
 			else
 				Statistics.winGame("Klondike");
+			recordedVictory = true;
 		}
 
 		//We start a new anonymous thread with and anonymous runnable object
