@@ -4,6 +4,7 @@ import java.awt.geom.RoundRectangle2D;
 import java.awt.Container;
 import java.awt.event.MouseEvent;
 import java.awt.Graphics;
+import java.awt.Color;
 
 import card.Card;
 import card.StackOfCards;
@@ -49,6 +50,7 @@ public class Pyramid extends Klondike {
 	 */
 	public Pyramid(Container container){
 		super(container);
+		container.setBackground(new Color(138, 43, 226)); //A green color.
 	}
 
 	/*
@@ -285,8 +287,6 @@ public class Pyramid extends Klondike {
 	@Override
 	public void mousePressed(MouseEvent e){
 		if(hasWon()){				//If the user has won,
-			container.repaint();	//repaint and
-			onWin();				//perform the on win action
 			return;
 		}
 
@@ -296,6 +296,12 @@ public class Pyramid extends Klondike {
 		} else {
 			//If any of the above actions returned true, that's an action
 			moves++;
+		}
+
+		if(hasWon()){				//If the user has won,
+			container.repaint();	//repaint and
+			onWin();				//perform the on win action
+			return;
 		}
 	}
 
