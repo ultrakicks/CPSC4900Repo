@@ -124,6 +124,35 @@ public class Tableau extends StackOfCards {
 
 		appendStack(stack); //Then the given stack can be appended.
 	}
+
+	//adds wrapping to tableus in american toad
+	public void americanAppend(Stack<Card> stack) {
+		Card bottom = stack.reverseCopy().pop();
+
+		/* Checks if:
+		 * -the given stack alternates in color.
+		 * -the given stack is in sequence with regards to value.
+		 * -the bottom card of the given stack differes in color with this tableau's top card
+		 * -the bottom card's value is one less than the that of the top card
+		 * 	(unless the top card is a king, allows king to be placed on an ace)
+		 * 	If any of these conditions isn't met, an exception is thrown.
+		 */
+		if (this.peek().compareTo(bottom) == -12 && bottom.getValue()==13 && this.peek().getValue()==1) {
+			if(this.peek().colorEquals(bottom)) {
+				String message = "The given stack is not suitable.";
+				throw new IllegalArgumentException(message);
+			} else {
+				appendStack(stack);
+			}
+		} else 	if(!isEmpty() && (this.peek().compareTo(bottom) != 1 || this.peek().colorEquals(bottom))) {
+			String message = "The given stack is not suitable.";
+			throw new IllegalArgumentException(message);
+		} else {
+			appendStack(stack);
+		}
+
+
+	}
 	
 	/**
 	 * Determines whether the given stack is completely visible, alterntes in
@@ -133,7 +162,7 @@ public class Tableau extends StackOfCards {
 	 * 			else <code>false</code>.
 	 */
 	public static boolean isSuitable(Stack<Card> stack){
-		return alternatesInColor(stack) && inSequence(stack) && isVisible(stack);
+		return alternatesInColor(stack) && americanSequence(stack) && isVisible(stack);
 	}
 
 	/**
@@ -201,6 +230,29 @@ public class Tableau extends StackOfCards {
 			//If they aren't sequentially ordered:
 			if(current.compareTo(toCompare) != 1){
 				return false; //then return false.
+			}
+			toCompare = current; //update toCompare.
+		}
+		return true; //If we have reached this point, then stack is in sequence.
+	}
+
+	public static boolean americanSequence(Stack<Card> stack){
+		if(stack.size() < 2){//Simple case
+			return true;
+		}
+
+		//Temporary stack in which elements will be removed to be checked. Another
+		Stack<Card> copy = stack.copy();//stack is made to maintain the original
+		Card toCompare = copy.pop(); //To compare against other elements.
+
+		while(!copy.isEmpty()){
+			Card current = copy.pop(); //To compare against toCompare.
+			//If they aren't sequentially ordered:
+			if(current.compareTo(toCompare) != 1){
+				return false; //then return false.
+			} else if(current.getValue() == 13 && toCompare.getValue() == 1){
+				toCompare = current;
+				return true;
 			}
 			toCompare = current; //update toCompare.
 		}
