@@ -68,9 +68,31 @@ public class pyramidTests{
     System.out.print(Integer.toString(randomPercent)+"%\n");
   }
 
+  public static PyramidOfCards startTestGame(){
+    JFrame frame = new JFrame();
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    //contentPane.add(gamePanel);
 
+    Container contentPane = frame.getContentPane();
+    Pyramid testPyramid=new Pyramid(contentPane);
+    testPyramid.setCoord(contentPane);
+    JPanel myPanel = new JPanel(){
+      protected void paintComponent(Graphics pane){
+      super.paintComponents(pane);
+      testPyramid.paint(pane);
+      //System.out.print(frame.getBounds().toString());
+      //System.out.print("Painting");
+    };};
+    contentPane.add(myPanel);
+    frame.setBounds(0, 0, 687, 611);
+    frame.setVisible(true);
+    contentPane.repaint();
+
+
+    return testPyramid.pyramid;
+  }
   /*First Card Selection*/
-  
+
   /*Second Card Selection*/
   /*Arithmetic*/
   /*Successful pair*/
@@ -83,30 +105,10 @@ public class pyramidTests{
 
 
   public static void main(String[] args) {
-    testRandomness();
-		//Calls initTableaux with the random deck and an anonymous array that
-		//holds the initial tableau sizes.
-		/*initTableaux(deck, new int[] {4, 4, 4, 4, 4, 4});
-		initTableaux(deck, 7);
-    JFrame frame = new JFrame();
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    Container contentPane = frame.getContentPane();
-    //contentPane.add(gamePanel);
-    JPanel myPanel = new JPanel() {
-      protected void paintComponent(Graphics pane) {
-        super.paintComponents(pane);
-        deck.draw(pane);
-        System.out.print("Painting");
-      }
-    };
-    contentPane.add(myPanel);
-    frame.setBounds(0, 0, 500, 400);
-    frame.setVisible(true);
-    contentPane.repaint();
-    System.out.print("Empty main\n");
-*/
+    Card testCard =startTestGame().getCard(207, 252);
+    System.out.print(""+ Integer.toString(testCard.getValue())+"\n");
+    System.out.print(""+ Boolean.toString(testCard.contains(207,252))+"\n");
 
+}
 
-
-  }
 }

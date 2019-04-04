@@ -17,13 +17,13 @@ import dataStructures.StackADT;
  * cards do not have to be in sequence with alternating colors to be removed
  * from a tableaux. Moreover, only the bottom card in use and the top card of a
  * tableau is relevant for appending the cards in use to said tableau column.
- * 
+ *
  * @author Warren Godone-Maresca
  *
  */
 public class Pyramid extends Klondike {
 
-	/**A reference to the stack of cards card that can be used to remove the 
+	/**A reference to the stack of cards card that can be used to remove the
 	 * top card. Can be null if no card is selected */
 	protected StackADT<Card> selectedStack;
 	 //NOTE THAT THE PyramidOfCards CLASS WILL HAVE A SELECT( ) METHOD TO SELECT
@@ -44,7 +44,7 @@ public class Pyramid extends Klondike {
 
 	/**
 	 * Instantiates the game with a {@link Container}.
-	 * @param container The Container (such as window or applet) in which the 
+	 * @param container The Container (such as window or applet) in which the
 	 * 					game will be played.
 	 */
 	public Pyramid(Container container){
@@ -79,7 +79,7 @@ public class Pyramid extends Klondike {
 				if(new RoundRectangle2D.Double(this.x - cardWidth/2 - offsetX*size,
 					this.y - cardWidth*3/4 + offsetY*size, cardWidth,
 					cardWidth*3/2, cardWidth/10, cardWidth/10).contains(x,y)) {return true;}
-						
+
 				return false;
 			}
 		};
@@ -114,7 +114,7 @@ public class Pyramid extends Klondike {
 		}
 	}
 
-	/**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+	/**
 	 * Initializes the pyramid.
 	 */
 	protected void initPyramid(StackOfCards source, int size) {
@@ -137,7 +137,7 @@ public class Pyramid extends Klondike {
 	 * the coordinates and the card chosen is on top, that card will be highlighted
 	 * @param x		The x coordinate of a mouse click.
 	 * @param y		The y coordinate.
-	 * @return <code>true</code> if the action was successfully performed, 
+	 * @return <code>true</code> if the action was successfully performed,
 	 * 			else <code>false</code>
 	 */
 	protected boolean tableauxPressedAction(int x, int y){
@@ -176,7 +176,7 @@ public class Pyramid extends Klondike {
 	 * the top card being collided with. That card will be highlighted
 	 * @param x		The x coordinate of a mouse click.
 	 * @param y		The y coordinate.
-	 * @return <code>true</code> if the action was successfully performed, 
+	 * @return <code>true</code> if the action was successfully performed,
 	 * 			else <code>false</code>
 	 */
 	protected boolean pyramidPressedAction(int x, int y){
@@ -220,7 +220,7 @@ public class Pyramid extends Klondike {
 	 * If not, the selected card will be placed in the free slot
 	 * @param x		The x coordinate of a mouse click.
 	 * @param y		The y coordinate.
-	 * @return <code>true</code> if the action was successfully performed, 
+	 * @return <code>true</code> if the action was successfully performed,
 	 * 			else <code>false</code>
 	 */
 	protected boolean freeSlotPressedAction(int x, int y){
@@ -264,9 +264,9 @@ public class Pyramid extends Klondike {
 
 	/**
 	 * Highlights the selected card of the given stack
-	 * 
+	 *
 	 * @param highlightedCard		newly selected card.
-	 * 
+	 *
 	 */
 	protected void setSelected(StackADT<Card> highlightedStack){
 		//If the parameter is not null, highlight new card
@@ -291,7 +291,11 @@ public class Pyramid extends Klondike {
 		}
 
 		int x = e.getX(), y = e.getY();
-		
+//
+// TEST LINE: DELETE AFTER FINISH TESTING
+//
+		System.out.print(Integer.toString(x)+","+Integer.toString(y)+"\n");
+
 		if(!freeSlotPressedAction(x,y) && !pyramidPressedAction(x,y) && !tableauxPressedAction(x, y)){
 		} else {
 			//If any of the above actions returned true, that's an action
@@ -348,7 +352,7 @@ public class Pyramid extends Klondike {
 	public String getName() {
 		return "AztecPyramid";
 	}
-	
+
 	@Override
 	public void mouseReleased(MouseEvent e){}
 	@Override
