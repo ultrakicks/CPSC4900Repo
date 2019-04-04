@@ -393,7 +393,7 @@ public class Statistics extends JPanel implements ActionListener {
 			frame.setJMenuBar(statsPanel.makeMenuBar());
 			//Set size to double the height of original for java swing
 			//problems I don't understand on my machine... Oh dear.
-			frame.setSize(175, 208);
+			frame.setSize(185, 220);
 			frame.setVisible(true);
 			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		} else {

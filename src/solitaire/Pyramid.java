@@ -331,6 +331,12 @@ public class Pyramid extends Klondike {
 			//If any of the above actions returned true, that's an action
 			moves++;
 		}
+		
+		if(hasWon()){				//If the user has won,
+			container.repaint();	//repaint and
+			onWin();				//perform the on win action
+			return;
+		}
 	}
 
 	/**
