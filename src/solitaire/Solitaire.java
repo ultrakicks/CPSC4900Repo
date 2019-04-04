@@ -104,6 +104,19 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		rulesMenu.add(rulesItem);
 		bar.add(rulesMenu);
 
+		volumeItem = new JCheckBoxMenuItem("Volume Toggle");
+		volumeItem.addActionListener(this);
+		selectMenu.add(volumeItem);
+		if (clip.isRunning())
+		{
+			volumeItem.setSelected(true);
+		}
+		else
+		{
+			volumeItem.setSelected(false);
+		}
+		volumeItem.addItemListener(this); //Adds volume toggle in-game
+
 		return bar; //The bar has been created.
 	}
 	
@@ -468,7 +481,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 			clip.open(ais);
 			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 			gainControl.setValue(-12.0f); //lowers the volume by 12db
-			clip.loop(-1);
+	        clip.loop(clip.LOOP_CONTINUOUSLY);              
 			
 
 		} catch (Exception e) {

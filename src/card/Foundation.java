@@ -41,6 +41,10 @@ public class Foundation extends StackOfCards
 	 * @param cardWidth	The width of each card in the stack.
 	 */
 
+	public static void SuitClear()
+	{
+		suitsUsed.clear();
+	}
 
 	public Foundation(int x, int y, int cardWidth, int digit){
 		super(x, y, cardWidth, 0, 0);
@@ -101,12 +105,23 @@ public class Foundation extends StackOfCards
 				throw new IllegalArgumentException();//TODO ""
 			}
 		} else {
-			//Otherwise the card's value must be 1 greater than the top card
-			//and be of the same suit.
-			if(card.getValue() == peek().getValue() + 1
+			/**
+			 * Otherwise the card's value must be 1 greater than the top card..
+			 * If top card is a King(13) and Ace was NOT the base card's value,
+			 * the card being pushed must be an Ace(1)
+			 */
+			System.out.println("Reached second if statement in americanPush()...");
+			System.out.println("card's.getValue() = "+card.getValue()+" | peek's.getValue() = "+peek().getValue());
+
+			if(card.getValue()==1 && peek().getValue()==13) {
+				System.out.println("inside king/ace if check.. should push");
+				super.push(card);
+			}
+			else if(card.getValue() == peek().getValue() + 1
 					&& card.getSuit() == peek().getSuit()){
 				super.push(card);
 			} else {
+				System.out.println("Illegal move attempt...");
 				throw new IllegalArgumentException();
 			}
 		}

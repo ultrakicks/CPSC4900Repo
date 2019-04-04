@@ -148,7 +148,7 @@ public class Statistics extends JPanel implements ActionListener {
 		//Open files
 		try
 		{
-			File file = new File("bin/data/" + gameName + ".txt");
+			File file = new File(gameName + ".txt");
 			Scanner infile = new Scanner(file);
 			
 			int totalGames = infile.nextInt();
@@ -201,7 +201,7 @@ public class Statistics extends JPanel implements ActionListener {
 		try
 		{
 			//Open file
-			File file = new File("bin/data/" + gameName + ".txt");
+			File file = new File(gameName + ".txt");
 			Scanner infile = new Scanner(file);
 			
 			games = infile.nextInt();
@@ -230,7 +230,7 @@ public class Statistics extends JPanel implements ActionListener {
 		try
 		{
 			//Open file
-			File file = new File("bin/data/" + gameName + ".txt");
+			File file = new File(System.getProperty("user.dir"), gameName + ".txt");
 			Scanner infile = new Scanner(file);
 			
 			games = infile.nextInt();
@@ -267,7 +267,7 @@ public class Statistics extends JPanel implements ActionListener {
 		try
 		{
 			//Open file
-			File file = new File("bin/data/" + gameName + ".txt");
+			File file = new File(System.getProperty("user.dir"), gameName + ".txt");
 			Scanner infile = new Scanner(file);
 			
 			games = infile.nextInt();
@@ -298,7 +298,7 @@ public class Statistics extends JPanel implements ActionListener {
 		try
 		{
 			//Open File
-			File file = new File("bin/data/" + gameName + ".txt");
+			File file = new File(gameName + ".txt");
 			FileWriter fileWriter = new FileWriter(file);
 			PrintWriter printWriter = new PrintWriter(fileWriter);
 			//Write game data

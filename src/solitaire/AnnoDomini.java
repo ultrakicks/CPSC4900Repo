@@ -87,6 +87,9 @@ public class AnnoDomini extends Klondike
 		//The initial deck.
 		StackOfCards deck = StackOfCards.randomDeck();
 
+		//Clears the suitsUsed ArrayList
+		Foundation.SuitClear();
+		
 		//Calls initTableaux with the random deck and an anonymous array that
 		//holds the initial tableau sizes.
 		initTableaux(deck, new int[] {1, 1, 1, 1});
