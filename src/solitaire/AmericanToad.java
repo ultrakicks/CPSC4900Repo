@@ -463,7 +463,7 @@ public class AmericanToad extends Klondike {
 				//Then we check if the inUse stack can be appended to the
 				//tableau per the rules of solitaire.
 				try {
-					tableau.appendSuitableCards(inUse);
+					tableau.americanAppend(inUse);
 					System.out.println("Cards were appended to tableau column..");
 					inUse.clear();
 					flipLastStack();
