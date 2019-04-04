@@ -106,7 +106,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 
 		volumeItem = new JCheckBoxMenuItem("Volume Toggle");
 		volumeItem.addActionListener(this);
-		bar.add(volumeItem);
+		selectMenu.add(volumeItem);
 		if (clip.isRunning())
 		{
 			volumeItem.setSelected(true);

@@ -270,6 +270,19 @@ public class AmericanToad extends Klondike {
 			//If the stock was clicked:
 			System.out.println("Mouse was clicked on main Stock...");
 			waste.push(stock.pop());waste.push(stock.pop());waste.push(stock.pop());	// Burn 3 cards.
+			if(stock.size() < 3)
+			{
+				if(stock.size() < 2)
+				{
+					waste.push(stock.pop());
+				}
+				waste.push(stock.pop());waste.push(stock.pop());
+			}
+			System.out.println(waste.peek().isHidden());
+			if(waste.peek().isHidden())
+			{
+				waste.peek().setHidden(false);
+			}
 			waste.peek().setHidden(false);//And show it.
 			System.out.println("Stock was pushed, 3 cards burned");
 
