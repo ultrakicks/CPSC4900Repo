@@ -241,10 +241,21 @@ public class StackOfCards extends Stack<Card> {
 		int i = 0;
 		for(Node<Card> node = head; node != null; node = node.getNext()){
 			node.getValue().setLocation( //Continued next line.
-					x + (size- i - 1)*offsetX, y + (size - i - 1)*offsetY);
+					x + (size- i-1)*offsetX, y + (size - i -1)*offsetY);
 			i++;
 		}
 	}
+
+    /**
+     * Sets the size of all cards in the stack
+     * @param width the new width of the stack
+     */
+	public void setSize(int width){
+	    cardWidth = width;
+        for(Node<Card> node = head; node != null; node = node.getNext()){
+            node.getValue().setSize(width);
+        }
+    }
 
 	/**
 	 * Sets the offset between a card in the stack and the card below in both
