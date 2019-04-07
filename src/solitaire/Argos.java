@@ -1,9 +1,8 @@
 package solitaire;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.*;
+import java.util.Collections;
 
 import card.Card;
 import card.StackOfCards;
@@ -19,13 +18,14 @@ import javax.swing.*;
  * It consists of stock and waste tableaux and 52 play tableaux arranged in a grid, each with one card
  * The right-most column is reserved for kings
  * A tableau is completed when a card that is double its value (excess 13) is placed on it
- * The game is won when three rows of tableaux are completed.
+ * The game is won when three rows of tableaux are completed, and is lost if three rows are not completed before the stock is exhausted
  * @author Team1
  */
 public class Argos extends Klondike {
     StackOfCards playDeck = new StackOfCards();
     StackOfCards stockDeck = new StackOfCards();
-    int numDraws = 0;
+    boolean hintOn = false;
+
 	/**
 	 * Instantiates the game and the panel.
 	 * @param container The container for the game.
@@ -35,9 +35,6 @@ public class Argos extends Klondike {
 
         container.addMouseListener(this); 		//To respond to clicks
         container.addMouseMotionListener(this); //and dragging.
-        container.setBackground(new Color(0, 100, 0)); //A green color.
-        container.setSize(790, 720);
-        container.setPreferredSize(container.getSize());
 
         setCoord(container);
 
@@ -62,17 +59,32 @@ public class Argos extends Klondike {
                     cardWidth = (container.getHeight()/12);
                 }
                 offset = cardWidth/2;
+                int whiteSpace = (container.getWidth()-(cardWidth*17))/2;
 
-                StackOfCards copyPlay = new StackOfCards();
-                copyPlay.appendStack(playDeck.copy());
+
                 StackOfCards copyStock = new StackOfCards();
                 copyStock.appendStack(stockDeck.copy());
-                initTableaux(copyPlay);
-                initStockAndWaste(copyStock);
-                int temp = numDraws;
-                for (int i=0; i<temp; i++)
-                    stockPressedAction(stock.getX(), stock.getY());
-                numDraws = temp;
+
+                StackOfCards tempStack = new StackOfCards();
+
+                for (int i=0; i<13; i++){
+                    for (int j=0; j<4; j++){
+                        tableaux[i+13*j].setSize(cardWidth);
+                        tableaux[i+13*j].setLocation((whiteSpace + cardWidth + (cardWidth + offset/2) * i),
+                                (int) (yCoord + (j*(2.25*cardWidth))));
+                        tableaux[i+13*j].setOffset(0, offset);
+                    }
+                }
+
+                stock.setLocation((whiteSpace + cardWidth + (cardWidth + offset/2) * 5), 9*cardWidth+yCoord);
+                stock.setSize(cardWidth);
+
+                waste.setSize(cardWidth);
+                waste.setLocation((whiteSpace + cardWidth + (cardWidth + offset/2) * 7), 9*cardWidth+yCoord);
+
+                inUse.setSize(cardWidth);
+
+                container.repaint();
             }
         });
 
@@ -112,21 +124,24 @@ public class Argos extends Klondike {
 		//Shuffle kings in to stock deck
 		stockDeck.shuffle();
 
-        StackOfCards copyPlay = new StackOfCards();
-        copyPlay.appendStack(playDeck.copy());
-        StackOfCards copyStock = new StackOfCards();
-        copyStock.appendStack(stockDeck.copy());
-
-		initTableaux(copyPlay);
-		initStockAndWaste(copyStock);
+		//Init stacks
+		initTableaux(playDeck);
+		initStockAndWaste(stockDeck);
 
 		//Automatically draw the first card
 		stockPressedAction(stock.getX(),stock.getY());
 		initialized = true;
+
+		//Update screen
 		container.repaint();
 	}
 
-	protected void initTableaux(StackOfCards source) {
+    /**
+     * Set up the grid of 52 play tableaux in 4 columns of 13
+     * Last 4 cards on source stack must be kings
+     * @param source - 52 cards used to set up the play tableaux
+     */
+	private void initTableaux(StackOfCards source) {
 		//Sets the number of tableau columns.
 		tableaux = new Tableau[52];
 
@@ -153,14 +168,18 @@ public class Argos extends Klondike {
 		}
 	}
 
+    /**
+     * Argos has no foundations, so don't take action
+     * @param x		The x coordinate of a mouse click.
+     * @param y		The y coordinate.
+     * @return false
+     */
 	@Override
-	protected boolean foundationsReleasedAction(int x, int y) {
-		return false;
-	}
+	protected boolean foundationsReleasedAction(int x, int y) { return false;}
 
 	/**
 	 * Just initializes the stock as the waste isn't used.
-	 * Pre: the tableaux have been initialized.
+	 * @param deck - cards in the stock deck
 	 */
 	@Override
 	protected void initStockAndWaste(StackOfCards deck){
@@ -172,25 +191,34 @@ public class Argos extends Klondike {
 	}
 
 	/**
-	 * Adds a card to each of the tableaux from the stock as long as the stock
-	 * has cards and if the stock contains the given location.
-	 * @return 	<code>true</code> if the stock contains the given location, else
-	 * 			<code>false</code>.
+	 * Adds a card to to the waste stack if the stock deck
+	 * has cards and contains the given point.
+	 * @return  true if a card is dealt from the stock deck
+     *          false if no card was dealt
 	 */
 	@Override
 	protected boolean stockPressedAction(int x, int y){
-		if(stock.contains(x, y)&&!stock.isEmpty()) {
-			//If the stock was clicked, and it still contains cards:
-				waste.push(stock.pop());        //Move the top card from stock to waste.
-				waste.peek().setHidden(false);  //And show it.
-				stock.peek().setHidden(true);   //Hides the new top card of the stack.
-				moves++; //This counts as a move.
-				container.repaint();
-                numDraws++;
-				return true; //The action was performed.
+        //If the stock was clicked, and it still contains cards:
+        if(stock.contains(x, y)&&!stock.isEmpty()) {
+                //Part of hint functionality
+                hintOn = false;                     //The user dealt another card, so turn off hints for the last card dealt
+
+                //Core stock deck function
+                waste.pop();                        //Remove any present card if user deals another
+                waste.push(stock.pop());            //Move the top card from stock to waste.
+                waste.peek().setHidden(false);      //And show it.
+                if (!stock.isEmpty())
+                    stock.peek().setHidden(true);   //Hides the new top card of the stack, if there is one
+                container.repaint();                //Update the screen with new cards
+
+                //Check for loss
+                if (hasLost())
+                    onLoss();
+
+                //Unnecessary to check for wins b/c they will never occur directly after a new card is dealt
+
+                return true; //The action was performed
 		}
-		if (hasWon())
-			onWin();
 		return false;
 	}
 
@@ -208,8 +236,10 @@ public class Argos extends Klondike {
 	protected boolean tableauxReleasedAction(int x, int y){
 		for(Tableau tableau : tableaux){ //Check each of the tableaux
 			if(tableau.contains(x, y) || tableau.shapeOfNextCard().contains(x, y)){
+
 				//if there is exactly one card on the tableau, and we are only attempting to put one card on it
 				if (tableau.size()==1 && inUse.size()==1) {
+
 					//Card value must be 2x tableau value, or 2*tableau value - 13
 					if ((inUse.peek().getValue()==(2*tableau.peek().getValue()))||(inUse.peek().getValue()==(2*tableau.peek().getValue()-13))) {
 						try {
@@ -218,13 +248,17 @@ public class Argos extends Klondike {
 							inUse.clear();
 							flipLastStack();
 
-
-							//If we emptied the waste stack, deal another card automatically
-							if (waste.isEmpty()) {
-								stockPressedAction(stock.getX(), stock.getY());
-							}
+							//If this card placement makes three complete rows of cards, they've won
 							if (hasWon())
 								onWin();
+
+							//Has to be below win-checking so that no unnecessary moves are generated if they've won
+                            //If we emptied the waste stack, deal another card automatically
+                            if (waste.isEmpty()) {
+                                //Use short-circuiting to only check for loss if we cannot deal another card
+                                if (!stockPressedAction(stock.getX(), stock.getY())&&hasLost())
+                                    onLoss();
+                            }
 							return true;
 						} catch (IllegalArgumentException ex) {
 						}
@@ -236,18 +270,22 @@ public class Argos extends Klondike {
 		return false;//If we have reached this point, then no action was performed
 	}
 
-	//Cards cannot be picked up from the tableaux except for the last move
+	//Cards cannot be picked up from the tableaux
 	@Override
 	protected boolean removableFromTableaux(Stack<Card> cards) { return false;}
 
 	/**
-	 * Performs the actions associated with the stack that is pressed.
+	 * Show card placement hint if they right-click
+     * Perform appropriate action if they left click on a stack of cards
 	 */
 	@Override
 	public void mousePressed(MouseEvent e){
 		int x = e.getX(), y = e.getY();
 
-		if(inUse.isEmpty() && !stockPressedAction(x, y) && !wastePressedAction(x,y)){
+		if (SwingUtilities.isRightMouseButton(e)) {
+            startHint();
+        }
+        if(SwingUtilities.isLeftMouseButton(e) && inUse.isEmpty() && !stockPressedAction(x, y) && !wastePressedAction(x,y)){
 			//Do the tableaux action if the stock action wasn't done.
 			tableauxPressedAction(x, y);
 		}
@@ -255,9 +293,19 @@ public class Argos extends Klondike {
 	}
 
 	/**
-	 * TODO: Set up win condition
+	 * Start showing card placement hints
 	 */
-	public  boolean hasWon(){
+	private void startHint(){
+	    hintOn = true;
+	    container.repaint();
+    }
+
+    /**
+     * check to see if three tableeu rows are complete
+     * @return true if so, false otherwise
+     */
+    @Override
+	public boolean hasWon(){
 		//Iterate through rows, then columns
 		boolean completeRow;
 		int rowsComplete = 0;
@@ -269,29 +317,90 @@ public class Argos extends Klondike {
 			if (completeRow)
 				rowsComplete++;
 		}
-		System.out.println("Complete Rows: "+rowsComplete);
 		return rowsComplete>=3;
 	}
 
+    /**
+     * Display a message that the user has to acknowledge
+     * telling them that they won, and # moves
+     * Then send them to the main menu
+     */
+	@Override
 	public void onWin() {
-		Statistics.winGame("Argos");
-		//Then we show a dialog box to alert the user of the fact.
-		//We start another anonymous thread to show the dialog box because
-		//the dialog will pause all threads if it is in the main thread.
-		//Then we show a dialog box to alert the user of the fact.
-		//We start another anonymous thread to show the dialog box because
-		//the dialog will pause all threads if it is in the main thread.
+        Statistics.winGame("Argos");
+        //Then we show a dialog box to alert the user of the fact.
+        //We start another anonymous thread to show the dialog box because
+        //the dialog will pause all threads if it is in the main thread.
+        //Then we show a dialog box to alert the user of the fact.
+        //We start another anonymous thread to show the dialog box because
+        //the dialog will pause all threads if it is in the main thread.
 
 
 
-		new Thread(new Runnable(){
-			public void run() {
-				JOptionPane.showMessageDialog(container,"Congratulations, you won in " + moves + " moves!");
-			}
-		}).start();
-		Solitaire.switchScreens(Solitaire.games.MENU);
-	}
+        new Thread(new Runnable(){
+            public void run() {
+                JOptionPane.showMessageDialog(container,"Congratulations, you won in " + moves + " moves!");
+                Solitaire.switchScreens(Solitaire.games.MENU);
+            }
+        }).start();
+    }
 
+    /**
+     * @return true if there is no way the user could generate three complete rows with the present cards
+     *          false otherwise
+     */
+    private boolean hasLost(){
+        //Iterate through rows, then columns
+        boolean completeRow;
+        int rowsComplete = 0;
+        for (int i=0; i<4; i++) {
+            completeRow=true;
+            for (int j=0; j<13; j++) {
+                completeRow &= tableaux[j+(i*13)].size()==2;
+            }
+            if (completeRow)
+                rowsComplete++;
+        }
+        //If waste is empty, stock and waste are both empty, so only check for row completion
+        if (waste.isEmpty())
+            return rowsComplete<3;
+        return rowsComplete<3 && stock.isEmpty() && getPlacements(waste.peek()).size()==0;
+    }
+
+
+    /**
+     * Show loss dialog
+     * Return user to main menu
+     */
+    private void onLoss() {
+        Statistics.leaveGame("Argos");
+
+
+        new Thread(new Runnable(){
+            public void run() {
+                JOptionPane.showMessageDialog(container,"Sorry, you lost. Better luck next time!");
+                Solitaire.switchScreens(Solitaire.games.MENU);
+            }
+        }).start();
+    }
+
+    /**
+     * Get the list of tableaux a card can be placed on
+     * @param card - the card we are attempting to place
+     * @return list of possible placements
+     */
+    private java.util.List<Tableau> getPlacements(Card card){
+	    java.util.List placements = new java.util.LinkedList<Tableau>();
+	    for (Tableau tab : tableaux) {
+	        if (tab.size()==1){
+	            if (card.getValue() == 2*tab.peek().getValue())
+	                placements.add(tab);
+	            if (card.getValue() == (2*tab.peek().getValue()-13))
+	                placements.add(tab);
+            }
+        }
+	    return placements;
+    }
 
 
 	/**
@@ -299,8 +408,26 @@ public class Argos extends Klondike {
 	 * method.
 	 * Draws stock/waste deck and play tableaus of Argos
 	 */
+	@Override
 	public void paint(Graphics pane){
 		if(initialized){
+
+            Card card = null;
+            if (!waste.isEmpty())
+                card = waste.peek();
+            else if (!inUse.isEmpty())
+                card = inUse.peek();
+
+
+            if (!hintOn || card == null) {}
+            else {
+                pane.setColor(new Color(121, 185, 232));
+
+                for (Tableau tab : getPlacements(card)) {
+                    pane.fillRoundRect(tab.getX()-(cardWidth/2)-4, tab.getY()-(3*cardWidth/4)-4, cardWidth + 8, (int) (cardWidth * 1.5) + 8, cardWidth / 10, (int) (cardWidth * .15));
+                }
+            }
+
 			for(StackOfCards tableau : tableaux){
 				tableau.draw(pane);
 			}
@@ -320,7 +447,10 @@ public class Argos extends Klondike {
 		}
 	}
 
-	public String getName() {
-		return "Argos";
-	}
+    /**
+     * Used for file read/write, other methods that operate on multiple games
+     * @return "Argos"
+     */
+    @Override
+	public String getName() { return "Argos";	}
 }
