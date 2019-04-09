@@ -137,7 +137,7 @@ public class Tableau extends StackOfCards {
 		 * 	(unless the top card is a king, allows king to be placed on an ace)
 		 * 	If any of these conditions isn't met, an exception is thrown.
 		 */
-		if (this.peek().compareTo(bottom) == -12 && bottom.getValue()==13 && this.peek().getValue()==1) {
+		if (!isEmpty() && this.peek().compareTo(bottom) == -12 && bottom.getValue()==13 && this.peek().getValue()==1) {
 			if(this.peek().colorEquals(bottom)) {
 				String message = "The given stack is not suitable.";
 				throw new IllegalArgumentException(message);
@@ -248,11 +248,10 @@ public class Tableau extends StackOfCards {
 		while(!copy.isEmpty()){
 			Card current = copy.pop(); //To compare against toCompare.
 			//If they aren't sequentially ordered:
-			if(current.compareTo(toCompare) != 1){
-				return false; //then return false.
-			} else if(current.getValue() == 13 && toCompare.getValue() == 1){
-				toCompare = current;
+			if(current.getValue() == 1 && toCompare.getValue() == 13){
 				return true;
+			} else if(current.compareTo(toCompare) != 1){
+				return false; //then return false.
 			}
 			toCompare = current; //update toCompare.
 		}

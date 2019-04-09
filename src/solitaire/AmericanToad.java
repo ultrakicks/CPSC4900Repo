@@ -104,6 +104,8 @@ public class AmericanToad extends Klondike {
 		pushFoundation(foundations,baseCard);
 		initialized = true; 		 	  //Everything is initialized,
 		container.repaint();  //So we repaint.
+		System.out.println("Size of deck = " + deck.size());
+		System.out.println("Size of reserve = " + reserve.size());
 	}
 
 	/**
@@ -237,7 +239,7 @@ public class AmericanToad extends Klondike {
 			System.out.println("Return from releaseAction function...");
 			System.out.println("final inUse Check; empty? "+inUse.isEmpty());
 			for(Tableau tableau: tableaux) {
-				if(tableau.isEmpty()) {
+				if(tableau.isEmpty() && !reserve.isEmpty()) {
 					System.out.println("Triggered if check on tableEmpty from mouseRelease... is it?");
 					System.out.println("Tableau should be empty...");
 					tableau.push(reserve.pop()); // Pop top reserve card into empty tableau
@@ -269,14 +271,17 @@ public class AmericanToad extends Klondike {
 		if(stock.contains(x, y)){
 			//If the stock was clicked:
 			System.out.println("Mouse was clicked on main Stock...");
-			waste.push(stock.pop());waste.push(stock.pop());waste.push(stock.pop());	// Burn 3 cards.
-			if(stock.size() < 3)
+			if (stock.size() < 3)
 			{
-				if(stock.size() < 2)
-				{
-					waste.push(stock.pop());
+				if (stock.size() < 2) {
+					waste.push(stock.pop());// Burn 1 cards.
 				}
-				waste.push(stock.pop());waste.push(stock.pop());
+				waste.push(stock.pop());
+				waste.push(stock.pop());// Burn 2 cards.
+			} else {
+				waste.push(stock.pop());
+				waste.push(stock.pop());
+				waste.push(stock.pop());// Burn 3 cards.
 			}
 			System.out.println(waste.peek().isHidden());
 			if(waste.peek().isHidden())
@@ -341,6 +346,7 @@ public class AmericanToad extends Klondike {
 			inUse.push(waste.pop());			//then the top card from the waste is put inUse
 			lastStack = waste;  				//and the waste becomes the last stack to be used
 			moves++;
+			waste.peek().setHidden(false);
 			System.out.println("inUse pushed top waste card, lastStack = waste... return"); line();
 			return true; 					//The action was performed.
 		}
@@ -401,6 +407,13 @@ public class AmericanToad extends Klondike {
 			System.out.println("Mouse was not pressed on a tableau..."); line();
 		}
 		return false; //No tableau was clicked.
+	}
+
+	protected boolean removableFromTableaux(Stack<Card> cards){
+		return cards != null
+				&& Tableau.isVisible(cards)
+				&& Tableau.americanSequence(cards)
+				&& Tableau.alternatesInColor(cards);
 	}
 
 
@@ -556,6 +569,49 @@ public class AmericanToad extends Klondike {
 		//If there are fewer than 4 nonempty tableaux, and the stock and waste
 		//are empty, then the user has effectively won.
 		return numOfNonEmptyTableaux <= 8 && stock.isEmpty() && waste.isEmpty() && reserve.isEmpty();
+	}
+
+	/**
+	 * Plays the winning animation.
+	 * Pre. <code>hasWon()</code> returns <code>true</code>.
+	 */
+	protected void winningAnimation(){
+		//We calculate the number of cards in all of the foundations.
+		int sizeOfFoundations = 0;
+		for(Foundation f : foundations){
+			sizeOfFoundations += f.size();
+		}
+
+		while(sizeOfFoundations < 52){ //until all cards are in the foundations.
+			//If the animation queue has more than 5 cards, then we wait so as to
+			//prevent the program from crashing by creating too many threads at
+			if(animationQueue.size() > 6){						//the same time.
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e){}
+				continue; //try again.
+			}
+			for(Foundation foundation : foundations){ //For each foundation:
+				Card temp = foundation.peek(); //For comparisons.
+
+				for(Tableau tableau : tableaux){
+					//If the tableau:
+					//-is not empty
+					//-its top card's value is one greater than temp
+					//-and it has the same suit as temp, then:
+					if(!tableau.isEmpty() &&
+							temp.compareTo(tableau.peek()) == -1
+							&& temp.getSuit() == tableau.peek().getSuit()){
+
+						//move the top card to the foundation and animate it.
+						animateTopCardOf(tableau, foundation);
+						sizeOfFoundations++;//One more card is in a foundation.
+
+						break; //We don't need to look in another tableau.
+					}
+				}
+			}
+		}
 	}
 
 
