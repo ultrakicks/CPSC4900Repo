@@ -42,8 +42,14 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 
 	/**Points to menu items in main menu.                                   */
 	private JMenuItem argosShowItem, annoShowItem, americanShowItem,
-					  aztecShowItem, volumeItem, argosStatsItem,
-					  annoStatsItem, americanStatsItem, aztecStatsItem;
+					  aztecShowItem, argosStatsItem, MMvolumeItem,IvolumeItem;
+
+	
+	private JMenuItem annoStatsItem;
+
+	private JMenuItem americanStatsItem;
+
+	private JMenuItem aztecStatsItem;
 	
 	/** Points to menu items in the game panel							*/
 	private JMenuItem argosItem, annoItem, americanItem, aztecItem, mainMenuItem, klondikeItem, freeCellItem,
@@ -73,6 +79,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 	 */
 	private JMenuBar makeGameMenuBar()
 	{
+//SELECT MENU BUTTONS -- GAME INSTANCES
 		JMenuBar bar = new JMenuBar();	//Holds all of the buttons.
 		JMenu selectMenu = new JMenu("Select");
 		
@@ -95,27 +102,22 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
         aztecItem = new JMenuItem("Aztec Pyramids");
         aztecItem.addActionListener(this);
         selectMenu.add(aztecItem);   //Adds the Aztec Pyramids item.
-
+        
+        IvolumeItem = new JCheckBoxMenuItem("Toggle Volume");
+        IvolumeItem.addActionListener(this);
+        IvolumeItem.addItemListener(this);
+        selectMenu.add(IvolumeItem);
+        
+        
+        
+// ADD SELECT MENU TO BAR
 		bar.add(selectMenu);
-
+// RULES MENU BUTTONS -- GAME INSTANCE
 		JMenu rulesMenu = new JMenu("Rules"); //To display the rules.
 		rulesItem = new JMenuItem("Open");
 		rulesItem.addActionListener(this);
 		rulesMenu.add(rulesItem);
 		bar.add(rulesMenu);
-
-		volumeItem = new JCheckBoxMenuItem("Volume Toggle");
-		volumeItem.addActionListener(this);
-		selectMenu.add(volumeItem);
-		if (clip.isRunning())
-		{
-			volumeItem.setSelected(true);
-		}
-		else
-		{
-			volumeItem.setSelected(false);
-		}
-		volumeItem.addItemListener(this); //Adds volume toggle in-game
 
 		return bar; //The bar has been created.
 	}
@@ -181,19 +183,14 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		}
 		aztecShowItem.addItemListener(this);
 		
-		volumeItem = new JCheckBoxMenuItem("Volume Toggle"); 
-		volumeItem.addActionListener(this);
-		settingsMenu.add(volumeItem);
-		if (clip.isRunning())
-		{
-			volumeItem.setSelected(true);
-		}
-		else
-		{
-			volumeItem.setSelected(false);
-		}
-		volumeItem.addItemListener(this);
-
+		//Initialize Main Menu volume Button
+		MMvolumeItem = new JCheckBoxMenuItem("Toggle Volume");
+		//MMvolumeItem.addActionListener(this);
+		
+		settingsMenu.add(MMvolumeItem);
+		MMvolumeItem.setSelected(true); //Checked to begin with
+		MMvolumeItem.addItemListener(this);
+		
 		bar.add(settingsMenu);
 
 		/*Statistics for each game */
@@ -253,8 +250,10 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		{
 			if (americanShowItem.isSelected())
 			{
+				System.out.println("American Toad showing");
 				MainMenu.americanBtn.setVisible(true);
 			} else {
+				System.out.println("American Toad not showing");
 				MainMenu.americanBtn.setVisible(false);
 			}
 		}
@@ -268,19 +267,22 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 				MainMenu.aztecBtn.setVisible(false);
 			}
 		}
-
-		if (source == volumeItem)
-		{
-			if (!volumeItem.isSelected())
+		
+		if (source == MMvolumeItem) {
+			if(MMvolumeItem.isSelected()) {
+				System.out.println("Volume Button is checked.");
+				clip.start();
+				System.out.println("Music should be playing.");
+				MMvolumeItem.setSelected(true);
+			} else {
+				System.out.println("Volume Button is not checked.");
 				clip.stop();
-			else {
-				clip.setFramePosition(0);
-				clip.loop(0);
+				System.out.println("Music should have stopped.");
+				MMvolumeItem.setSelected(false);
 			}
 		}
-
-	}
-
+	}	
+	
 	/**
 	 * Responds to menu events to set the form of Solitaire.
 	 */
@@ -368,26 +370,129 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		} else if(e.getSource() == aztecStatsItem){
 			Statistics.openStatistics("Aztec Pyramid");
 			return; //So we don't remove the listeners.
+		} 
+			
+		//Get game name
+		String gameName;
+		if(game instanceof Argos) 
+		{
+			System.out.println("In instance of Argos");
+			if(e.getSource() == IvolumeItem) 
+			{
+				System.out.println("IVolumeItem was the source");
+				if(IvolumeItem.isSelected()) 
+				{
+					System.out.println("Toggle button should be checked");
+					clip.start();
+					System.out.println("Music should start, observe game instance functionality.");
+				}
+				else 
+				{
+					System.out.println("Toggle button should not be checked.");
+					clip.stop();
+					System.out.println("Music should have stopped, check functionality of game instance.");
+				}
+				return;
+			}
+			gameName = "Argos";
 		}
-		
+		else if(game instanceof AmericanToad) 
+		{
+			System.out.println("In Instance of American Toad");
+			if(e.getSource() == IvolumeItem) 
+			{
+				System.out.println("IVolumeItem was the source");
+				if(IvolumeItem.isSelected()) 
+				{
+					System.out.println("Toggle button should be checked");
+					clip.start();
+					System.out.println("Music should start, observe game instance functionality.");
+				}
+				else 
+				{
+					System.out.println("Toggle button should not be checked.");
+					clip.stop();
+					System.out.println("Music should have stopped, check functionality of game instance.");
+				}
+				return;
+			}
+			gameName = "American Toad";
+		}
+		else if(game instanceof AnnoDomini)
+		{
+			System.out.println("In instance of AnnoDomini");
+			if(e.getSource() == IvolumeItem) 
+			{
+				System.out.println("IVolumeItem was the source");
+				if(IvolumeItem.isSelected()) 
+				{
+					System.out.println("Toggle button should be checked");
+					clip.start();
+					System.out.println("Music should start, observe game instance functionality.");
+				}
+				else 
+				{
+					System.out.println("Toggle button should not be checked.");
+					clip.stop();
+					System.out.println("Music should have stopped, check functionality of game instance.");
+				}
+				return;
+			}
+			gameName = "Anno Domini";
+		}
+		else if(game instanceof Pyramid)
+		{
+			System.out.println("In instance of Aztec Pryamid");
+			if(e.getSource() == IvolumeItem) 
+			{
+				System.out.println("IVolumeItem was the source");
+				if(IvolumeItem.isSelected()) 
+				{
+					System.out.println("Toggle button should be checked");
+					clip.start();
+					System.out.println("Music should start, observe game instance functionality.");
+				}
+				else 
+				{
+					System.out.println("Toggle button should not be checked.");
+					clip.stop();
+					System.out.println("Music should have stopped, check functionality of game instance.");
+				}
+				return;
+			}
+			gameName = "Aztec Pyramid";
+		}
+		else if (game instanceof Klondike)
+		{
+			System.out.println("In instance of Klondike");
+			if(e.getSource() == IvolumeItem) 
+			{
+				System.out.println("IVolumeItem was the source");
+				if(IvolumeItem.isSelected()) 
+				{
+					System.out.println("Toggle button should be checked");
+					clip.start();
+					System.out.println("Music should start, observe game instance functionality.");
+				}
+				else 
+				{
+					System.out.println("Toggle button should not be checked.");
+					clip.stop();
+					System.out.println("Music should have stopped, check functionality of game instance.");
+				}
+				return;
+			}
+			gameName = "Klondike";
+		}	
+		else {
+			gameName = "Klondike";
+			System.out.println("Unexpected error...");
+		}
+
 		//The listeners need to be removed or else there will still be a
 		//reference to the previous game object.
 		this.removeMouseListener(game);
 		this.removeMouseMotionListener(game);
-		
-		//Get game name
-		String gameName;
-		if(game instanceof Argos)
-			gameName = "Argos";
-		else if(game instanceof AmericanToad)
-			gameName = "American Toad";
-		else if(game instanceof AnnoDomini)
-			gameName = "Anno Domini";
-		else if(game instanceof Pyramid)
-			gameName = "Aztec Pyramid";
-		else
-			gameName = "Klondike";
-
 		//Change game view
 		if(e.getSource() == mainMenuItem){
 			Statistics.leaveGame(gameName);
@@ -408,8 +513,8 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 			Statistics.leaveGame(gameName);
             game = new Pyramid(this);
 			Statistics.startGame("Aztec Pyramid");
-		}
-
+		} 
+		System.out.println("Ended here, should repaint");
 		repaint();
 	}
 
@@ -454,6 +559,8 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 				game = new AmericanToad(gamePanel);
 				frame.setJMenuBar(gamePanel.makeGameMenuBar());
 				cardLayout.next(contentPane);
+				clip.stop(); 
+				System.out.println("Main Menu music should be stopped after launch of AT");
 				Statistics.startGame("American Toad");
 				break;
 			case ANNO_DOMINI:
