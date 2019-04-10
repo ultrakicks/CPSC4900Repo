@@ -106,6 +106,11 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
         IvolumeItem = new JCheckBoxMenuItem("Toggle Volume");
         IvolumeItem.addActionListener(this);
         IvolumeItem.addItemListener(this);
+        if (clip.isRunning())
+        {
+        	IvolumeItem.setSelected(true);
+        }
+        
         selectMenu.add(IvolumeItem);
         
         
@@ -188,7 +193,10 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		//MMvolumeItem.addActionListener(this);
 		
 		settingsMenu.add(MMvolumeItem);
-		MMvolumeItem.setSelected(true); //Checked to begin with
+		if (clip.isRunning())
+        {
+			MMvolumeItem.setSelected(true);
+        }
 		MMvolumeItem.addItemListener(this);
 		
 		bar.add(settingsMenu);
@@ -270,14 +278,11 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		
 		if (source == MMvolumeItem) {
 			if(MMvolumeItem.isSelected()) {
-				System.out.println("Volume Button is checked.");
 				clip.start();
-				System.out.println("Music should be playing.");
 				MMvolumeItem.setSelected(true);
+				clip.loop(clip.LOOP_CONTINUOUSLY);
 			} else {
-				System.out.println("Volume Button is not checked.");
 				clip.stop();
-				System.out.println("Music should have stopped.");
 				MMvolumeItem.setSelected(false);
 			}
 		}
@@ -300,57 +305,26 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		            File file = new File(game.getName() + "Rules.pdf");
 		            if (!file.exists()) 
 		            {
-		                // In JAR
-		                InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream("resources/AnnoRules.pdf");
-		                // Copy file
-		                OutputStream outputStream = null;
-						try 
-						{
-							outputStream = new FileOutputStream(file);
-						} 
-						catch (FileNotFoundException e1) 
-						{
-							e1.printStackTrace();
-						}
-		                byte[] buffer = new byte[1024];
-		                int length;
-		                try 
-		                {
-							while ((length = inputStream.read(buffer)) > 0)
-							{
-							    outputStream.write(buffer, 0, length);
-							}
-						} 
-		                catch (IOException e1) 
-		                {
-							e1.printStackTrace();
-						}
-		                try 
-		                {
-							outputStream.close();
-						} 
-		                catch (IOException e1) 
-		                {
-							e1.printStackTrace();
-						}
-		                try 
-		                {
-							inputStream.close();
-						} 
-		                catch (IOException e1) 
-		                {
+		            	File fileBackup = new File("AnnoDominiRules.pdf");
+		            	try {
+							Desktop.getDesktop().open(fileBackup);
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 		            }
-		            // Open file
-		            try 
+		            else
 		            {
-						Desktop.getDesktop().open(file);
-					} 
-		            catch (IOException e1) 
-		            {
-						e1.printStackTrace();
-					}
+		            	// Open file
+			            try 
+			            {
+							Desktop.getDesktop().open(file);
+						} 
+			            catch (IOException e1) 
+			            {
+							e1.printStackTrace();
+						}
+		            }
 		        }
 			}
 			
@@ -376,21 +350,16 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		String gameName;
 		if(game instanceof Argos) 
 		{
-			System.out.println("In instance of Argos");
 			if(e.getSource() == IvolumeItem) 
 			{
-				System.out.println("IVolumeItem was the source");
 				if(IvolumeItem.isSelected()) 
 				{
-					System.out.println("Toggle button should be checked");
 					clip.start();
-					System.out.println("Music should start, observe game instance functionality.");
+					clip.loop(clip.LOOP_CONTINUOUSLY);
 				}
 				else 
 				{
-					System.out.println("Toggle button should not be checked.");
 					clip.stop();
-					System.out.println("Music should have stopped, check functionality of game instance.");
 				}
 				return;
 			}
@@ -398,21 +367,16 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		}
 		else if(game instanceof AmericanToad) 
 		{
-			System.out.println("In Instance of American Toad");
 			if(e.getSource() == IvolumeItem) 
 			{
-				System.out.println("IVolumeItem was the source");
 				if(IvolumeItem.isSelected()) 
 				{
-					System.out.println("Toggle button should be checked");
 					clip.start();
-					System.out.println("Music should start, observe game instance functionality.");
+					clip.loop(clip.LOOP_CONTINUOUSLY);
 				}
 				else 
 				{
-					System.out.println("Toggle button should not be checked.");
 					clip.stop();
-					System.out.println("Music should have stopped, check functionality of game instance.");
 				}
 				return;
 			}
@@ -420,21 +384,16 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		}
 		else if(game instanceof AnnoDomini)
 		{
-			System.out.println("In instance of AnnoDomini");
 			if(e.getSource() == IvolumeItem) 
 			{
-				System.out.println("IVolumeItem was the source");
 				if(IvolumeItem.isSelected()) 
 				{
-					System.out.println("Toggle button should be checked");
 					clip.start();
-					System.out.println("Music should start, observe game instance functionality.");
+					clip.loop(clip.LOOP_CONTINUOUSLY);
 				}
 				else 
 				{
-					System.out.println("Toggle button should not be checked.");
 					clip.stop();
-					System.out.println("Music should have stopped, check functionality of game instance.");
 				}
 				return;
 			}
@@ -442,21 +401,16 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		}
 		else if(game instanceof Pyramid)
 		{
-			System.out.println("In instance of Aztec Pryamid");
 			if(e.getSource() == IvolumeItem) 
 			{
-				System.out.println("IVolumeItem was the source");
 				if(IvolumeItem.isSelected()) 
 				{
-					System.out.println("Toggle button should be checked");
 					clip.start();
-					System.out.println("Music should start, observe game instance functionality.");
+					clip.loop(clip.LOOP_CONTINUOUSLY);
 				}
 				else 
 				{
-					System.out.println("Toggle button should not be checked.");
 					clip.stop();
-					System.out.println("Music should have stopped, check functionality of game instance.");
 				}
 				return;
 			}
@@ -464,21 +418,16 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		}
 		else if (game instanceof Klondike)
 		{
-			System.out.println("In instance of Klondike");
 			if(e.getSource() == IvolumeItem) 
 			{
-				System.out.println("IVolumeItem was the source");
 				if(IvolumeItem.isSelected()) 
 				{
-					System.out.println("Toggle button should be checked");
 					clip.start();
-					System.out.println("Music should start, observe game instance functionality.");
+					clip.loop(clip.LOOP_CONTINUOUSLY);
 				}
 				else 
 				{
-					System.out.println("Toggle button should not be checked.");
 					clip.stop();
-					System.out.println("Music should have stopped, check functionality of game instance.");
 				}
 				return;
 			}
@@ -514,7 +463,6 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
             game = new Pyramid(this);
 			Statistics.startGame("Aztec Pyramid");
 		} 
-		System.out.println("Ended here, should repaint");
 		repaint();
 	}
 
@@ -559,8 +507,6 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 				game = new AmericanToad(gamePanel);
 				frame.setJMenuBar(gamePanel.makeGameMenuBar());
 				cardLayout.next(contentPane);
-				clip.stop(); 
-				System.out.println("Main Menu music should be stopped after launch of AT");
 				Statistics.startGame("American Toad");
 				break;
 			case ANNO_DOMINI:
