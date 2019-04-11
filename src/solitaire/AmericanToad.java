@@ -38,6 +38,7 @@ import java.awt.event.MouseMotionListener;
 public class AmericanToad extends Klondike {
 	protected StackOfCards reserve;
 	protected Card baseCard;
+	protected int reshuffleCount = 0;
 
 	public void line() {
 		System.out.println("________________________________________");
@@ -271,17 +272,23 @@ public class AmericanToad extends Klondike {
 		if(stock.contains(x, y)){
 			//If the stock was clicked:
 			System.out.println("Mouse was clicked on main Stock...");
-			if (stock.size() < 3)
+			if (stock.size() == 2)
 			{
-				if (stock.size() < 2) {
+				if (stock.size() == 1) {
 					waste.push(stock.pop());// Burn 1 cards.
+					waste.peek().setHidden(false);
 				}
 				waste.push(stock.pop());
+				waste.peek().setHidden(false);
 				waste.push(stock.pop());// Burn 2 cards.
-			} else {
+				waste.peek().setHidden(false);
+			} else if (stock.size() >= 3 && stock.size() != 0) {
 				waste.push(stock.pop());
+				waste.peek().setHidden(false);
 				waste.push(stock.pop());
+				waste.peek().setHidden(false);
 				waste.push(stock.pop());// Burn 3 cards.
+				waste.peek().setHidden(false);
 			}
 			System.out.println(waste.peek().isHidden());
 			if(waste.peek().isHidden())
@@ -308,19 +315,23 @@ public class AmericanToad extends Klondike {
 			container.repaint();
 			return true;
 		}
-		else if(stock.shapeOfNextCard().contains(x, y)){
+		else if(stock.shapeOfNextCard().contains(x, y ) && reshuffleCount == 0){
 			System.out.println("main Stock is empty, re-pile from waste");
 			//else if the mouse clicked the empty stock's area:
 			//Turn over all cards from the waste to the stock,
-			waste.shuffle();
-			stock.appendStack(waste.reverseCopy());
-			waste.clear(); //and clear the waste.
-
-			if(!stock.isEmpty()){
-				stock.peek().setHidden(true); //So that stock is turned form
-				moves++;					  //the user.
+			if(reshuffleCount < 1)
+			{
+				stock.appendStack(waste.reverseCopy());
+				waste.clear(); //and clear the waste.
+				reshuffleCount++;
+				if(!stock.isEmpty())
+				{
+					stock.peek().setHidden(true); //So that stock is turned form
+					moves++;					  //the user.
+				}
+				container.repaint();
+				return true; //The action was performed.
 			}
-			return true; //The action was performed.
 		}
 
 		System.out.println("Mouse was not pressed on the stock..."); line();

@@ -4,10 +4,7 @@
     <list default="true" id="9b2949fe-657b-4565-a671-7dc4302e731a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/American Toad.txt" beforeDir="false" afterPath="$PROJECT_DIR$/American Toad.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Anno Domini.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Anno Domini.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Argos.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Argos.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aztec Pyramid.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Aztec Pyramid.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/solitaire/Solitaire.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/solitaire/Solitaire.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/solitaire/AmericanToad.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/solitaire/AmericanToad.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -17,11 +14,39 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/solitaire/Solitaire.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="151">
-              <caret line="556" selection-start-line="556" selection-end-line="556" />
+              <caret line="541" selection-start-line="541" selection-end-line="541" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/solitaire/AmericanToad.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="170">
+              <caret line="321" column="34" lean-forward="true" selection-start-line="321" selection-start-column="34" selection-end-line="321" selection-end-column="34" />
+              <folding>
+                <element signature="e#2885#2886#0" expanded="true" />
+                <element signature="e#2925#2926#0" expanded="true" />
+                <element signature="e#22801#22802#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/American Toad.txt">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/solitaire/AnnoDomini.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="172">
+              <caret line="45" column="37" lean-forward="true" selection-start-line="44" selection-start-column="4" selection-end-line="45" selection-end-column="37" />
             </state>
           </provider>
         </entry>
@@ -49,6 +74,8 @@
       <find>stockpressed</find>
       <find>3 cards</find>
       <find>main menu music sh</find>
+      <find>main stock</find>
+      <find>reshuffleCount</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -61,8 +88,8 @@
         <option value="$PROJECT_DIR$/src/solitaire/AmericanTestToad.java" />
         <option value="$PROJECT_DIR$/src/solitaire/Klondike.java" />
         <option value="$PROJECT_DIR$/src/card/Foundation.java" />
-        <option value="$PROJECT_DIR$/src/solitaire/AmericanToad.java" />
         <option value="$PROJECT_DIR$/src/solitaire/Solitaire.java" />
+        <option value="$PROJECT_DIR$/src/solitaire/AmericanToad.java" />
       </list>
     </option>
   </component>
@@ -76,7 +103,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -117,11 +143,12 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1554926816571" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1555024852479" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
@@ -194,8 +221,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15938166" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1609808" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -204,7 +232,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.38894907" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.38894907" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3997833" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -240,13 +268,6 @@
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/solitaire/AnnoDomini.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1581">
-          <caret line="107" column="29" selection-start-line="107" selection-start-column="29" selection-end-line="107" selection-end-column="29" />
         </state>
       </provider>
     </entry>
@@ -288,17 +309,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/solitaire/AmericanToad.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="47" column="26" selection-start-line="47" selection-start-column="26" selection-end-line="47" selection-end-column="26" />
-          <folding>
-            <element signature="e#2885#2886#0" expanded="true" />
-            <element signature="e#2925#2926#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/solitaire/Statistics.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="169">
@@ -330,10 +340,32 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/American Toad.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/solitaire/Solitaire.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="151">
-          <caret line="556" selection-start-line="556" selection-end-line="556" />
+          <caret line="541" selection-start-line="541" selection-end-line="541" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/solitaire/AnnoDomini.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="172">
+          <caret line="45" column="37" lean-forward="true" selection-start-line="44" selection-start-column="4" selection-end-line="45" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/solitaire/AmericanToad.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="321" column="34" lean-forward="true" selection-start-line="321" selection-start-column="34" selection-end-line="321" selection-end-column="34" />
+          <folding>
+            <element signature="e#2885#2886#0" expanded="true" />
+            <element signature="e#2925#2926#0" expanded="true" />
+            <element signature="e#22801#22802#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
