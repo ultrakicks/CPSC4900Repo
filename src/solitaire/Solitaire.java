@@ -106,6 +106,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
         IvolumeItem = new JCheckBoxMenuItem("Toggle Volume");
         IvolumeItem.addActionListener(this);
         IvolumeItem.addItemListener(this);
+        IvolumeItem.setSelected(true);
         selectMenu.add(IvolumeItem);
         
         
@@ -559,8 +560,6 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 				game = new AmericanToad(gamePanel);
 				frame.setJMenuBar(gamePanel.makeGameMenuBar());
 				cardLayout.next(contentPane);
-				clip.stop(); 
-				System.out.println("Main Menu music should be stopped after launch of AT");
 				Statistics.startGame("American Toad");
 				break;
 			case ANNO_DOMINI:

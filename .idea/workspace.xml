@@ -4,7 +4,9 @@
     <list default="true" id="9b2949fe-657b-4565-a671-7dc4302e731a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/American Toad.txt" beforeDir="false" afterPath="$PROJECT_DIR$/American Toad.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/solitaire/AmericanToad.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/solitaire/AmericanToad.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Anno Domini.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Anno Domini.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Argos.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Argos.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Aztec Pyramid.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Aztec Pyramid.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/solitaire/Solitaire.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/solitaire/Solitaire.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -16,64 +18,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/solitaire/AmericanToad.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="293">
-              <caret line="281" column="24" lean-forward="true" selection-start-line="281" selection-start-column="12" selection-end-line="284" selection-end-column="13" />
-              <folding>
-                <element signature="e#2885#2886#0" expanded="true" />
-                <element signature="e#2925#2926#0" expanded="true" />
-                <element signature="e#20310#20311#0" expanded="true" />
-                <element signature="e#20338#20339#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/solitaire/Klondike.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="226">
-              <caret line="215" column="36" lean-forward="true" selection-start-line="215" selection-start-column="12" selection-end-line="215" selection-end-column="36" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/card/Tableau.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1479">
-              <caret line="89" column="18" selection-start-line="89" selection-start-column="12" selection-end-line="89" selection-end-column="18" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/card/StackOfCards.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="167">
-              <caret line="92" selection-start-line="92" selection-end-line="92" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/solitaire/MainMenu.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="698">
-              <caret line="70" selection-start-line="70" selection-end-line="70" />
-              <folding>
-                <element signature="e#1991#1992#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/solitaire/Solitaire.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="437">
-              <caret line="117" column="70" lean-forward="true" selection-start-line="117" selection-start-column="70" selection-end-line="117" selection-end-column="70" />
+            <state relative-caret-position="151">
+              <caret line="556" selection-start-line="556" selection-end-line="556" />
             </state>
           </provider>
         </entry>
@@ -100,6 +48,7 @@
       <find>cards not</find>
       <find>stockpressed</find>
       <find>3 cards</find>
+      <find>main menu music sh</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -112,20 +61,22 @@
         <option value="$PROJECT_DIR$/src/solitaire/AmericanTestToad.java" />
         <option value="$PROJECT_DIR$/src/solitaire/Klondike.java" />
         <option value="$PROJECT_DIR$/src/card/Foundation.java" />
-        <option value="$PROJECT_DIR$/src/solitaire/Solitaire.java" />
         <option value="$PROJECT_DIR$/src/solitaire/AmericanToad.java" />
+        <option value="$PROJECT_DIR$/src/solitaire/Solitaire.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="width" value="1920" />
-    <option name="height" value="1040" />
+    <option name="y" value="21" />
+    <option name="width" value="1696" />
+    <option name="height" value="1026" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -167,11 +118,10 @@
         </subPane>
       </pane>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1554406349365" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1554926816571" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
@@ -244,9 +194,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17857143" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15938166" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -255,7 +204,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.40303358" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.38894907" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3997833" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -294,16 +243,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/solitaire/Argos.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="27" column="5" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/solitaire/AnnoDomini.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1581">
@@ -328,6 +267,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/solitaire/Klondike.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3383">
+          <caret line="215" column="36" selection-start-line="215" selection-start-column="12" selection-end-line="215" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/card/Tableau.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1479">
@@ -335,47 +281,59 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/solitaire/MainMenu.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="698">
-          <caret line="70" selection-start-line="70" selection-end-line="70" />
-          <folding>
-            <element signature="e#1991#1992#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/solitaire/Solitaire.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
-          <caret line="117" column="70" lean-forward="true" selection-start-line="117" selection-start-column="70" selection-end-line="117" selection-end-column="70" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/solitaire/Klondike.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="215" column="36" lean-forward="true" selection-start-line="215" selection-start-column="12" selection-end-line="215" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/card/StackOfCards.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="167">
+        <state relative-caret-position="1479">
           <caret line="92" selection-start-line="92" selection-end-line="92" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/solitaire/AmericanToad.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="293">
-          <caret line="281" column="24" lean-forward="true" selection-start-line="281" selection-start-column="12" selection-end-line="284" selection-end-column="13" />
+        <state relative-caret-position="306">
+          <caret line="47" column="26" selection-start-line="47" selection-start-column="26" selection-end-line="47" selection-end-column="26" />
           <folding>
             <element signature="e#2885#2886#0" expanded="true" />
             <element signature="e#2925#2926#0" expanded="true" />
-            <element signature="e#20310#20311#0" expanded="true" />
-            <element signature="e#20338#20339#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/solitaire/Statistics.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="169">
+          <caret line="218" selection-start-line="218" selection-end-line="218" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/solitaire/MainMenu.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="44" selection-start-line="44" selection-end-line="44" />
+          <folding>
+            <element signature="e#1926#1927#0" expanded="true" />
+            <element signature="e#1991#1992#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Argos.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/solitaire/Argos.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-6872">
+          <caret line="27" selection-start-line="27" selection-end-line="27" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/solitaire/Solitaire.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="151">
+          <caret line="556" selection-start-line="556" selection-end-line="556" />
         </state>
       </provider>
     </entry>
