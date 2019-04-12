@@ -35,6 +35,7 @@ public class Argos extends Klondike {
 
         container.addMouseListener(this); 		//To respond to clicks
         container.addMouseMotionListener(this); //and dragging.
+	container.setBackground(new Color(0, 60, 0));
 
         setCoord(container);
 
