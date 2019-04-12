@@ -58,6 +58,7 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 	 */
 	public Solitaire(){
 		game = new Klondike(this);
+        Statistics.setSolitaire(this);
 	}
 
 	/** 
@@ -112,7 +113,6 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
         
 // ADD SELECT MENU TO BAR
 		bar.add(selectMenu);
-
 // RULES MENU BUTTONS -- GAME INSTANCE
 		JMenu rulesMenu = new JMenu("Rules"); //To display the rules.
 		rulesItem = new JMenuItem("Open");
@@ -219,48 +219,6 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		bar.add(statsMenu);
 
 		return bar; //The bar has been created.
-	}
-
-	public void updateStatistics(Statistics.update type, String game){
-		switch(type){
-			case START:
-				if (Statistics.startGame(game)){}
-				else {
-					Solitaire container = this;
-					new Thread(new Runnable(){
-						public void run() {
-							JOptionPane.showMessageDialog(container,"There was an error accessing the statistics file.\n");
-							return;
-						}
-					}).start();
-				}
-			case LEAVE:
-				if (Statistics.leaveGame(game)){}
-				else {
-					Solitaire container = this;
-					new Thread(new Runnable(){
-						public void run() {
-							JOptionPane.showMessageDialog(container,"There was an error accessing the statistics file.\n"+
-									"Statistics could not be updated.");
-							return;
-						}
-					}).start();
-				}
-				break;
-			case WIN:
-				if (Statistics.winGame(game)){}
-				else {
-					Solitaire container = this;
-					new Thread(new Runnable(){
-						public void run() {
-							JOptionPane.showMessageDialog(container,"There was an error accessing the statistics file.\n"+
-									"Statistics could not be updated.");
-							return;
-						}
-					}).start();
-				}
-				break;
-		}
 	}
 
 	/**
@@ -482,25 +440,25 @@ public class Solitaire extends JPanel implements ActionListener, ItemListener {
 		this.removeMouseMotionListener(game);
 		//Change game view
 		if(e.getSource() == mainMenuItem){
-			updateStatistics(Statistics.update.LEAVE, gameName);
+			Statistics.leaveGame(gameName);
 			switchScreens(games.MENU);
-		} else if(e.getSource() == argosItem){
-			updateStatistics(Statistics.update.LEAVE,gameName);
-			game = new Argos(this);
-			updateStatistics(Statistics.update.START,"Argos");
-		} else if(e.getSource() == americanItem){
-			updateStatistics(Statistics.update.LEAVE,gameName);
-			game = new AmericanToad(this);
-			updateStatistics(Statistics.update.START, "American Toad");
-		} else if(e.getSource() == annoItem){
-			updateStatistics(Statistics.update.LEAVE,gameName);
-			game = new AnnoDomini(this);
-			updateStatistics(Statistics.update.START, "Anno Domini");
-		} else if (e.getSource() == aztecItem) {
-			updateStatistics(Statistics.update.LEAVE, gameName);
-			game = new Pyramid(this);
-			updateStatistics(Statistics.update.START,"Aztec Pyramid");
-		}
+        } else if(e.getSource() == argosItem){
+			Statistics.leaveGame(gameName);
+            game = new Argos(this);
+			Statistics.startGame("Argos");
+        } else if(e.getSource() == americanItem){
+			Statistics.leaveGame(gameName);
+            game = new AmericanToad(this);
+			Statistics.startGame("American Toad");
+        } else if(e.getSource() == annoItem){
+			Statistics.leaveGame(gameName);
+            game = new AnnoDomini(this); 
+			Statistics.startGame("Anno Domini");
+        } else if (e.getSource() == aztecItem) {
+			Statistics.leaveGame(gameName);
+            game = new Pyramid(this);
+			Statistics.startGame("Aztec Pyramid");
+		} 
 		repaint();
 	}
 

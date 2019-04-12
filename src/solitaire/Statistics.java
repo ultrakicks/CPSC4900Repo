@@ -31,6 +31,7 @@ public class Statistics extends JPanel implements ActionListener {
 	private JLabel gameTitle, gameTotal, gameWins,
 						gameAverageTime, gameBestTime, gameWinPercentage, gameBestScore;
 
+	private static Solitaire gamePanel;
 
 	public static enum update {START, WIN, LEAVE, RELOAD}
 
@@ -91,7 +92,11 @@ public class Statistics extends JPanel implements ActionListener {
 		
 		repaint();
 	}
-	
+
+	public static void setSolitaire(Solitaire game){
+		gamePanel = game;
+	}
+
 	/** 
 	 * Returns the menu bar for the game panel
 	 */
@@ -189,13 +194,24 @@ public class Statistics extends JPanel implements ActionListener {
 				gameBestScore.setText("Best Record: " + bestRecord);
 
 		} catch (Exception e) {
-					JPanel container = this;
-					new Thread(new Runnable(){
-						public void run() {
-							JOptionPane.showMessageDialog(container,"There was an error accessing the statistics file.\n");
-							return;
-						}
-					}).start();
+			//Set values of each item
+			gameTitle.setText(gameName);
+			gameTotal.setText("Total Games: N/A");
+			gameWins.setText("Wins: N/A");
+			gameWinPercentage.setText("Win %: N/A");
+			gameAverageTime.setText("Average Time: N/A");
+			gameBestTime.setText("Best Time: N/A");
+			gameBestScore.setText("Best Record: N/A");
+
+
+			System.out.println("Statistics file for "+gameName+"is unavailable or corrupted");
+			JPanel container = this;
+			new Thread(new Runnable(){
+				public void run() {
+					JOptionPane.showMessageDialog(container,"There was an error accessing the statistics file.\n");
+					return;
+				}
+			}).start();
 		}
 	}
 
@@ -206,10 +222,9 @@ public class Statistics extends JPanel implements ActionListener {
 	 * This set of methods adds to the current statistics of a certain game
 	 * and then, if the statistics tab is open, reloads it automatically
 	 */
-	public static boolean startGame(String gameName) {
+	public static void startGame(String gameName) {
 		int wins = 0, games = 0, bestRecord = 0;
 		long totalTime = 0, bestTime = 0;
-		boolean success = true;
 
 		timeStarted = System.currentTimeMillis();
 
@@ -238,9 +253,15 @@ public class Statistics extends JPanel implements ActionListener {
             }
 
 		} catch (Exception e) {
-			success=false;
+			System.out.println("Statistics file for "+gameName+"is unavailable or corrupted");
+			new Thread(new Runnable(){
+				public void run() {
+					JOptionPane.showMessageDialog(gamePanel,"There was an error accessing the statistics file.\n" +
+							"Gameplay statistics cannot be recorded");
+					return;
+				}
+			}).start();
 		}
-		return success;
 	}
 
 	/**
@@ -249,10 +270,9 @@ public class Statistics extends JPanel implements ActionListener {
 	 * 
 	 * @param gameName the name of the game. This specifies the txt file being opened
 	 */
-	public static boolean winGame(String gameName) {
+	public static void winGame(String gameName) {
 		int wins = 0, games = 0, bestRecord = 0;
 		long totalTime = 0, bestTime = 0;
-		boolean success = true;
 
 		try
 		{
@@ -287,9 +307,8 @@ public class Statistics extends JPanel implements ActionListener {
             }
 
 		} catch (Exception e) {
-		    success = false;
+			System.out.println("Statistics file for "+gameName+"is unavailable or corrupted");
         }
-		return success;
 	}
 	
 	/**
@@ -336,10 +355,9 @@ public class Statistics extends JPanel implements ActionListener {
 		return false;
 	}
 
-	public static boolean leaveGame(String gameName) {
+	public static void leaveGame(String gameName) {
 		int wins = 0, games = 0, bestRecord = 0;
 		long totalTime = 0, bestTime = 0;
-		boolean success = true;
 		try
 		{
 			//Open file
@@ -353,11 +371,6 @@ public class Statistics extends JPanel implements ActionListener {
 			bestRecord = infile.nextInt();
 			infile.close();
 
-
-            if(timeStarted > 0) {
-                long timeTaken = (System.currentTimeMillis() - timeStarted)/1000;
-                totalTime += timeTaken;
-            }
             timeStarted = 0;
 
             //Rewrite file
@@ -368,9 +381,8 @@ public class Statistics extends JPanel implements ActionListener {
                 statsPanel.reloadStatistics(gameName);
             }
 		} catch (Exception e) {
-			success = false;
+			System.out.println("Statistics file for "+gameName+"is unavailable or corrupted");
 		}
-        return false;
 	}
 
 	public static void writeFile(String gameName, int games, int wins, long totalTime, long bestTime, int bestRecord) throws IOException {
